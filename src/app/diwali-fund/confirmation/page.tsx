@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -29,7 +29,7 @@ export default function ConfirmationPage() {
             // localStorage.removeItem('diwali_fund_confirmation');
         } else {
             // Redirect if no details are found
-            router.push('/diwali-fund');
+            router.push('/dashboard');
         }
     }, [router]);
 
