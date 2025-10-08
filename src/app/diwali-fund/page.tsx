@@ -31,7 +31,6 @@ export default function DiwaliFundPage() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [idProof, setIdProof] = useState("");
-  const [idProofFile, setIdProofFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
@@ -112,17 +111,10 @@ export default function DiwaliFundPage() {
   const retakePhoto = () => {
     setFaceImageBase64(null);
   };
-  
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setIdProofFile(e.target.files[0]);
-    }
-  };
-
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!faceImageBase64 || !contribution || !frequency || !name || !contact || !idProofFile) {
+    if (!faceImageBase64 || !contribution || !frequency || !name || !contact || !idProof) {
       toast({
         variant: "destructive",
         title: "Missing Information",
@@ -138,7 +130,7 @@ export default function DiwaliFundPage() {
     const fundDetails = {
       name,
       contact,
-      idProof: idProofFile.name,
+      idProof,
       contribution,
       frequency,
       estimatedReturn,
@@ -148,7 +140,7 @@ export default function DiwaliFundPage() {
 
     // Simulate submission
     setTimeout(() => {
-      // In a real app, you'd upload the file and save the data to a backend.
+      // In a real app, you'd save the data to a backend.
       // For this demo, we'll store in localStorage and navigate.
       localStorage.setItem('diwali_fund_confirmation', JSON.stringify(fundDetails));
       
@@ -173,8 +165,8 @@ export default function DiwaliFundPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid gap-8 md:grid-cols-3">
 
-          <div className="md:col-span-2">
-            <Card>
+          <div className="md:col-span-2 space-y-8">
+             <Card>
               <CardHeader>
                 <CardTitle>Your Details</CardTitle>
                 <CardDescription>
@@ -195,14 +187,8 @@ export default function DiwaliFundPage() {
 
                 <div className="grid md:grid-cols-2 gap-4 items-end">
                     <div className="space-y-2">
-                        <Label htmlFor="id-proof">ID Proof Upload</Label>
-                        <div className="relative">
-                            <Input id="id-proof-file" type="file" className="hidden" onChange={handleFileChange} accept="image/*,.pdf" required/>
-                            <Label htmlFor="id-proof-file" className="border border-dashed rounded-md p-4 flex flex-col items-center justify-center text-sm text-muted-foreground cursor-pointer hover:bg-muted/50">
-                                <Upload className="h-6 w-6 mb-2"/>
-                                <span>{idProofFile ? idProofFile.name : "Click to upload ID Proof"}</span>
-                            </Label>
-                        </div>
+                        <Label htmlFor="id-proof">Aadhaar Number</Label>
+                        <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
                     </div>
 
                     <div className="space-y-2">
@@ -233,16 +219,7 @@ export default function DiwaliFundPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-          
-          <div className="md:col-span-1 space-y-8">
-            <Alert>
-                <Info className="h-4 w-4" />
-                <AlertTitle>How it Works</AlertTitle>
-                <AlertDescription>
-                    Save ₹100, ₹1,000, or ₹5,000 weekly or monthly and receive a <span className="font-bold text-primary">+10% bonus</span> at Diwali. Early withdrawal will incur a 10% deduction on your total saved amount.
-                </AlertDescription>
-            </Alert>
+
             <Card>
                 <CardHeader>
                     <CardTitle>Contribution Plan</CardTitle>
@@ -272,6 +249,16 @@ export default function DiwaliFundPage() {
                     </div>
                 </CardContent>
             </Card>
+          </div>
+          
+          <div className="md:col-span-1 space-y-8">
+            <Alert>
+                <Info className="h-4 w-4" />
+                <AlertTitle>How it Works</AlertTitle>
+                <AlertDescription>
+                    Save ₹100, ₹1,000, or ₹5,000 weekly or monthly and receive a <span className="font-bold text-primary">+10% bonus</span> at Diwali. Early withdrawal will incur a 10% deduction on your total saved amount.
+                </AlertDescription>
+            </Alert>
             <Card className="bg-primary text-primary-foreground">
                 <CardHeader>
                     <CardTitle>Estimated Diwali Return</CardTitle>
@@ -300,5 +287,3 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
-
-    
