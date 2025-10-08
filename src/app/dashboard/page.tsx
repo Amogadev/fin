@@ -3,7 +3,7 @@
 
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -53,6 +53,21 @@ function AddUserCard() {
                 <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
             <p className="font-semibold text-xs">Add New User</p>
+        </CardContent>
+      </Card>
+    </Link>
+  )
+}
+
+function DiwaliFundCard() {
+  return (
+    <Link href="/diwali-fund" className="block">
+      <Card className="h-32 w-32 bg-muted/50 hover:bg-muted/80 transition-colors flex flex-col items-center justify-center text-center space-y-2">
+        <CardContent className="p-2 flex flex-col items-center justify-center text-center space-y-2">
+            <div className="flex items-center justify-center bg-background/50 rounded-full w-10 h-10">
+                <Gift className="h-5 w-5 text-muted-foreground" />
+            </div>
+            <p className="font-semibold text-xs">Diwali Fund</p>
         </CardContent>
       </Card>
     </Link>
@@ -120,11 +135,11 @@ export default function DashboardPage() {
       <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
-            <CardTitle>Recent Users</CardTitle>
+            <CardTitle>Quick Actions</CardTitle>
           </div>
           <Button asChild size="sm" className="ml-auto gap-1">
             <Link href="/dashboard/users">
-              View All
+              View All Users
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -135,6 +150,7 @@ export default function DashboardPage() {
               <UserCard key={user.id} user={user} />
             ))}
             <AddUserCard />
+            <DiwaliFundCard />
           </div>
         </CardContent>
       </Card>
