@@ -36,7 +36,7 @@ export default function DashboardLayout({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="flex items-center justify-between p-4 border-b bg-card md:bg-transparent">
+      <header className="flex items-center justify-between p-4 border-b bg-card">
         <h2 className="text-lg font-semibold font-headline capitalize">
           {getPageTitle()}
         </h2>
@@ -58,22 +58,25 @@ export default function DashboardLayout({
         </div>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t shadow-t-lg">
-        <div className="flex justify-center items-center h-16">
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex flex-col items-center justify-center w-24 h-full text-sm font-medium transition-colors ${
-                pathname === item.href
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <item.icon className="h-6 w-6 mb-1" />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-auto mx-auto">
+        <div className="bg-foreground text-background rounded-full shadow-lg p-2 flex items-center gap-2">
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center justify-center h-12 w-12 rounded-full transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-primary-foreground"
+                }`}
+              >
+                <item.icon className="h-6 w-6" />
+                <span className="sr-only">{item.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </div>
