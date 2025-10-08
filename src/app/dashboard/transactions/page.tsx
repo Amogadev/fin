@@ -57,7 +57,6 @@ export default function TransactionsPage() {
          <div className="space-y-4">
             <PageHeader
                 title="All Transactions"
-                description="An audit log of all loan disbursements and repayments."
             />
             <Card>
                 <CardContent className="pt-6">
@@ -74,7 +73,6 @@ export default function TransactionsPage() {
     <div className="space-y-4">
       <PageHeader
         title="All Transactions"
-        description="An audit log of all loan disbursements and repayments."
       />
       <Card>
         <CardContent className="pt-6">
