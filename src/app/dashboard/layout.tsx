@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -47,7 +48,7 @@ export default function DashboardLayout({
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-6 w-6" />
                 <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                  6
+                  0
                 </span>
                 <span className="sr-only">Notifications</span>
               </Button>
@@ -58,42 +59,8 @@ export default function DashboardLayout({
             >
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <div className="p-2">
-                <p className="text-sm font-semibold text-muted-foreground px-2 mb-2">
-                  Upcoming Payments
-                </p>
-                <DropdownMenuItem className="flex flex-col items-start gap-1">
-                  <p>
-                    Anjali Sharma - EMI Due{" "}
-                    <span className="font-bold">₹500</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Due in 3 days
-                  </p>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex flex-col items-start gap-1">
-                  <p>
-                    Priya Singh - EMI Due{" "}
-                    <span className="font-bold">₹1250</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Due in 5 days
-                  </p>
-                </DropdownMenuItem>
-              </div>
-              <DropdownMenuSeparator />
-              <div className="p-2">
-                <p className="text-sm font-semibold text-muted-foreground px-2 mb-2">
-                  Pending
-                </p>
-                <DropdownMenuItem className="flex flex-col items-start gap-1">
-                  <p>
-                    Loan Application from Rohan Verma
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Amount: ₹25,000
-                  </p>
-                </DropdownMenuItem>
+              <div className="p-4 text-center text-sm text-muted-foreground">
+                No new notifications.
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
