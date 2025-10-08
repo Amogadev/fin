@@ -61,14 +61,13 @@ function AddUserCard() {
 
 function DiwaliFundCard() {
   return (
-    <Link href="/diwali-fund" className="block">
-      <Card className="h-32 w-32 bg-muted/50 hover:bg-muted/80 transition-colors flex flex-col items-center justify-center text-center space-y-2">
-        <CardContent className="p-2 flex flex-col items-center justify-center text-center space-y-2">
-            <div className="flex items-center justify-center bg-background/50 rounded-full w-10 h-10">
-                <Gift className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <p className="font-semibold text-xs">Diwali Fund</p>
-        </CardContent>
+    <Link href="/diwali-fund" className="block h-full">
+      <Card className="h-full bg-primary/5 hover:bg-primary/10 transition-colors flex flex-col items-center justify-center text-center space-y-2 p-4">
+        <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
+            <Gift className="h-6 w-6 text-primary" />
+        </div>
+        <p className="font-semibold text-sm text-primary">Join Diwali Fund</p>
+        <p className="text-xs text-muted-foreground">Save & get a festive bonus</p>
       </Card>
     </Link>
   )
@@ -86,10 +85,13 @@ export default function DashboardPage() {
   if (!dataPromise) {
     return (
         <div className="space-y-8">
-            <div className="grid gap-4 md:grid-cols-3">
-                <StatCard.Skeleton />
-                <StatCard.Skeleton />
-                <StatCard.Skeleton />
+            <div className="grid gap-4 md:grid-cols-4">
+                <div className="md:col-span-3 grid gap-4 md:grid-cols-3">
+                    <StatCard.Skeleton />
+                    <StatCard.Skeleton />
+                    <StatCard.Skeleton />
+                </div>
+                <div className="h-36 bg-muted/50 rounded-md"></div>
             </div>
             <Card>
                 <CardHeader>
@@ -112,26 +114,29 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-4 md:grid-cols-3">
-        <StatCard
-          title="Wallet Balance"
-          value={`₹${(vaultData.balance).toLocaleString("en-IN")}`}
-          icon={Landmark}
-          description="Total available funds"
-        />
-        <StatCard
-          title="Total Loans Given"
-          value={`₹${vaultData.totalLoansGiven.toLocaleString("en-IN")}`}
-          icon={IndianRupee}
-          description="Principal amount disbursed"
-        />
-        <StatCard
-          title="Total Active Users"
-          value={users.length.toString()}
-          icon={Users}
-          description="Users with accounts"
-        />
-      </div>
+       <div className="grid gap-4 md:grid-cols-4">
+            <div className="md:col-span-3 grid gap-4 md:grid-cols-3">
+                <StatCard
+                title="Wallet Balance"
+                value={`₹${(vaultData.balance).toLocaleString("en-IN")}`}
+                icon={Landmark}
+                description="Total available funds"
+                />
+                <StatCard
+                title="Total Loans Given"
+                value={`₹${vaultData.totalLoansGiven.toLocaleString("en-IN")}`}
+                icon={IndianRupee}
+                description="Principal amount disbursed"
+                />
+                <StatCard
+                title="Total Active Users"
+                value={users.length.toString()}
+                icon={Users}
+                description="Users with accounts"
+                />
+            </div>
+            <DiwaliFundCard />
+        </div>
       <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
@@ -150,7 +155,6 @@ export default function DashboardPage() {
               <UserCard key={user.id} user={user} />
             ))}
             <AddUserCard />
-            <DiwaliFundCard />
           </div>
         </CardContent>
       </Card>
