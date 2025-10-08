@@ -70,11 +70,6 @@ export default function LoginPage() {
               <Button type="submit" className="w-full">
                 Login
               </Button>
-               <Button asChild variant="link" className="w-full">
-                <Link href="/dashboard" target="_blank">
-                  Open in new window
-                </Link>
-              </Button>
             </form>
           </CardContent>
         </Card>
