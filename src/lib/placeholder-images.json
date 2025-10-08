@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "user001_id_card",
+      "description": "ID card for a user",
+      "imageUrl": "https://picsum.photos/seed/userid1/400/250",
+      "imageHint": "id card document"
+    },
+    {
+      "id": "user001_selfie",
+      "description": "A selfie of a user for verification",
+      "imageUrl": "https://picsum.photos/seed/userselfie1/400/400",
+      "imageHint": "woman portrait"
+    }
+  ]
 }
