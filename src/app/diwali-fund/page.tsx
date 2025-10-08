@@ -164,9 +164,8 @@ export default function DiwaliFundPage() {
       
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid gap-8 md:grid-cols-3">
-
           <div className="md:col-span-2 space-y-8">
-             <Card>
+            <Card>
               <CardHeader>
                 <CardTitle>Your Details</CardTitle>
                 <CardDescription>
@@ -174,7 +173,7 @@ export default function DiwaliFundPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                 <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
                     <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -185,7 +184,7 @@ export default function DiwaliFundPage() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4 items-end">
+                <div className="grid md:grid-cols-2 gap-4 items-start">
                     <div className="space-y-2">
                         <Label htmlFor="contact">Phone Number</Label>
                         <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
@@ -219,7 +218,7 @@ export default function DiwaliFundPage() {
                 </div>
               </CardContent>
             </Card>
-
+            
             <Card>
                 <CardHeader>
                     <CardTitle>Contribution Plan</CardTitle>
@@ -249,6 +248,7 @@ export default function DiwaliFundPage() {
                     </div>
                 </CardContent>
             </Card>
+
           </div>
           
           <div className="md:col-span-1 space-y-8">
