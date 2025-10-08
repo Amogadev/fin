@@ -45,22 +45,22 @@ export default function DashboardLayout({
         </div>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
-      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-auto mx-auto">
-        <div className="bg-foreground text-background rounded-full shadow-lg p-2 flex items-center gap-2">
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-card border-t">
+        <div className="flex justify-around items-center h-full max-w-lg mx-auto">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center justify-center h-12 w-12 rounded-full transition-colors ${
+                className={`flex flex-col items-center justify-center gap-1 w-20 h-full transition-colors ${
                   isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-primary-foreground"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
                 }`}
               >
                 <item.icon className="h-6 w-6" />
-                <span className="sr-only">{item.label}</span>
+                <span className="text-xs">{item.label}</span>
               </Link>
             );
           })}
