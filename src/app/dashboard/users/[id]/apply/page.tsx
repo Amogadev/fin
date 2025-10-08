@@ -35,7 +35,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
   const router = useRouter();
   const { toast } = useToast();
 
-  const [amount, setAmount] = useState(10000);
+  const [amount, setAmount] = useState(0);
   const [loanType, setLoanType] = useState<"loan" | "emi">("emi");
   const [paymentFrequency, setPaymentFrequency] = useState<(typeof PAYMENT_FREQUENCIES)[number]>("Monthly");
 
