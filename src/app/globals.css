@@ -12,8 +12,8 @@
     --popover-foreground: 264 15% 85%;
     --notification-popover: 240 10% 98%;
     --notification-popover-foreground: 264 45% 12%;
-    --primary: 231 48% 48%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 264 45% 12%;
     --secondary: 264 30% 25%;
     --secondary-foreground: 0 0% 98%;
     --muted: 264 30% 25%;
