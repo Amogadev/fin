@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,10 +15,47 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PageHeader from "@/components/page-header";
 import { Camera, ArrowLeft } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function NewUserPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [idProof, setIdProof] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // In a real app, you would save the data to your backend here.
+    // We'll simulate this with a timeout.
+    setTimeout(() => {
+      const newUser = {
+        id: `user${Date.now().toString().slice(-3)}`, // semi-unique ID
+        name,
+        contact,
+        idProof,
+      };
+
+      console.log("Creating new user:", newUser);
+
+      toast({
+        title: "User Created",
+        description: `${name} has been registered successfully.`,
+      });
+
+      // For this demo, we'll just redirect to the user list.
+      // In a real app, you might redirect to the new user's page: `/dashboard/users/${newUser.id}`
+      router.push("/dashboard/users");
+
+      setIsSubmitting(false);
+    }, 1000);
+  };
+
   return (
-    <div className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <PageHeader
         title="Register New User"
         description="Collect personal information and capture a face image for identity verification."
@@ -38,15 +79,33 @@ export default function NewUserPage() {
             <CardContent className="space-y-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="e.g., Rohan Verma" />
+                <Input
+                  id="name"
+                  placeholder="e.g., Rohan Verma"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="contact">Contact Number</Label>
-                <Input id="contact" placeholder="e.g., +91 98765 43210" />
+                <Input
+                  id="contact"
+                  placeholder="e.g., +91 98765 43210"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  required
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="id-proof">ID Proof</Label>
-                <Input id="id-proof" placeholder="e.g., AADHAAR, PAN number" />
+                <Input
+                  id="id-proof"
+                  placeholder="e.g., AADHAAR, PAN number"
+                  value={idProof}
+                  onChange={(e) => setIdProof(e.target.value)}
+                  required
+                />
               </div>
             </CardContent>
           </Card>
@@ -63,7 +122,7 @@ export default function NewUserPage() {
               <div className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed">
                 <Camera className="w-16 h-16 text-muted-foreground" />
               </div>
-              <Button variant="outline">
+              <Button variant="outline" disabled>
                 <Camera className="mr-2 h-4 w-4" />
                 Open Camera
               </Button>
@@ -72,10 +131,10 @@ export default function NewUserPage() {
         </div>
       </div>
       <div className="flex justify-end pt-4">
-        <Button asChild size="lg">
-          <Link href="/dashboard/users/user002">Create User & Proceed</Link>
+        <Button type="submit" size="lg" disabled={isSubmitting}>
+          {isSubmitting ? "Creating User..." : "Create User & Proceed"}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
