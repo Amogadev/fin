@@ -142,10 +142,10 @@ export default function DashboardPage() {
                 value={`₹${(vaultData.balance).toLocaleString("en-IN")}`}
                 icon={Landmark}
                 description={
-                    <>
+                    <div>
                     <p>Total available funds</p>
                     <p className="text-xs text-muted-foreground/80">Initial Balance: ₹1,00,000</p>
-                    </>
+                    </div>
                 }
                 />
                 <StatCard
