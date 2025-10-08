@@ -1,3 +1,4 @@
+
 import { getUsers, User } from "@/lib/data";
 import {
   Card,
@@ -9,9 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, ArrowRight } from "lucide-react";
+import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon } from "lucide-react";
 import PageHeader from "@/components/page-header";
 
 function UserCard({ user }: { user: User }) {
@@ -31,14 +31,9 @@ function UserCard({ user }: { user: User }) {
     <Card>
       <CardHeader>
         <div className="flex items-center gap-4">
-          <Image
-            src={user.faceImageUrl}
-            alt={user.name}
-            width={64}
-            height={64}
-            className="rounded-full border object-cover"
-            data-ai-hint="person portrait"
-          />
+          <div className="w-16 h-16 rounded-full border bg-muted flex items-center justify-center">
+            <UserIcon className="h-8 w-8 text-muted-foreground" />
+          </div>
           <div>
             <CardTitle>{user.name}</CardTitle>
             <CardDescription>{user.contact}</CardDescription>
