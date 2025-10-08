@@ -48,9 +48,11 @@ function UserCard({ user }: { user: User }) {
             <CardTitle className="text-base">{user.name}</CardTitle>
             <CardDescription className="text-xs">{user.contact}</CardDescription>
           </div>
-          <Button variant="ghost" size="icon" className="w-8 h-8">
+          <Button asChild variant="ghost" size="icon" className="w-8 h-8">
+            <Link href={`/dashboard/users/${user.id}/edit`}>
               <FilePenLine className="h-4 w-4" />
               <span className="sr-only">Edit User</span>
+            </Link>
           </Button>
         </div>
       </CardHeader>
