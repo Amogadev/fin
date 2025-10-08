@@ -24,7 +24,7 @@ import { Pie, PieChart, Cell } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 import type { Loan } from "@/lib/data";
 import { getUsers } from "@/lib/data";
-import { addDays, addMonths, addYears } from "date-fns";
+import { addDays, addMonths, addYears, format } from "date-fns";
 
 
 const LOAN_TYPE_CONFIG = {
@@ -62,6 +62,8 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
   const interest = amount * interestRate;
   const principal = amount;
   const totalOwed = principal + interest;
+  const dueDate = paymentFrequency ? getDueDate(new Date(), paymentFrequency) : null;
+
 
   const chartData = [
     { name: "Principal", value: principal, fill: "hsl(var(--primary))" },
@@ -69,7 +71,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
   ];
 
   const handleSubmit = async () => {
-    if (!loanType || !paymentFrequency) {
+    if (!loanType || !paymentFrequency || !dueDate) {
       toast({
         variant: "destructive",
         title: "Missing Information",
@@ -83,7 +85,6 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
     const newLoanId = `loan${allLoans.length + 1}`;
     const newTxnId = `txn${Date.now().toString().slice(-5)}`;
     const createdAt = new Date();
-    const dueDate = getDueDate(createdAt, paymentFrequency);
 
 
     const newLoan: Loan = {
@@ -282,6 +283,12 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                   <span className="font-medium">
                     ₹{interest.toLocaleString("en-IN")}
                   </span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="text-muted-foreground">Due Date:</span>
+                    <span className="font-medium">
+                        {dueDate ? format(dueDate, 'PPP') : 'N/A'}
+                    </span>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex justify-between font-semibold text-base">
