@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -32,15 +32,15 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [transactions, setTransactions] = useState<TransactionWithUser[]>([]);
+  const [transactionsPromise, setTransactionsPromise] = useState<Promise<TransactionWithUser[]>>();
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
-      const txs = await getAllTransactions();
-      setTransactions(txs);
-    }
-    fetchData();
-  }, []);
+    setIsClient(true);
+    setTransactionsPromise(getAllTransactions());
+  }, [pathname]); // Refetch on path change
+
+  const transactions = transactionsPromise ? use(transactionsPromise) : [];
 
 
   const menuItems = [
@@ -48,6 +48,8 @@ export default function DashboardLayout({
     { href: "/dashboard/users", label: "Users", icon: Users },
     { href: "/dashboard/transactions", label: "Transactions", icon: Receipt },
   ];
+  
+  const notificationCount = isClient ? transactions.length : 0;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -61,9 +63,11 @@ export default function DashboardLayout({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-6 w-6" />
-                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                  {transactions.length}
-                </span>
+                {notificationCount > 0 && (
+                  <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                    {notificationCount}
+                  </span>
+                )}
                 <span className="sr-only">Notifications</span>
               </Button>
             </DropdownMenuTrigger>
@@ -73,7 +77,7 @@ export default function DashboardLayout({
             >
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {transactions.length > 0 ? (
+              {transactions && transactions.length > 0 ? (
                 transactions.map((tx) => (
                   <DropdownMenuItem key={tx.id} className="flex flex-col items-start gap-1">
                     <p className="font-semibold">{tx.userName}</p>

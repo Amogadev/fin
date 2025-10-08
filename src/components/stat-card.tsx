@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardHeader,
@@ -6,6 +7,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import type { LucideIcon } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
 
 interface StatCardProps {
   title: string;
@@ -14,7 +16,7 @@ interface StatCardProps {
   icon: LucideIcon;
 }
 
-export default function StatCard({
+function StatCard({
   title,
   value,
   description,
@@ -33,3 +35,20 @@ export default function StatCard({
     </Card>
   );
 }
+
+StatCard.Skeleton = function StatCardSkeleton() {
+    return (
+        <Card className="flex flex-col justify-center h-36">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-4" />
+            </CardHeader>
+            <CardContent>
+                <Skeleton className="h-7 w-32 mb-2" />
+                <Skeleton className="h-3 w-40" />
+            </CardContent>
+        </Card>
+    )
+}
+
+export default StatCard;

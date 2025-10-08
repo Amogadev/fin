@@ -1,4 +1,6 @@
 
+"use client";
+
 import { getUsers, User } from "@/lib/data";
 import {
   Card,
@@ -13,6 +15,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon } from "lucide-react";
 import PageHeader from "@/components/page-header";
+import { use, useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function UserCard({ user }: { user: User }) {
   const loanStatus = user.loans.some((l) => l.status === "Overdue")
@@ -62,8 +66,72 @@ function UserCard({ user }: { user: User }) {
   );
 }
 
-export default async function UsersPage() {
-  const users = await getUsers();
+function UserCardSkeleton() {
+    return (
+        <Card>
+            <CardHeader className="p-3">
+                <div className="flex items-center gap-3">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <div className="space-y-1.5">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-3 w-16" />
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent className="px-3 pb-2 text-xs space-y-2">
+                <div className="flex justify-between">
+                    <Skeleton className="h-3 w-12" />
+                    <Skeleton className="h-3 w-20" />
+                </div>
+                <div className="flex justify-between">
+                    <Skeleton className="h-3 w-14" />
+                    <Skeleton className="h-5 w-12 rounded-full" />
+                </div>
+            </CardContent>
+            <CardFooter className="p-3 pt-1">
+                <Skeleton className="h-8 w-full" />
+            </CardFooter>
+        </Card>
+    );
+}
+
+export default function UsersPage() {
+  const [usersPromise, setUsersPromise] = useState<Promise<User[]>>();
+
+  useEffect(() => {
+    setUsersPromise(getUsers());
+  }, []);
+
+  if (!usersPromise) {
+    return (
+      <div className="space-y-4">
+        <PageHeader
+          title="Users"
+          description="Manage all registered users and their loan accounts."
+        >
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/dashboard">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/dashboard/users/new">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Register New User
+              </Link>
+            </Button>
+          </div>
+        </PageHeader>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => <UserCardSkeleton key={i} />)}
+        </div>
+      </div>
+    );
+  }
+
+  const users = use(usersPromise);
 
   return (
     <div className="space-y-4">

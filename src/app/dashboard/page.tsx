@@ -1,6 +1,9 @@
+
+"use client";
+
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User, ArrowUpRight, Plus } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -14,8 +17,10 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { use, useEffect, useState } from "react";
+import { User, Vault } from "@/lib/data";
 
-function UserCard({ user }: { user: import("@/lib/data").User }) {
+function UserCard({ user }: { user: User }) {
   const totalLoanAmount = user.loans
     .filter(loan => loan.status === 'Active' || loan.status === 'Overdue')
     .reduce((acc, loan) => acc + (loan.totalOwed - loan.amountRepaid), 0);
@@ -24,7 +29,7 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
     <Link href={`/dashboard/users/${user.id}`} className="block">
       <Card className="h-32 w-32 bg-muted/50 hover:bg-muted/80 transition-colors flex flex-col justify-center items-center text-center">
         <CardContent className="p-2 space-y-2 flex flex-col items-center">
-          <User className="h-8 w-8 text-muted-foreground" />
+          <UserIcon className="h-8 w-8 text-muted-foreground" />
           <div>
             <p className="font-semibold text-sm">{user.name}</p>
             <p className="text-xs text-muted-foreground">
@@ -54,9 +59,40 @@ function AddUserCard() {
   )
 }
 
-export default async function DashboardPage() {
-  const vaultData = await getVaultData();
-  const users = await getUsers();
+export default function DashboardPage() {
+  const [dataPromise, setDataPromise] = useState<Promise<{vault: Vault, users: User[]}> | null>(null);
+
+  useEffect(() => {
+    setDataPromise(
+        Promise.all([getVaultData(), getUsers()]).then(([vault, users]) => ({ vault, users }))
+    );
+  }, []);
+
+  if (!dataPromise) {
+    return (
+        <div className="space-y-8">
+            <div className="grid gap-4 md:grid-cols-3">
+                <StatCard.Skeleton />
+                <StatCard.Skeleton />
+                <StatCard.Skeleton />
+            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Recent Users</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex space-x-4">
+                        <div className="h-32 w-32 bg-muted/50 rounded-md"></div>
+                        <div className="h-32 w-32 bg-muted/50 rounded-md"></div>
+                        <div className="h-32 w-32 bg-muted/50 rounded-md"></div>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    );
+  }
+
+  const { vault: vaultData, users } = use(dataPromise);
   const recentUsers = users.slice(0, 3);
 
   return (
@@ -75,10 +111,10 @@ export default async function DashboardPage() {
           description="Principal amount disbursed"
         />
         <StatCard
-          title="Total Interest Earned"
-          value={`₹${vaultData.totalInterestEarned.toLocaleString("en-IN")}`}
+          title="Total Active Users"
+          value={users.length.toString()}
           icon={Users}
-          description="From all loans"
+          description="Users with accounts"
         />
       </div>
       <Card>
