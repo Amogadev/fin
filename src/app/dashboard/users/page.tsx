@@ -17,6 +17,7 @@ import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon, FilePenLine } from
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
 
 function UserCard({ user }: { user: User }) {
   const loanStatus = user.loans.some((l) => l.status === "Overdue")
@@ -30,6 +31,11 @@ function UserCard({ user }: { user: User }) {
     : user.loans.some((l) => l.status === "Active")
     ? "success"
     : "secondary";
+
+  const nextDueDate = user.loans
+    .filter(l => l.status === 'Active' || l.status === 'Overdue')
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+    [0]?.dueDate;
 
   return (
     <Card>
@@ -57,6 +63,12 @@ function UserCard({ user }: { user: User }) {
           <span className="text-muted-foreground">Loan Status:</span>
           <Badge variant={loanStatusVariant}>{loanStatus}</Badge>
         </div>
+        {nextDueDate && (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Next Due Date:</span>
+            <span className="text-xs">{format(new Date(nextDueDate), "PP")}</span>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="p-3 pt-1">
         <Button asChild variant="outline" size="sm" className="w-full h-8">
