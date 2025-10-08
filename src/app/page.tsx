@@ -43,7 +43,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="admin@example.com"
                 required
-                defaultValue="@login"
+                defaultValue="login@gmail.com"
               />
             </div>
             <div className="grid gap-2">
