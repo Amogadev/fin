@@ -22,7 +22,7 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
 
   return (
     <Link href={`/dashboard/users/${user.id}`} className="block">
-      <Card className="h-32 w-32 hover:bg-muted/50 transition-colors flex flex-col justify-center items-center text-center">
+      <Card className="h-32 w-32 bg-notification-popover text-notification-popover-foreground hover:bg-notification-popover/90 transition-colors flex flex-col justify-center items-center text-center">
         <CardContent className="p-2 space-y-1">
           <p className="font-semibold text-sm">{user.name}</p>
           <p className="text-xs text-muted-foreground">
@@ -39,7 +39,7 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
 function AddUserCard() {
   return (
     <Link href="/dashboard/users/new" className="block">
-      <Card className="h-32 w-32 hover:bg-muted/50 transition-colors flex flex-col items-center justify-center text-center space-y-2">
+      <Card className="h-32 w-32 bg-notification-popover text-notification-popover-foreground hover:bg-notification-popover/90 transition-colors flex flex-col items-center justify-center text-center space-y-2">
         <CardContent className="p-2 flex flex-col items-center justify-center text-center space-y-2">
             <div className="flex items-center justify-center bg-muted rounded-full w-10 h-10">
                 <Plus className="h-5 w-5 text-muted-foreground" />
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
           description="From all loans"
         />
       </div>
-      <Card className="bg-notification-popover text-notification-popover-foreground">
+      <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Recent Users</CardTitle>
