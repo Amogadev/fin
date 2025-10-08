@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -102,7 +101,7 @@ export default function DashboardLayout({
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
       <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border rounded-full shadow-lg overflow-hidden">
-        <div className="flex justify-around items-center h-full max-w-sm mx-auto px-4">
+        <div className="flex justify-around items-center h-full max-w-lg mx-auto px-4">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -120,6 +119,28 @@ export default function DashboardLayout({
               </Link>
             );
           })}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={`flex flex-col items-center justify-center gap-1 w-20 h-full transition-colors text-muted-foreground hover:text-accent-foreground/80`}
+              >
+                <Settings className="h-6 w-6" />
+                <span className="text-xs">Settings</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="top"
+              align="center"
+              className="mb-2"
+            >
+              <DropdownMenuItem asChild>
+                <Link href="/">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log Out</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
     </div>
