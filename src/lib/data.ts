@@ -83,18 +83,15 @@ export const getVaultData = async (): Promise<Vault> => {
 
 export const getUsers = async (): Promise<User[]> => {
   let allUsers = [...mockUsers];
-  // Check for new loans in localStorage and add them to the corresponding user
+  
   if (typeof window !== 'undefined') {
-    const tempUserJson = localStorage.getItem('temp_new_user');
-    if (tempUserJson) {
-        const tempUser = JSON.parse(tempUserJson);
-        if (!allUsers.find(u => u.id === tempUser.id)) {
-            allUsers.push({
-                ...tempUser,
-                createdAt: new Date().toISOString(),
-                loans: [],
-            });
-        }
+    // This logic handles multiple users stored in an array in localStorage
+    const tempUsersJson = localStorage.getItem('temp_new_users');
+    if (tempUsersJson) {
+      const tempUsers = JSON.parse(tempUsersJson);
+      const existingUserIds = new Set(allUsers.map(u => u.id));
+      const newUsers = tempUsers.filter((u: User) => !existingUserIds.has(u.id));
+      allUsers = [...allUsers, ...newUsers];
     }
 
     allUsers.forEach(user => {

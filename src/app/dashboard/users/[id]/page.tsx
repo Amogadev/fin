@@ -37,23 +37,7 @@ export default function UserDetailPage({
 
   useEffect(() => {
     async function loadUser() {
-      // Try to get user from mock data first
       let userData = await getUserById(id);
-
-      // If not found, check localStorage for a newly created user (demo purpose)
-      if (!userData) {
-        const tempUserJson = localStorage.getItem('temp_new_user');
-        if (tempUserJson) {
-          const tempUser = JSON.parse(tempUserJson);
-          if (tempUser.id === id) {
-            userData = {
-              ...tempUser,
-              createdAt: new Date().toISOString(),
-              loans: [],
-            };
-          }
-        }
-      }
       
       // Check for new loans in localStorage
       if (userData) {

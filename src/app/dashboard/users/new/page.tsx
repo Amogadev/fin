@@ -52,7 +52,9 @@ export default function NewUserPage() {
       }
     };
 
-    getCameraPermission();
+    if (!faceImageBase64) {
+      getCameraPermission();
+    }
     
     return () => {
       // Stop camera stream when component unmounts
@@ -61,7 +63,7 @@ export default function NewUserPage() {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [toast]);
+  }, [toast, faceImageBase64]);
 
   const captureFace = () => {
     if (videoRef.current && canvasRef.current) {
@@ -85,16 +87,6 @@ export default function NewUserPage() {
   
   const retakePhoto = async () => {
     setFaceImageBase64(null);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      setHasCameraPermission(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-      setHasCameraPermission(false);
-    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -118,17 +110,22 @@ export default function NewUserPage() {
         idProof,
         faceImageBase64,
         faceImageUrl: faceImageBase64, // For demo, use the base64 as the URL
+        createdAt: new Date().toISOString(),
+        loans: [],
       };
 
       console.log("Creating new user:", newUser);
+      
+      const tempUsersJson = localStorage.getItem('temp_new_users');
+      const tempUsers = tempUsersJson ? JSON.parse(tempUsersJson) : [];
+      tempUsers.push(newUser);
+      localStorage.setItem('temp_new_users', JSON.stringify(tempUsers));
 
       toast({
         title: "User Created",
         description: `${name} has been registered successfully.`,
       });
       
-      localStorage.setItem('temp_new_user', JSON.stringify(newUser));
-
       router.push(`/dashboard/users/${newUser.id}`);
 
       setIsSubmitting(false);
