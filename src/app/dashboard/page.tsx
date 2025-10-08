@@ -48,11 +48,16 @@ function UserCard({ user }: { user: User }) {
           <UserIcon className="h-8 w-8 text-muted-foreground" />
           <div>
             <p className="font-semibold text-sm">{user.name}</p>
-            <p className="text-xs text-muted-foreground">
-              {totalLoanAmount > 0
-                ? `₹${totalLoanAmount.toLocaleString("en-IN")} ${latestLoanType ? `(${latestLoanType.replace('Standard ', '')})` : ''}`.trim()
-                : user.registrationType === 'Diwali Fund' ? 'Diwali Fund' : "No active loans"}
-            </p>
+            {totalLoanAmount > 0 ? (
+                <div>
+                    <p className="text-xs text-foreground">₹{totalLoanAmount.toLocaleString("en-IN")}</p>
+                    <p className="text-xs text-muted-foreground">({latestLoanType?.replace('Standard ', '')})</p>
+                </div>
+            ) : (
+                 <p className="text-xs text-muted-foreground">
+                    {user.registrationType === 'Diwali Fund' ? 'Diwali Fund' : "No active loans"}
+                 </p>
+            )}
           </div>
         </CardContent>
       </Card>
