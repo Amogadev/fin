@@ -24,7 +24,7 @@ function UserCard({ user }: { user: User }) {
   const loanStatusVariant = user.loans.some((l) => l.status === "Overdue")
     ? "destructive"
     : user.loans.some((l) => l.status === "Active")
-    ? "outline"
+    ? "success"
     : "secondary";
 
   return (

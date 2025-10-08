@@ -188,7 +188,7 @@ export default function UserDetailPage({
                               loan.status === "Overdue"
                                 ? "destructive"
                                 : loan.status === "Active"
-                                ? "outline"
+                                ? "success"
                                 : "secondary"
                             }
                           >
