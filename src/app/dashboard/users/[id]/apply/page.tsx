@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import Link from "next/link";
 import PageHeader from "@/components/page-header";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,8 @@ const LOAN_TYPE_CONFIG = {
   emi: { interestRate: 0.12, label: "EMI" }, // 12%
 };
 
-export default function ApplyLoanPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function ApplyLoanPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  const { id } = use(paramsPromise);
   const [amount, setAmount] = useState(10000);
   const [loanType, setLoanType] = useState<"loan" | "emi">("loan");
 
