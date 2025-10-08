@@ -27,7 +27,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-background">
+    <main className="flex items-center justify-center min-h-screen bg-muted">
       <Card className="w-full max-w-sm mx-auto shadow-2xl">
         <CardHeader className="text-center">
           <div className="mb-4 inline-block mx-auto">
@@ -68,7 +68,7 @@ export default function LoginPage() {
             </div>
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90"
+              className="w-full"
             >
               Login
             </Button>

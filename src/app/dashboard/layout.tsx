@@ -32,16 +32,13 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [transactionsPromise, setTransactionsPromise] = useState<Promise<TransactionWithUser[]>>();
+  const [transactions, setTransactions] = useState<TransactionWithUser[]>([]);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    setTransactionsPromise(getAllTransactions());
+    getAllTransactions().then(setTransactions);
   }, [pathname]); // Refetch on path change
-
-  const transactions = transactionsPromise ? use(transactionsPromise) : [];
-
 
   const menuItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -52,7 +49,7 @@ export default function DashboardLayout({
   const notificationCount = isClient ? transactions.length : 0;
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-muted/50">
       <header className="flex items-center justify-between p-4 border-b bg-card">
         <div>
           <p className="text-sm text-muted-foreground">Welcome Back!</p>
@@ -73,7 +70,7 @@ export default function DashboardLayout({
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-80 bg-notification-popover text-notification-popover-foreground"
+              className="w-80"
             >
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
