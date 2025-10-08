@@ -32,7 +32,7 @@ export default function DashboardLayout({
       <header className="flex items-center justify-between p-4 border-b bg-card">
         <div>
           <p className="text-sm text-muted-foreground">Welcome Back!</p>
-          <h2 className="text-2xl font-bold font-headline">Hi, Siyam.</h2>
+          <h2 className="text-2xl font-bold font-headline">Hi.</h2>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="relative">
