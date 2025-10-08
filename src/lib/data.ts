@@ -1,4 +1,6 @@
 
+import { addDays, addMonths, addYears } from 'date-fns';
+
 export type User = {
   id: string;
   name: string;
@@ -22,6 +24,7 @@ export type Loan = {
   loanType: 'Loan' | 'EMI';
   paymentFrequency: 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
   createdAt: string;
+  dueDate: string;
   transactions: Transaction[];
 };
 
@@ -64,14 +67,35 @@ function getStoredLoans(): Record<string, Loan[]> {
   return tempLoansJson ? JSON.parse(tempLoansJson) : {};
 }
 
+function checkAndUpdateLoanStatus(loan: Loan): Loan {
+    if (loan.status === 'Paid') {
+        return loan;
+    }
+
+    const today = new Date();
+    today.setHours(0,0,0,0); // Normalize today's date
+    const dueDate = new Date(loan.dueDate);
+     dueDate.setHours(0,0,0,0); // Normalize due date
+
+    if (today > dueDate) {
+        return { ...loan, status: 'Overdue' };
+    }
+
+    return loan;
+}
+
+
 function mergeData(users: User[], allLoans: Record<string, Loan[]>): User[] {
     return users.map(user => {
-        const userLoans = allLoans[user.id] || [];
+        const userLoans = (allLoans[user.id] || []).map(checkAndUpdateLoanStatus);
         const existingLoanIds = new Set(user.loans.map(l => l.id));
         const newLoans = userLoans.filter((l: Loan) => !existingLoanIds.has(l.id));
+        
+        const updatedExistingLoans = user.loans.map(checkAndUpdateLoanStatus);
+        
         return {
             ...user,
-            loans: [...user.loans, ...newLoans]
+            loans: [...updatedExistingLoans, ...newLoans]
         };
     });
 }
@@ -117,7 +141,7 @@ export const getUsers = async (): Promise<User[]> => {
   const storedLoans = getStoredLoans();
 
   const mergedUsers = storedUsers.map(user => {
-      const userLoans = storedLoans[user.id] || [];
+      const userLoans = (storedLoans[user.id] || []).map(checkAndUpdateLoanStatus);
       return { ...user, loans: userLoans };
   });
 
@@ -126,7 +150,11 @@ export const getUsers = async (): Promise<User[]> => {
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
   const allUsers = await getUsers();
-  return Promise.resolve(allUsers.find(u => u.id === id));
+  const user = allUsers.find(u => u.id === id);
+  if (user) {
+    user.loans = user.loans.map(checkAndUpdateLoanStatus);
+  }
+  return Promise.resolve(user);
 };
 
 export const getAllTransactions = async (): Promise<TransactionWithUser[]> => {
