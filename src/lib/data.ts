@@ -1,3 +1,4 @@
+
 export type User = {
   id: string;
   name: string;
@@ -41,7 +42,7 @@ export type Vault = {
 const mockUsers: User[] = [];
 
 const mockVault: Vault = {
-  balance: 0,
+  balance: 100000,
   totalLoansGiven: 0,
   totalInterestEarned: 0,
 };
@@ -52,7 +53,32 @@ export type TransactionWithUser = Transaction & {
 };
 
 export const getVaultData = async (): Promise<Vault> => {
-  return Promise.resolve(mockVault);
+  // In a real app, fetch this from a database.
+  // For this demo, we'll simulate it and aggregate data from users.
+  const users = await getUsers();
+  let totalLoansGiven = 0;
+  let totalInterestEarned = 0;
+  let totalRepaid = 0;
+
+  users.forEach(user => {
+    user.loans.forEach(loan => {
+      totalLoansGiven += loan.principal;
+      totalRepaid += loan.amountRepaid;
+      // Simplified interest calculation for demo
+      if (loan.amountRepaid > loan.principal) {
+          totalInterestEarned += (loan.amountRepaid - loan.principal);
+      }
+    });
+  });
+
+  // Initial balance minus loans given out plus repayments received
+  const currentBalance = mockVault.balance - totalLoansGiven + totalRepaid;
+
+  return Promise.resolve({
+      balance: currentBalance,
+      totalLoansGiven,
+      totalInterestEarned
+  });
 };
 
 export const getUsers = async (): Promise<User[]> => {
