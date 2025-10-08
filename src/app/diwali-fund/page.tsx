@@ -173,56 +173,6 @@ export default function DiwaliFundPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid gap-8 md:grid-cols-3">
 
-          {/* Column 1: Plan & Info */}
-          <div className="md:col-span-1 space-y-8">
-            <Alert>
-                <Info className="h-4 w-4" />
-                <AlertTitle>How it Works</AlertTitle>
-                <AlertDescription>
-                    Save ₹100, ₹1,000, or ₹5,000 weekly or monthly and receive a <span className="font-bold text-primary">+10% bonus</span> at Diwali. Early withdrawal will incur a 10% deduction on your total saved amount.
-                </AlertDescription>
-            </Alert>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Contribution Plan</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <Label>Contribution Amount</Label>
-                        <Select value={contribution?.toString()} onValueChange={(val) => setContribution(Number(val))}>
-                            <SelectTrigger><SelectValue placeholder="Select amount" /></SelectTrigger>
-                            <SelectContent>
-                                {CONTRIBUTION_AMOUNTS.map(amount => (
-                                    <SelectItem key={amount} value={amount.toString()}>₹{amount.toLocaleString('en-IN')}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Frequency</Label>
-                        <Select value={frequency} onValueChange={setFrequency}>
-                            <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
-                            <SelectContent>
-                                {FREQUENCIES.map(freq => (
-                                    <SelectItem key={freq} value={freq}>{freq}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </CardContent>
-            </Card>
-            <Card className="bg-primary text-primary-foreground">
-                <CardHeader>
-                    <CardTitle>Estimated Diwali Return</CardTitle>
-                    <CardDescription className="text-primary-foreground/80">Your total contribution plus your 10% bonus.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-3xl font-bold">₹{Math.round(estimatedReturn).toLocaleString('en-IN')}</p>
-                </CardContent>
-            </Card>
-          </div>
-          
-          {/* Column 2 & 3: User Details */}
           <div className="md:col-span-2">
             <Card>
               <CardHeader>
@@ -284,6 +234,54 @@ export default function DiwaliFundPage() {
               </CardContent>
             </Card>
           </div>
+          
+          <div className="md:col-span-1 space-y-8">
+            <Alert>
+                <Info className="h-4 w-4" />
+                <AlertTitle>How it Works</AlertTitle>
+                <AlertDescription>
+                    Save ₹100, ₹1,000, or ₹5,000 weekly or monthly and receive a <span className="font-bold text-primary">+10% bonus</span> at Diwali. Early withdrawal will incur a 10% deduction on your total saved amount.
+                </AlertDescription>
+            </Alert>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Contribution Plan</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                        <Label>Contribution Amount</Label>
+                        <Select value={contribution?.toString()} onValueChange={(val) => setContribution(Number(val))}>
+                            <SelectTrigger><SelectValue placeholder="Select amount" /></SelectTrigger>
+                            <SelectContent>
+                                {CONTRIBUTION_AMOUNTS.map(amount => (
+                                    <SelectItem key={amount} value={amount.toString()}>₹{amount.toLocaleString('en-IN')}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Frequency</Label>
+                        <Select value={frequency} onValueChange={setFrequency}>
+                            <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
+                            <SelectContent>
+                                {FREQUENCIES.map(freq => (
+                                    <SelectItem key={freq} value={freq}>{freq}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card className="bg-primary text-primary-foreground">
+                <CardHeader>
+                    <CardTitle>Estimated Diwali Return</CardTitle>
+                    <CardDescription className="text-primary-foreground/80">Your total contribution plus your 10% bonus.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-3xl font-bold">₹{Math.round(estimatedReturn).toLocaleString('en-IN')}</p>
+                </CardContent>
+            </Card>
+          </div>
         </div>
 
         <div className="flex justify-end pt-4">
@@ -302,3 +300,5 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
+
+    
