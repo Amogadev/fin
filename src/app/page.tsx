@@ -45,7 +45,6 @@ export default function LoginPage() {
                 type="email"
                 placeholder="admin@example.com"
                 required
-                defaultValue="login@gmail.com"
               />
             </div>
             <div className="grid gap-2 relative">
@@ -54,7 +53,6 @@ export default function LoginPage() {
                 id="password" 
                 type={showPassword ? "text" : "password"} 
                 required 
-                defaultValue="12345" 
                 className="pr-10"
               />
               <Button

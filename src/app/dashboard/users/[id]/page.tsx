@@ -73,19 +73,6 @@ export default function UserDetailPage({
     }
 
     loadUser();
-
-    // Clean up localStorage after a short delay to avoid stale data
-    const timer = setTimeout(() => {
-        if (localStorage.getItem('temp_new_user')) {
-            const tempUser = JSON.parse(localStorage.getItem('temp_new_user')!);
-            if (tempUser.id === id) {
-                localStorage.removeItem('temp_new_user');
-            }
-        }
-    }, 500);
-
-    return () => clearTimeout(timer);
-
   }, [id]);
 
   if (user === undefined) {
