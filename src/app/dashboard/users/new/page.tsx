@@ -191,13 +191,13 @@ function LoanUserForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col items-center justify-center space-y-4">
-                <div className="w-40 h-40 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
+                <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
                   ) : isCameraOpen ? (
                     <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
                   ) : (
-                    <Camera className="h-12 w-12 text-muted-foreground" />
+                    <Camera className="h-10 w-10 text-muted-foreground" />
                   )}
                   <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
