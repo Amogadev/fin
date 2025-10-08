@@ -81,7 +81,7 @@ export default async function DashboardPage() {
           description="From all loans"
         />
       </div>
-      <Card className="bg-notification-popover text-notification-popover-foreground">
+      <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Recent Users</CardTitle>
