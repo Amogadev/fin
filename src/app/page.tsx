@@ -28,7 +28,7 @@ export default function LoginPage() {
   return (
     <main className="grid min-h-screen">
       <div className="flex items-center justify-center bg-background p-4">
-        <Card className="w-full max-w-sm mx-auto shadow-2xl">
+        <Card className="w-full max-w-xs mx-auto shadow-2xl">
           <CardHeader className="text-center">
             <div className="mb-4 inline-block mx-auto">
               <Logo />
