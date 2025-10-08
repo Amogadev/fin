@@ -40,7 +40,7 @@ function UserCard({ user }: { user: User }) {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="px-3 pb-2 text-xs">
+      <CardContent className="px-3 pb-2 text-xs space-y-1">
         <div className="flex justify-between">
           <span className="text-muted-foreground">ID Proof:</span>
           <span className="text-xs">{user.idProof}</span>
