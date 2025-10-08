@@ -26,6 +26,7 @@ const LOAN_TYPE_CONFIG = {
 };
 
 export default function ApplyLoanPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [amount, setAmount] = useState(10000);
   const [loanType, setLoanType] = useState<"loan" | "emi">("loan");
 
@@ -43,7 +44,7 @@ export default function ApplyLoanPage({ params }: { params: { id: string } }) {
     <div className="space-y-6">
       <PageHeader title="New Loan Application">
         <Button asChild variant="outline" size="sm">
-          <Link href={`/dashboard/users/${params.id}`}>
+          <Link href={`/dashboard/users/${id}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to User
           </Link>
@@ -166,7 +167,7 @@ export default function ApplyLoanPage({ params }: { params: { id: string } }) {
                     ₹{totalOwed.toLocaleString("en-IN")}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-accent" />
                     <span>Interest ({interestRate * 100}%):</span>
