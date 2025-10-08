@@ -30,7 +30,7 @@ export default function LoginPage() {
   return (
     <main className="grid md:grid-cols-2 min-h-screen">
       <div className="hidden md:flex items-center justify-center p-8">
-        <div className="relative w-full max-w-sm aspect-square">
+        <div className="relative w-full max-w-xs aspect-square">
             <Image
                 src="/finance.jpg"
                 alt="Financial background"
@@ -41,7 +41,7 @@ export default function LoginPage() {
         </div>
       </div>
       <div className="flex items-center justify-center bg-muted p-4">
-        <Card className="w-full max-w-sm mx-auto shadow-2xl">
+        <Card className="w-full max-w-xs mx-auto shadow-2xl">
           <CardHeader className="text-center">
             <div className="mb-4 inline-block mx-auto">
               <Logo />
