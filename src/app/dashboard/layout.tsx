@@ -56,9 +56,11 @@ function ThemeToggle() {
   };
 
   return (
-     <div className="flex items-center space-x-2 px-2 py-1.5" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-      {theme === 'light' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-      <Label htmlFor="dark-mode-switch" className="text-sm">Dark Mode</Label>
+     <div className="flex items-center space-x-2 px-2 py-1.5" onClick={(e) => { e.stopPropagation(); }}>
+      <Label htmlFor="dark-mode-switch" className="flex items-center gap-2 text-sm cursor-pointer">
+        {theme === 'light' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        <span>Dark Mode</span>
+      </Label>
       <Switch
         id="dark-mode-switch"
         checked={theme === 'dark'}
@@ -167,7 +169,9 @@ export default function DashboardLayout({
               align="center"
               className="mb-2"
             >
-              <ThemeToggle />
+              <div onMouseDown={(e) => e.preventDefault()}>
+                <ThemeToggle />
+              </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href="/">
