@@ -141,7 +141,12 @@ export default function DashboardPage() {
                 title="Wallet Balance"
                 value={`₹${(vaultData.balance).toLocaleString("en-IN")}`}
                 icon={Landmark}
-                description="Total available funds"
+                description={
+                    <>
+                    <p>Total available funds</p>
+                    <p className="text-xs text-muted-foreground/80">Initial Balance: ₹1,00,000</p>
+                    </>
+                }
                 />
                 <StatCard
                 title="Total Loans Given"
