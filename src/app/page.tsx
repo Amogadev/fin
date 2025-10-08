@@ -2,12 +2,10 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -28,67 +26,66 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="grid md:grid-cols-2 min-h-screen">
-      <div className="hidden md:flex items-center justify-center p-8">
-        <div className="relative w-full max-w-xs aspect-square">
-            <Image
-                src="/finance.jpg"
-                alt="Financial background"
-                fill
-                className="object-contain"
-                data-ai-hint="finance abstract"
-            />
-        </div>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-muted p-4 space-y-8">
+      <div className="w-full max-w-xs">
+          <div className="relative aspect-square">
+              <Image
+                  src="/finance.jpg"
+                  alt="Financial background"
+                  fill
+                  className="object-contain"
+                  data-ai-hint="finance abstract"
+              />
+          </div>
       </div>
-      <div className="flex items-center justify-center bg-muted p-4">
-        <Card className="w-full max-w-xs mx-auto shadow-2xl">
-          <CardHeader className="text-center">
-            <div className="mb-4 inline-block mx-auto">
-              <Logo />
+      
+      <Card className="w-full max-w-xs mx-auto shadow-2xl">
+        <CardHeader className="text-center">
+          <div className="mb-4 inline-block mx-auto">
+            <Logo />
+          </div>
+          <CardTitle className="text-xl font-headline">Admin Login</CardTitle>
+          
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLoginSubmit} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="admin@example.com"
+                required
+              />
             </div>
-            <CardTitle className="text-xl font-headline">Admin Login</CardTitle>
-            
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLoginSubmit} className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="admin@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2 relative">
-                <Label htmlFor="password">Password</Label>
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"} 
-                  required 
-                  className="pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff /> : <Eye />}
-                  <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
-                </Button>
-              </div>
+            <div className="grid gap-2 relative">
+              <Label htmlFor="password">Password</Label>
+              <Input 
+                id="password" 
+                type={showPassword ? "text" : "password"} 
+                required 
+                className="pr-10"
+              />
               <Button
-                type="submit"
-                className="w-full"
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                Login
+                {showPassword ? <EyeOff /> : <Eye />}
+                <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
               </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+            </div>
+            <Button
+              type="submit"
+              className="w-full"
+            >
+              Login
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </main>
   );
 }
