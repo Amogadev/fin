@@ -24,7 +24,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 function UserCard({ user }: { user: User }) {
   const activeLoans = user.loans.filter(loan => loan.status === 'Active' || loan.status === 'Overdue');
   const totalLoanAmount = activeLoans.reduce((acc, loan) => acc + (loan.totalOwed - loan.amountRepaid), 0);
-  const latestLoanType = activeLoans.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]?.loanType;
+  const latestLoan = activeLoans.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+  const latestLoanType = latestLoan?.loanType;
 
   return (
     <Link href={`/dashboard/users/${user.id}`} className="block">
@@ -49,7 +50,7 @@ function UserCard({ user }: { user: User }) {
             <p className="font-semibold text-sm">{user.name}</p>
             <p className="text-xs text-muted-foreground">
               {totalLoanAmount > 0
-                ? `₹${totalLoanAmount.toLocaleString("en-IN")} ${latestLoanType ? `(${latestLoanType})` : ''}`.trim()
+                ? `₹${totalLoanAmount.toLocaleString("en-IN")} ${latestLoanType ? `(${latestLoanType.replace('Standard ', '')})` : ''}`.trim()
                 : user.registrationType === 'Diwali Fund' ? 'Diwali Fund' : "No active loans"}
             </p>
           </div>
