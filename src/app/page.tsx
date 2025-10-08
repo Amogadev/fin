@@ -26,20 +26,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="grid min-h-screen md:grid-cols-2">
-      <div className="hidden items-center justify-center bg-muted p-4 md:flex">
-        <div className="w-full max-w-xs">
-          <div className="relative aspect-square">
-            <Image
-              src="/finance.jpg"
-              alt="Financial background"
-              fill
-              className="object-contain"
-              data-ai-hint="finance abstract"
-            />
-          </div>
-        </div>
-      </div>
+    <main className="grid min-h-screen">
       <div className="flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-xs mx-auto shadow-2xl">
           <CardHeader className="text-center">
