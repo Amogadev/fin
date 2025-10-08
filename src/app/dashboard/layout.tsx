@@ -56,7 +56,7 @@ function ThemeToggle() {
   };
 
   return (
-     <div className="flex items-center space-x-2 px-2 py-1.5">
+     <div className="flex items-center space-x-2 px-2 py-1.5" onClick={(e) => e.preventDefault()}>
       {theme === 'light' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
       <Label htmlFor="dark-mode-switch" className="text-sm">Dark Mode</Label>
       <Switch
