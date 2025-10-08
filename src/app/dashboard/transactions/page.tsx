@@ -97,7 +97,7 @@ export default function TransactionsPage() {
                     <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
                      <TableCell>
                       <Badge variant={tx.type === 'Disbursement' ? 'destructive' : 'success'}>
-                        {tx.type === 'Disbursement' ? 'Money Out' : 'Money In'}
+                        {tx.type === 'Disbursement' ? 'Debited' : 'Credited'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
