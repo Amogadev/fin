@@ -39,106 +39,107 @@ export type Vault = {
   totalInterestEarned: number;
 };
 
-const mockUsers: User[] = [];
-
-const mockVault: Vault = {
+// Initial state for the vault. In a real app, this would come from a persistent store.
+const initialVaultState: Vault = {
   balance: 100000,
   totalLoansGiven: 0,
   totalInterestEarned: 0,
 };
+
 
 export type TransactionWithUser = Transaction & {
     userId: string;
     userName: string;
 };
 
+function getStoredUsers(): User[] {
+  if (typeof window === 'undefined') return [];
+  const tempUsersJson = localStorage.getItem('temp_new_users');
+  return tempUsersJson ? JSON.parse(tempUsersJson) : [];
+}
+
+function getStoredLoans(): Record<string, Loan[]> {
+  if (typeof window === 'undefined') return {};
+  const tempLoansJson = localStorage.getItem('temp_new_loans');
+  return tempLoansJson ? JSON.parse(tempLoansJson) : {};
+}
+
+function mergeData(users: User[], allLoans: Record<string, Loan[]>): User[] {
+    return users.map(user => {
+        const userLoans = allLoans[user.id] || [];
+        const existingLoanIds = new Set(user.loans.map(l => l.id));
+        const newLoans = userLoans.filter((l: Loan) => !existingLoanIds.has(l.id));
+        return {
+            ...user,
+            loans: [...user.loans, ...newLoans]
+        };
+    });
+}
+
+
 export const getVaultData = async (): Promise<Vault> => {
-  // In a real app, fetch this from a database.
-  // For this demo, we'll simulate it and aggregate data from users.
   const users = await getUsers();
+  
   let totalLoansGiven = 0;
-  let totalInterestEarned = 0;
   let totalRepaid = 0;
 
   users.forEach(user => {
     user.loans.forEach(loan => {
       totalLoansGiven += loan.principal;
-      totalRepaid += loan.amountRepaid;
-      // Simplified interest calculation for demo
-      if (loan.amountRepaid > loan.principal) {
-          totalInterestEarned += (loan.amountRepaid - loan.principal);
-      }
+      loan.transactions.forEach(tx => {
+        if(tx.type === 'Repayment') {
+            totalRepaid += tx.amount;
+        }
+      })
     });
   });
+  
+  const interestEarned = users.flatMap(u => u.loans).reduce((acc, loan) => {
+    // A more accurate way to calculate earned interest based on repayments
+    const repaidTowardsPrincipal = Math.min(loan.amountRepaid, loan.principal);
+    const repaidTowardsInterest = Math.max(0, loan.amountRepaid - repaidTowardsPrincipal);
+    return acc + repaidTowardsInterest;
+  }, 0);
 
-  // Initial balance minus loans given out plus repayments received
-  const currentBalance = mockVault.balance - totalLoansGiven + totalRepaid;
+  const currentBalance = initialVaultState.balance - totalLoansGiven + totalRepaid;
 
   return Promise.resolve({
       balance: currentBalance,
       totalLoansGiven,
-      totalInterestEarned
+      totalInterestEarned: interestEarned,
   });
 };
 
 export const getUsers = async (): Promise<User[]> => {
-  let allUsers = [...mockUsers];
-  
-  if (typeof window !== 'undefined') {
-    // This logic handles multiple users stored in an array in localStorage
-    const tempUsersJson = localStorage.getItem('temp_new_users');
-    if (tempUsersJson) {
-      const tempUsers = JSON.parse(tempUsersJson);
-      const existingUserIds = new Set(allUsers.map(u => u.id));
-      const newUsers = tempUsers.filter((u: User) => !existingUserIds.has(u.id));
-      allUsers = [...allUsers, ...newUsers];
-    }
+  if (typeof window === 'undefined') return [];
 
-    allUsers.forEach(user => {
-      const tempLoansJson = localStorage.getItem('temp_new_loans');
-      if (tempLoansJson) {
-        const tempLoans = JSON.parse(tempLoansJson);
-        if (tempLoans[user.id]) {
-          const existingLoanIds = new Set(user.loans.map(l => l.id));
-          const newLoans = tempLoans[user.id].filter((l: Loan) => !existingLoanIds.has(l.id));
-          user.loans = [...user.loans, ...newLoans];
-        }
-      }
-    });
-  }
-  return Promise.resolve(allUsers);
+  const storedUsers = getStoredUsers();
+  const storedLoans = getStoredLoans();
+
+  const mergedUsers = storedUsers.map(user => {
+      const userLoans = storedLoans[user.id] || [];
+      return { ...user, loans: userLoans };
+  });
+
+  return Promise.resolve(mergedUsers);
 };
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
-  // This combines static mock data with dynamically added users from localStorage
   const allUsers = await getUsers();
-  const user = allUsers.find(u => u.id === id);
-
-  if (user && typeof window !== 'undefined') {
-    const tempLoansJson = localStorage.getItem('temp_new_loans');
-    if (tempLoansJson) {
-        const tempLoans = JSON.parse(tempLoansJson);
-        if (tempLoans[id]) {
-            const existingLoanIds = new Set(user.loans.map(l => l.id));
-            const newLoans = tempLoans[id].filter((l: Loan) => !existingLoanIds.has(l.id));
-            user.loans = [...user.loans, ...newLoans];
-        }
-    }
-  }
-
-  return Promise.resolve(user);
+  return Promise.resolve(allUsers.find(u => u.id === id));
 };
 
 export const getAllTransactions = async (): Promise<TransactionWithUser[]> => {
     const allUsers = await getUsers();
-    const allTxs = allUsers.flatMap(user => 
-        user.loans.flatMap(loan => 
-            loan.transactions.map(tx => ({
+    const allTxs = allUsers.flatMap(user => {
+        const userLoans = user.loans || [];
+        return userLoans.flatMap(loan => 
+            (loan.transactions || []).map(tx => ({
                 ...tx,
                 userId: user.id,
                 userName: user.name,
             }))
         )
-    );
+    });
     return Promise.resolve(allTxs.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
 }

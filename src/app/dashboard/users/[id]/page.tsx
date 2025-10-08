@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { ShieldCheck, PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
+import { IndianRupee, PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect, useState, use } from "react";
 
 export default function UserDetailPage({
@@ -118,8 +118,8 @@ export default function UserDetailPage({
                   </Link>
                 </Button>
                 <Button asChild variant="accent">
-                  <Link href={`/dashboard/users/${user.id}/verify`}>
-                    <ShieldCheck className="mr-2 h-4 w-4" /> Verify Identity
+                  <Link href={`/dashboard/users/${user.id}/repay`}>
+                    <IndianRupee className="mr-2 h-4 w-4" /> Repay Loan
                   </Link>
                 </Button>
               </div>
