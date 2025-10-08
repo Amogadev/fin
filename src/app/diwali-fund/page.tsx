@@ -160,23 +160,23 @@ export default function DiwaliFundPage() {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
-                <Label htmlFor="id-proof">Aadhaar Number</Label>
-                <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
+                    <Label htmlFor="id-proof">Aadhaar Number</Label>
+                    <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
                 </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4 items-start">
                 <div className="space-y-2">
                     <Label htmlFor="contact">Phone Number</Label>
                     <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
                 </div>
+            </div>
 
+            <div className="grid md:grid-cols-2 gap-4 items-start pt-4">
+                <div>{/* This empty div can be used for alignment or removed */}</div>
                 <div className="space-y-2">
                     <Label>Face Capture</Label>
                     <div className="w-full max-w-xs mx-auto aspect-square bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
