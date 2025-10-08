@@ -23,6 +23,8 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Pie, PieChart, Cell } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 import type { Loan } from "@/lib/data";
+import { getUsers } from "@/lib/data";
+
 
 const LOAN_TYPE_CONFIG = {
   loan: { interestRate: 0.1, label: "Standard Loan" }, // 10%
@@ -43,15 +45,15 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
   const interestRate = loanType ? LOAN_TYPE_CONFIG[loanType].interestRate : 0;
   const interest = amount * interestRate;
-  const principal = amount - interest;
-  const totalOwed = amount;
+  const principal = amount;
+  const totalOwed = principal + interest;
 
   const chartData = [
     { name: "Principal", value: principal, fill: "hsl(var(--primary))" },
     { name: "Interest", value: interest, fill: "hsl(var(--accent))" },
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!loanType || !paymentFrequency) {
       toast({
         variant: "destructive",
@@ -61,8 +63,14 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
       return;
     }
 
+    const allUsers = await getUsers();
+    const allLoans = allUsers.flatMap(u => u.loans);
+    const newLoanId = `loan${allLoans.length + 1}`;
+    const newTxnId = `txn${Date.now().toString().slice(-5)}`;
+
+
     const newLoan: Loan = {
-      id: `loan${Date.now().toString().slice(-5)}`,
+      id: newLoanId,
       userId,
       amountRequested: amount,
       interest,
@@ -75,18 +83,15 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
       createdAt: new Date().toISOString(),
       transactions: [
         {
-          id: `txn${Date.now().toString().slice(-5)}`,
-          loanId: '', // will be set below
+          id: newTxnId,
+          loanId: newLoanId,
           type: 'Disbursement',
           amount: principal,
           date: new Date().toISOString(),
         }
       ]
     };
-    newLoan.transactions[0].loanId = newLoan.id;
 
-    // In a real app, you would save this to a database.
-    // For this demo, we'll use localStorage to persist the new loan for the session.
     const tempLoansJson = localStorage.getItem('temp_new_loans');
     const tempLoans = tempLoansJson ? JSON.parse(tempLoansJson) : {};
     if (!tempLoans[userId]) {
@@ -246,24 +251,24 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
               <div className="w-full max-w-sm space-y-3 text-sm">
                 <Separator className="my-4" />
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Requested:</span>
+                  <span className="text-muted-foreground">Principal:</span>
                   <span className="font-medium">
-                    ₹{totalOwed.toLocaleString("en-IN")}
+                    ₹{principal.toLocaleString("en-IN")}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2">
+                <div className="flex justify-between items-center gap-2">
+                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-accent" />
                     <span>Interest ({interestRate * 100}%):</span>
                   </div>
                   <span className="font-medium">
-                    - ₹{interest.toLocaleString("en-IN")}
+                    ₹{interest.toLocaleString("en-IN")}
                   </span>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex justify-between font-semibold text-base">
-                  <span>Principal Disbursed:</span>
-                  <span>₹{principal.toLocaleString("en-IN")}</span>
+                  <span>Total Owed:</span>
+                  <span>₹{totalOwed.toLocaleString("en-IN")}</span>
                 </div>
               </div>
             </CardContent>
