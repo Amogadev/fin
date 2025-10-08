@@ -29,8 +29,10 @@ function EditUserSkeleton() {
         description="Update the user's personal information."
       >
         <Button asChild variant="outline">
+          <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Users
+          </Link>
         </Button>
       </PageHeader>
       <Card className="max-w-2xl mx-auto">
