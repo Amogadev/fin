@@ -8,6 +8,7 @@ import {
   LogOut,
   Settings,
   Receipt,
+  Bell,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -26,34 +27,20 @@ export default function DashboardLayout({
     { href: "/dashboard/transactions", label: "Transactions", icon: Receipt },
   ];
 
-  const getPageTitle = () => {
-    if (pathname.includes('/users/new')) return 'Register User';
-    if (pathname.match(/\/users\/user\d+$/)) return 'User Details';
-    if (pathname.includes('/apply')) return 'Loan Application';
-    if (pathname.includes('/verify')) return 'Verify Identity';
-    return pathname.split("/").pop()?.replace("-", " ") || "Dashboard";
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
       <header className="flex items-center justify-between p-4 border-b bg-card">
-        <h2 className="text-lg font-semibold font-headline capitalize">
-          {getPageTitle()}
-        </h2>
+        <div>
+          <p className="text-sm text-muted-foreground">Welcome Back!</p>
+          <h2 className="text-2xl font-bold font-headline">Hi, Siyam.</h2>
+        </div>
         <div className="flex items-center gap-4">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="https://picsum.photos/seed/admin/100" />
-            <AvatarFallback>A</AvatarFallback>
-          </Avatar>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
-            <span className="sr-only">Settings</span>
-          </Button>
-          <Button asChild variant="ghost" size="icon">
-            <Link href="/">
-              <LogOut className="h-5 w-5" />
-              <span className="sr-only">Logout</span>
-            </Link>
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-6 w-6" />
+            <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+              6
+            </span>
+            <span className="sr-only">Notifications</span>
           </Button>
         </div>
       </header>
