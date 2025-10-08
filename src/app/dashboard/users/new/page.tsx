@@ -29,42 +29,43 @@ function LoanUserForm() {
   
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [faceImageBase64, setFaceImageBase64] = useState<string | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const getCameraPermission = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasCameraPermission(true);
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings.',
-        });
-      }
-    };
-
-    if (!faceImageBase64) {
-      getCameraPermission();
-    }
-    
+    // Stop camera stream when component unmounts or image is captured
     return () => {
-      // Stop camera stream when component unmounts
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [toast, faceImageBase64]);
+  }, [faceImageBase64]);
+
+  const openCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setHasCameraPermission(true);
+      setIsCameraOpen(true);
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setHasCameraPermission(false);
+      setIsCameraOpen(false);
+      toast({
+        variant: 'destructive',
+        title: 'Camera Access Denied',
+        description: 'Please enable camera permissions in your browser settings.',
+      });
+    }
+  }
+
 
   const captureFace = () => {
     if (videoRef.current && canvasRef.current) {
@@ -77,6 +78,7 @@ function LoanUserForm() {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         const dataUri = canvas.toDataURL('image/png');
         setFaceImageBase64(dataUri);
+        setIsCameraOpen(false); // Close camera view
         // Stop the camera stream after capture
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
@@ -88,6 +90,7 @@ function LoanUserForm() {
   
   const retakePhoto = async () => {
     setFaceImageBase64(null);
+    setIsCameraOpen(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -191,8 +194,10 @@ function LoanUserForm() {
                 <div className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                  ) : (
+                  ) : isCameraOpen ? (
                     <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                  ) : (
+                    <Camera className="h-12 w-12 text-muted-foreground" />
                   )}
                   <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
@@ -206,15 +211,20 @@ function LoanUserForm() {
                   </Alert>
                 )}
                 
-                {!faceImageBase64 ? (
+                {faceImageBase64 ? (
+                  <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting}>
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                    Retake Photo
+                  </Button>
+                ) : isCameraOpen ? (
                     <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false}>
                       <Camera className="mr-2 h-4 w-4" />
                       Capture Photo
                     </Button>
                 ) : (
-                  <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting}>
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Retake Photo
+                  <Button type="button" onClick={openCamera} disabled={isSubmitting}>
+                     <Camera className="mr-2 h-4 w-4" />
+                    Open Camera
                   </Button>
                 )}
 

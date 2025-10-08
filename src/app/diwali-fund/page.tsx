@@ -31,42 +31,44 @@ export default function DiwaliFundPage() {
   
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [faceImageBase64, setFaceImageBase64] = useState<string | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const getCameraPermission = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasCameraPermission(true);
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings.',
-        });
-      }
-    };
-
-    if (!faceImageBase64) {
-      getCameraPermission();
-    }
-    
+    // Stop camera stream when component unmounts or image is captured
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [toast, faceImageBase64]);
+  }, [faceImageBase64]);
+
+
+  const openCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setHasCameraPermission(true);
+      setIsCameraOpen(true);
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setHasCameraPermission(false);
+      setIsCameraOpen(false);
+      toast({
+        variant: 'destructive',
+        title: 'Camera Access Denied',
+        description: 'Please enable camera permissions in your browser settings.',
+      });
+    }
+  }
+
 
   const captureFace = () => {
     if (videoRef.current && canvasRef.current) {
@@ -79,6 +81,7 @@ export default function DiwaliFundPage() {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         const dataUri = canvas.toDataURL('image/png');
         setFaceImageBase64(dataUri);
+        setIsCameraOpen(false);
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
           stream.getTracks().forEach(track => track.stop());
@@ -89,6 +92,7 @@ export default function DiwaliFundPage() {
 
   const retakePhoto = () => {
     setFaceImageBase64(null);
+    setIsCameraOpen(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -178,8 +182,10 @@ export default function DiwaliFundPage() {
                     <div className="w-full aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
                         {faceImageBase64 ? (
                             <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                        ) : (
+                        ) : isCameraOpen ? (
                             <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                        ) : (
+                            <Camera className="h-10 w-10 text-muted-foreground" />
                         )}
                         <canvas ref={canvasRef} className="hidden"></canvas>
                     </div>
@@ -188,13 +194,17 @@ export default function DiwaliFundPage() {
                             <AlertTitle>Camera Access Denied</AlertTitle>
                         </Alert>
                     )}
-                    {!faceImageBase64 ? (
+                    {faceImageBase64 ? (
+                        <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full">
+                            <RefreshCw className="mr-2 h-4 w-4" /> Retake Photo
+                        </Button>
+                    ) : isCameraOpen ? (
                         <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false} className="w-full">
                             <Camera className="mr-2 h-4 w-4" /> Capture Photo
                         </Button>
-                    ) : (
-                        <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full">
-                            <RefreshCw className="mr-2 h-4 w-4" /> Retake Photo
+                    ): (
+                       <Button type="button" onClick={openCamera} disabled={isSubmitting} className="w-full">
+                            <Camera className="mr-2 h-4 w-4" /> Open Camera
                         </Button>
                     )}
                 </div>
