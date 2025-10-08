@@ -5,7 +5,7 @@ export default function Logo() {
     <div className="flex items-center gap-2 text-primary">
       <ShieldCheck className="h-8 w-8 text-accent" />
       <h1 className="text-2xl font-bold font-headline tracking-tight">
-        VaultWise
+        Vault360
       </h1>
     </div>
   );

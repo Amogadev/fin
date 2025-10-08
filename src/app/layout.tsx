@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VaultWise",
+  title: "Vault360",
   description: "A Smart Finance / Loan Management System",
 };
 
