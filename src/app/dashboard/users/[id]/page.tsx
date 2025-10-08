@@ -35,16 +35,17 @@ export default function UserDetailPage({
   const router = useRouter();
 
   useEffect(() => {
+    const userId = params.id;
     async function loadUser() {
       // Try to get user from mock data first
-      let userData = await getUserById(params.id);
+      let userData = await getUserById(userId);
 
       // If not found, check localStorage for a newly created user (demo purpose)
       if (!userData) {
         const tempUserJson = localStorage.getItem('temp_new_user');
         if (tempUserJson) {
           const tempUser = JSON.parse(tempUserJson);
-          if (tempUser.id === params.id) {
+          if (tempUser.id === userId) {
             userData = {
               ...tempUser,
               createdAt: new Date().toISOString(),
@@ -63,7 +64,7 @@ export default function UserDetailPage({
     const timer = setTimeout(() => {
         if (localStorage.getItem('temp_new_user')) {
             const tempUser = JSON.parse(localStorage.getItem('temp_new_user')!);
-            if (tempUser.id === params.id) {
+            if (tempUser.id === userId) {
                 localStorage.removeItem('temp_new_user');
             }
         }
