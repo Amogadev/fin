@@ -101,7 +101,7 @@ export default function DashboardLayout({
         </div>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
-      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border-t rounded-full shadow-lg overflow-hidden">
+      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border rounded-full shadow-lg overflow-hidden">
         <div className="flex justify-around items-center h-full max-w-sm mx-auto px-4">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
