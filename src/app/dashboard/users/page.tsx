@@ -1,21 +1,71 @@
-import { getUsers } from "@/lib/data";
+import { getUsers, User } from "@/lib/data";
 import {
   Card,
   CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft } from "lucide-react";
+import { PlusCircle, ArrowLeft, ArrowRight } from "lucide-react";
 import PageHeader from "@/components/page-header";
+
+function UserCard({ user }: { user: User }) {
+  const loanStatus = user.loans.some((l) => l.status === "Overdue")
+    ? "Overdue"
+    : user.loans.some((l) => l.status === "Active")
+    ? "Active"
+    : "Clear";
+  
+  const loanStatusVariant = user.loans.some((l) => l.status === "Overdue")
+    ? "destructive"
+    : user.loans.some((l) => l.status === "Active")
+    ? "outline"
+    : "secondary";
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-4">
+          <Image
+            src={user.faceImageUrl}
+            alt={user.name}
+            width={64}
+            height={64}
+            className="rounded-full border object-cover"
+            data-ai-hint="person portrait"
+          />
+          <div>
+            <CardTitle>{user.name}</CardTitle>
+            <CardDescription>{user.contact}</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">ID Proof:</span>
+          <span>{user.idProof}</span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-muted-foreground">Loan Status:</span>
+          <Badge variant={loanStatusVariant}>{loanStatus}</Badge>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button asChild variant="outline" className="w-full">
+          <Link href={`/dashboard/users/${user.id}`}>
+            View Details
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
 
 export default async function UsersPage() {
   const users = await getUsers();
@@ -41,56 +91,11 @@ export default async function UsersPage() {
           </Button>
         </div>
       </PageHeader>
-      <Card className="bg-muted text-muted-foreground">
-        <CardContent className="pt-6">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>ID Proof</TableHead>
-                <TableHead>Loan Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>
-                    <div className="font-medium text-foreground">{user.name}</div>
-                  </TableCell>
-                  <TableCell>{user.contact}</TableCell>
-                  <TableCell>{user.idProof}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        user.loans.some((l) => l.status === "Overdue")
-                          ? "destructive"
-                          : user.loans.some((l) => l.status === "Active")
-                          ? "outline"
-                          : "secondary"
-                      }
-                    >
-                      {user.loans.some((l) => l.status === "Overdue")
-                        ? "Overdue"
-                        : user.loans.some((l) => l.status === "Active")
-                        ? "Active"
-                        : "Clear"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button asChild variant="outline" size="sm">
-                      <Link href={`/dashboard/users/${user.id}`}>
-                        View Details
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {users.map((user) => (
+          <UserCard key={user.id} user={user} />
+        ))}
+      </div>
     </div>
   );
 }
