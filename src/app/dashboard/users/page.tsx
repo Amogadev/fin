@@ -14,7 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, ArrowLeft } from "lucide-react";
 import PageHeader from "@/components/page-header";
 
 export default async function UsersPage() {
@@ -26,12 +26,20 @@ export default async function UsersPage() {
         title="Users"
         description="Manage all registered users and their loan accounts."
       >
-        <Button asChild>
-          <Link href="/dashboard/users/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Register New User
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/dashboard/users/new">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Register New User
+            </Link>
+          </Button>
+        </div>
       </PageHeader>
       <Card>
         <CardContent className="pt-6">
