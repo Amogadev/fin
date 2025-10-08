@@ -1,5 +1,7 @@
-import { notFound } from "next/navigation";
-import { getUserById } from "@/lib/data";
+"use client";
+
+import { notFound, useRouter } from "next/navigation";
+import { getUserById, type User } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import PageHeader from "@/components/page-header";
@@ -21,16 +23,65 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { ShieldCheck, PlusCircle, ArrowLeft } from "lucide-react";
+import { ShieldCheck, PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export default async function UserDetailPage({
+export default function UserDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const user = await getUserById(params.id);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const router = useRouter();
 
-  if (!user) {
+  useEffect(() => {
+    async function loadUser() {
+      // Try to get user from mock data first
+      let userData = await getUserById(params.id);
+
+      // If not found, check localStorage for a newly created user (demo purpose)
+      if (!userData) {
+        const tempUserJson = localStorage.getItem('temp_new_user');
+        if (tempUserJson) {
+          const tempUser = JSON.parse(tempUserJson);
+          if (tempUser.id === params.id) {
+            userData = {
+              ...tempUser,
+              createdAt: new Date().toISOString(),
+              loans: [],
+            };
+          }
+        }
+      }
+
+      setUser(userData || null);
+    }
+
+    loadUser();
+
+    // Clean up localStorage after a short delay
+    const timer = setTimeout(() => {
+        if (localStorage.getItem('temp_new_user')) {
+            const tempUser = JSON.parse(localStorage.getItem('temp_new_user')!);
+            if (tempUser.id === params.id) {
+                localStorage.removeItem('temp_new_user');
+            }
+        }
+    }, 500);
+
+    return () => clearTimeout(timer);
+
+  }, [params.id]);
+
+  if (user === undefined) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (user === null) {
     notFound();
   }
 
@@ -109,7 +160,7 @@ export default async function UserDetailPage({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {user.loans.length > 0 ? (
+                  {user.loans && user.loans.length > 0 ? (
                     user.loans.map((loan) => (
                       <TableRow key={loan.id}>
                         <TableCell className="font-mono">{loan.id}</TableCell>
