@@ -12,7 +12,7 @@ import { Skeleton } from "./ui/skeleton";
 interface StatCardProps {
   title: string;
   value: string;
-  description: string;
+  description: string | React.ReactNode;
   icon: LucideIcon;
 }
 

@@ -143,8 +143,8 @@ export default function DashboardPage() {
                 icon={Landmark}
                 description={
                     <div>
-                    <p>Total available funds</p>
-                    <p className="text-xs text-muted-foreground/80">Initial Balance: ₹1,00,000</p>
+                    <span>Total available funds</span>
+                    <span className="block text-xs text-muted-foreground/80">Initial Balance: ₹1,00,000</span>
                     </div>
                 }
                 />
