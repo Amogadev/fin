@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Logo from '@/components/logo';
 import { Eye, EyeOff } from 'lucide-react';
-import Image from 'next/image';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,6 +69,11 @@ export default function LoginPage() {
               </div>
               <Button type="submit" className="w-full">
                 Login
+              </Button>
+               <Button asChild variant="link" className="w-full">
+                <Link href="/dashboard" target="_blank">
+                  Open in new window
+                </Link>
               </Button>
             </form>
           </CardContent>
