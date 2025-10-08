@@ -11,6 +11,8 @@ import {
   Settings,
   Receipt,
   Bell,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { getAllTransactions } from "@/lib/data";
 
@@ -24,6 +26,46 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { TransactionWithUser } from "@/lib/data";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  return (
+     <div className="flex items-center space-x-2 px-2 py-1.5">
+      {theme === 'light' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      <Label htmlFor="dark-mode-switch" className="text-sm">Dark Mode</Label>
+      <Switch
+        id="dark-mode-switch"
+        checked={theme === 'dark'}
+        onCheckedChange={toggleTheme}
+      />
+    </div>
+  )
+}
 
 
 export default function DashboardLayout({
@@ -49,7 +91,7 @@ export default function DashboardLayout({
   const notificationCount = isClient ? transactions.length : 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-muted/50">
+    <div className="flex flex-col min-h-screen bg-muted/40 dark:bg-background">
       <header className="flex items-center justify-between p-4 border-b bg-card">
         <div>
           <p className="text-sm text-muted-foreground">Welcome Back!</p>
@@ -124,6 +166,8 @@ export default function DashboardLayout({
               align="center"
               className="mb-2"
             >
+              <ThemeToggle />
+              <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href="/">
                   <LogOut className="mr-2 h-4 w-4" />
