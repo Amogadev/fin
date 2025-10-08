@@ -25,6 +25,7 @@ function TransactionTableSkeleton() {
                 <TableHead>Transaction ID</TableHead>
                 <TableHead>User</TableHead>
                 <TableHead>Amount</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead className="text-right">Date</TableHead>
               </TableRow>
             </TableHeader>
@@ -34,6 +35,7 @@ function TransactionTableSkeleton() {
                         <TableCell><Skeleton className="h-5 w-24" /></TableCell>
                         <TableCell><Skeleton className="h-5 w-32" /></TableCell>
                         <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-20" /></TableCell>
                         <TableCell className="text-right"><Skeleton className="h-5 w-40 ml-auto" /></TableCell>
                     </TableRow>
                 ))}
@@ -82,6 +84,7 @@ export default function TransactionsPage() {
                 <TableHead>Transaction ID</TableHead>
                 <TableHead>User</TableHead>
                 <TableHead>Amount</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead className="text-right">Date</TableHead>
               </TableRow>
             </TableHeader>
@@ -92,6 +95,11 @@ export default function TransactionsPage() {
                     <TableCell className="font-mono">{tx.id}</TableCell>
                     <TableCell>{tx.userName}</TableCell>
                     <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
+                     <TableCell>
+                      <Badge variant={tx.type === 'Disbursement' ? 'destructive' : 'success'}>
+                        {tx.type}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-right">
                       {format(new Date(tx.date), "PPpp")}
                     </TableCell>
@@ -100,7 +108,7 @@ export default function TransactionsPage() {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
+                    colSpan={5}
                     className="h-24 text-center text-muted-foreground"
                   >
                     No transactions yet. Create a user and issue a loan to see
