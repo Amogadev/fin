@@ -1,6 +1,6 @@
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User, ArrowUpRight } from "lucide-react";
+import { IndianRupee, Users, Landmark, User, ArrowUpRight, Plus } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -13,48 +13,47 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 
 function UserCard({ user }: { user: import("@/lib/data").User }) {
-  const loanStatus = user.loans.some((l) => l.status === "Overdue")
-    ? "Overdue"
-    : user.loans.some((l) => l.status === "Active")
-    ? "Active"
-    : "Clear";
-  const loanVariant =
-    loanStatus === "Overdue"
-      ? "destructive"
-      : loanStatus === "Active"
-      ? "outline"
-      : "secondary";
-
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="flex flex-row items-center gap-4">
-        <Image
-          src={user.faceImageUrl}
-          alt={user.name}
-          width={40}
-          height={40}
-          className="rounded-full object-cover"
-          data-ai-hint="person portrait"
-        />
-        <div className="grid gap-1">
-          <CardTitle className="text-base">{user.name}</CardTitle>
-          <CardDescription className="text-xs">{user.contact}</CardDescription>
-        </div>
-      </CardHeader>
-      <CardContent className="flex-grow">
-        <Badge variant={loanVariant}>{loanStatus}</Badge>
-      </CardContent>
-      <CardFooter>
-        <Button asChild variant="outline" size="sm" className="w-full">
-          <Link href={`/dashboard/users/${user.id}`}>View Details</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+    <Link href={`/dashboard/users/${user.id}`} className="block">
+      <Card className="h-full hover:bg-muted/50 transition-colors">
+        <CardContent className="p-4 space-y-3">
+          <Image
+            src={user.faceImageUrl}
+            alt={user.name}
+            width={48}
+            height={48}
+            className="rounded-full object-cover"
+            data-ai-hint="person portrait"
+          />
+          <div className="space-y-1">
+            <p className="font-semibold">{user.name}</p>
+            <p className="text-sm text-muted-foreground">
+              {format(new Date(user.createdAt), "dd MMM")}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 
+function AddUserCard() {
+  return (
+    <Link href="/dashboard/users/new" className="block">
+      <Card className="h-full hover:bg-muted/50 transition-colors">
+        <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-2 h-full">
+            <div className="flex items-center justify-center bg-muted rounded-full w-12 h-12">
+                <Plus className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <p className="font-semibold text-sm">Add New User</p>
+        </CardContent>
+      </Card>
+    </Link>
+  )
+}
 
 export default async function DashboardPage() {
   const vaultData = await getVaultData();
@@ -97,10 +96,11 @@ export default async function DashboardPage() {
           </Button>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {recentUsers.map((user) => (
               <UserCard key={user.id} user={user} />
             ))}
+            <AddUserCard />
           </div>
         </CardContent>
       </Card>
