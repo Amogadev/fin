@@ -243,7 +243,7 @@ export default function NewUserPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="Register New User for LOAN/EMI"
+        title="Register New User for Loan / EMI"
         description="Collect personal information and capture a face image for identity verification."
       >
         <Button asChild variant="outline">
