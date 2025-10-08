@@ -18,9 +18,8 @@ import PageHeader from "@/components/page-header";
 import { Camera, ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-function LoanUserForm({ onBack }: { onBack: () => void }) {
+function LoanUserForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [name, setName] = useState("");
@@ -224,11 +223,7 @@ function LoanUserForm({ onBack }: { onBack: () => void }) {
             </Card>
           </div>
         </div>
-        <div className="flex justify-between pt-4">
-            <Button type="button" variant="outline" onClick={onBack}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-            </Button>
+        <div className="flex justify-end pt-4">
           <Button type="submit" size="lg" disabled={isSubmitting || !faceImageBase64}>
             {isSubmitting ? (
               <>
@@ -245,54 +240,21 @@ function LoanUserForm({ onBack }: { onBack: () => void }) {
 }
 
 export default function NewUserPage() {
-  const router = useRouter();
-  const [registrationType, setRegistrationType] = useState<"loan" | "diwali" | null>(null);
-
-  const handleTypeChange = (value: "loan" | "diwali") => {
-    if (value === 'diwali') {
-      router.push('/diwali-fund');
-    } else {
-      setRegistrationType(value);
-    }
-  };
-
   return (
     <div className="space-y-4">
       <PageHeader
         title="Register New User"
-        description="Select the registration type to begin."
+        description="Collect personal information and capture a face image for identity verification."
       >
         <Button asChild variant="outline">
-          <Link href="/dashboard">
+          <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            Back to Users
           </Link>
         </Button>
       </PageHeader>
       
-      {!registrationType && (
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle>Select Registration Type</CardTitle>
-            <CardDescription>What are you registering this new user for?</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Select onValueChange={handleTypeChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select an option..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="loan">New User for Loan/EMI</SelectItem>
-                <SelectItem value="diwali">Join Diwali Fund</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-      )}
-
-      {registrationType === 'loan' && (
-        <LoanUserForm onBack={() => setRegistrationType(null)} />
-      )}
+      <LoanUserForm />
     </div>
   );
 }
