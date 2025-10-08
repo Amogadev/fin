@@ -86,7 +86,6 @@ export default async function DashboardPage() {
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Recent Users</CardTitle>
-            <CardDescription>Recently registered users.</CardDescription>
           </div>
           <Button asChild size="sm" className="ml-auto gap-1">
             <Link href="/dashboard/users">
