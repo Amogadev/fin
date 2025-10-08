@@ -80,8 +80,8 @@ const mockUsers: User[] = [
   {
     id: 'user001',
     name: 'Anjali Sharma',
-    contact: '+91 98765 43210',
-    idProof: 'AADHAAR-XXXX-XXXX-1234',
+    contact: '',
+    idProof: '',
     faceImageUrl: 'https://picsum.photos/seed/user001/400/400',
     faceImageBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
     createdAt: '2023-10-15T09:00:00Z',
@@ -90,8 +90,8 @@ const mockUsers: User[] = [
   {
     id: 'user002',
     name: 'Rohan Verma',
-    contact: '+91 87654 32109',
-    idProof: 'PAN-ABCDE1234F',
+    contact: '',
+    idProof: '',
     faceImageUrl: 'https://picsum.photos/seed/user002/400/400',
     faceImageBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
     createdAt: '2023-11-01T11:20:00Z',
@@ -100,8 +100,8 @@ const mockUsers: User[] = [
   {
     id: 'user003',
     name: 'Priya Singh',
-    contact: '+91 76543 21098',
-    idProof: 'VOTERID-XYZ1234567',
+    contact: '',
+    idProof: '',
     faceImageUrl: 'https://picsum.photos/seed/user003/400/400',
     faceImageBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
     createdAt: '2024-01-20T16:45:00Z',
@@ -128,9 +128,9 @@ const mockUsers: User[] = [
 ];
 
 const mockVault: Vault = {
-  balance: 87700,
-  totalLoansGiven: 15300,
-  totalInterestEarned: 1700,
+  balance: 0,
+  totalLoansGiven: 0,
+  totalInterestEarned: 0,
 };
 
 export type TransactionWithUser = Transaction & {
@@ -143,15 +143,60 @@ export const getVaultData = async (): Promise<Vault> => {
 };
 
 export const getUsers = async (): Promise<User[]> => {
+  // Check for new loans in localStorage and add them to the corresponding user
+  if (typeof window !== 'undefined') {
+    const tempLoansJson = localStorage.getItem('temp_new_loans');
+    if (tempLoansJson) {
+      const tempLoans = JSON.parse(tempLoansJson);
+      mockUsers.forEach(user => {
+        if (tempLoans[user.id]) {
+          const existingLoanIds = new Set(user.loans.map(l => l.id));
+          const newLoans = tempLoans[user.id].filter((l: Loan) => !existingLoanIds.has(l.id));
+          user.loans = [...user.loans, ...newLoans];
+        }
+      });
+    }
+  }
   return Promise.resolve(mockUsers);
 };
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
-  return Promise.resolve(mockUsers.find(u => u.id === id));
+  // This combines static mock data with dynamically added users from localStorage
+  let allUsers = [...mockUsers];
+  if (typeof window !== 'undefined') {
+    const tempUserJson = localStorage.getItem('temp_new_user');
+    if (tempUserJson) {
+        const tempUser = JSON.parse(tempUserJson);
+        if (!allUsers.find(u => u.id === tempUser.id)) {
+            allUsers.push({
+                ...tempUser,
+                createdAt: new Date().toISOString(),
+                loans: [],
+            });
+        }
+    }
+  }
+
+  const user = allUsers.find(u => u.id === id);
+
+  if (user && typeof window !== 'undefined') {
+    const tempLoansJson = localStorage.getItem('temp_new_loans');
+    if (tempLoansJson) {
+        const tempLoans = JSON.parse(tempLoansJson);
+        if (tempLoans[id]) {
+            const existingLoanIds = new Set(user.loans.map(l => l.id));
+            const newLoans = tempLoans[id].filter((l: Loan) => !existingLoanIds.has(l.id));
+            user.loans = [...user.loans, ...newLoans];
+        }
+    }
+  }
+
+  return Promise.resolve(user);
 };
 
 export const getAllTransactions = async (): Promise<TransactionWithUser[]> => {
-    const allTxs = mockUsers.flatMap(user => 
+    const allUsers = await getUsers();
+    const allTxs = allUsers.flatMap(user => 
         user.loans.flatMap(loan => 
             loan.transactions.map(tx => ({
                 ...tx,
