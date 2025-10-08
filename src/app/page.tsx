@@ -43,11 +43,12 @@ export default function LoginPage() {
                 type="email"
                 placeholder="admin@example.com"
                 required
+                defaultValue="login"
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" required defaultValue="12345" />
             </div>
             <Button
               type="submit"
