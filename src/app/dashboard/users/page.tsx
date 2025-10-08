@@ -145,7 +145,6 @@ export default function UsersPage() {
       <div className="space-y-4">
         <PageHeader
           title="Users"
-          description="Manage all registered users and their loan accounts."
         >
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" size="sm">
@@ -177,7 +176,6 @@ export default function UsersPage() {
     <div className="space-y-4">
       <PageHeader
         title="Users"
-        description="Manage all registered users and their loan accounts."
       >
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm">
