@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -11,6 +12,7 @@ import {
   Receipt,
   Bell,
 } from "lucide-react";
+import { getAllTransactions } from "@/lib/data";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +23,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { TransactionWithUser } from "@/lib/data";
+
 
 export default function DashboardLayout({
   children,
@@ -28,6 +32,16 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [transactions, setTransactions] = useState<TransactionWithUser[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const txs = await getAllTransactions();
+      setTransactions(txs);
+    }
+    fetchData();
+  }, []);
+
 
   const menuItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -48,7 +62,7 @@ export default function DashboardLayout({
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-6 w-6" />
                 <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                  0
+                  {transactions.length}
                 </span>
                 <span className="sr-only">Notifications</span>
               </Button>
@@ -59,9 +73,18 @@ export default function DashboardLayout({
             >
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <div className="p-4 text-center text-sm text-muted-foreground">
-                No new notifications.
-              </div>
+              {transactions.length > 0 ? (
+                transactions.map((tx) => (
+                  <DropdownMenuItem key={tx.id} className="flex flex-col items-start gap-1">
+                    <p className="font-semibold">{tx.userName}</p>
+                    <p className="text-xs text-muted-foreground">{tx.type} of ₹{tx.amount}</p>
+                  </DropdownMenuItem>
+                ))
+              ) : (
+                <div className="p-4 text-center text-sm text-muted-foreground">
+                  No new notifications.
+                </div>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
