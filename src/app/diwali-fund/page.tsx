@@ -179,7 +179,7 @@ export default function DiwaliFundPage() {
 
                 <div className="space-y-2">
                     <Label>Face Capture</Label>
-                    <div className="w-full aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
+                    <div className="w-full aspect-square bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
                         {faceImageBase64 ? (
                             <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
                         ) : isCameraOpen ? (
