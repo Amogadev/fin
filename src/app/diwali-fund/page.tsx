@@ -180,15 +180,15 @@ export default function DiwaliFundPage() {
                     <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="contact">Phone Number</Label>
-                    <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
+                    <Label htmlFor="id-proof">Aadhaar Number</Label>
+                    <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
                   </div>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4 items-end">
                     <div className="space-y-2">
-                        <Label htmlFor="id-proof">Aadhaar Number</Label>
-                        <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
+                        <Label htmlFor="contact">Phone Number</Label>
+                        <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
                     </div>
 
                     <div className="space-y-2">
