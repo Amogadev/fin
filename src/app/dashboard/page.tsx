@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
 function UserCard({ user }: { user: import("@/lib/data").User }) {
+  const totalLoanAmount = user.loans
+    .filter(loan => loan.status === 'Active' || loan.status === 'Overdue')
+    .reduce((acc, loan) => acc + (loan.totalOwed - loan.amountRepaid), 0);
+
   return (
     <Link href={`/dashboard/users/${user.id}`} className="block">
       <Card className="h-full hover:bg-muted/50 transition-colors">
@@ -31,7 +35,9 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
           <div className="space-y-1">
             <p className="font-semibold">{user.name}</p>
             <p className="text-sm text-muted-foreground">
-              {format(new Date(user.createdAt), "dd MMM")}
+              {totalLoanAmount > 0 
+                ? `₹${totalLoanAmount.toLocaleString("en-IN")}`
+                : "No active loans"}
             </p>
           </div>
         </CardContent>
