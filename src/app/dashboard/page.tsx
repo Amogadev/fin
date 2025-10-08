@@ -23,13 +23,16 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
   return (
     <Link href={`/dashboard/users/${user.id}`} className="block">
       <Card className="h-32 w-32 bg-notification-popover text-notification-popover-foreground hover:bg-notification-popover/90 transition-colors flex flex-col justify-center items-center text-center">
-        <CardContent className="p-2 space-y-1">
-          <p className="font-semibold text-sm">{user.name}</p>
-          <p className="text-xs text-muted-foreground">
-            {totalLoanAmount > 0 
-              ? `₹${totalLoanAmount.toLocaleString("en-IN")}`
-              : "No active loans"}
-          </p>
+        <CardContent className="p-2 space-y-2 flex flex-col items-center">
+          <User className="h-8 w-8 text-muted-foreground" />
+          <div>
+            <p className="font-semibold text-sm">{user.name}</p>
+            <p className="text-xs text-muted-foreground">
+              {totalLoanAmount > 0
+                ? `₹${totalLoanAmount.toLocaleString("en-IN")}`
+                : "No active loans"}
+            </p>
+          </div>
         </CardContent>
       </Card>
     </Link>
@@ -78,7 +81,7 @@ export default async function DashboardPage() {
           description="From all loans"
         />
       </div>
-      <Card>
+      <Card className="bg-notification-popover text-notification-popover-foreground">
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Recent Users</CardTitle>
