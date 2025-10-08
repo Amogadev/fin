@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon } from "lucide-react";
+import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon, FilePenLine } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -38,10 +38,14 @@ function UserCard({ user }: { user: User }) {
           <div className="w-10 h-10 rounded-full border bg-muted flex items-center justify-center">
             <UserIcon className="h-5 w-5 text-muted-foreground" />
           </div>
-          <div>
+          <div className="flex-1">
             <CardTitle className="text-base">{user.name}</CardTitle>
             <CardDescription className="text-xs">{user.contact}</CardDescription>
           </div>
+          <Button variant="ghost" size="icon" className="w-8 h-8">
+              <FilePenLine className="h-4 w-4" />
+              <span className="sr-only">Edit User</span>
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="px-3 pb-2 text-xs space-y-1">
