@@ -31,7 +31,7 @@ export default function LoginPage() {
     <main className="grid md:grid-cols-2 min-h-screen">
       <div className="relative hidden md:block">
         <Image
-            src="https://picsum.photos/seed/finance/1200/1800"
+            src="/finance.jpeg"
             alt="Financial background"
             layout="fill"
             objectFit="cover"
