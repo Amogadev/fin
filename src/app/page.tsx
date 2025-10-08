@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   return (
     <main className="grid md:grid-cols-2 min-h-screen">
-      <div className="relative hidden md:block p-20">
+      <div className="relative hidden md:block p-40">
         <Image
             src="/finance.jpg"
             alt="Financial background"
