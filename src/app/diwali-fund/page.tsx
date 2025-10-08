@@ -153,63 +153,66 @@ export default function DiwaliFundPage() {
       
       <form onSubmit={handleSubmit} className="space-y-8">
         <Card>
-            <CardHeader>
-                <CardTitle>Your Details</CardTitle>
-                <CardDescription>
-                    Please provide your information for verification.
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-3 gap-4">
+          <CardHeader>
+            <CardTitle>Your Details</CardTitle>
+            <CardDescription>
+              Please provide your information and capture a photo for verification.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Left side: Form inputs */}
+              <div className="md:col-span-2 space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
                 </div>
-                <div className="space-y-2">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
                     <Label htmlFor="id-proof">Aadhaar Number</Label>
                     <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
-                </div>
-                <div className="space-y-2">
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="contact">Phone Number</Label>
                     <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
+                  </div>
                 </div>
-            </div>
+              </div>
 
-            <div className="grid md:grid-cols-2 gap-4 items-start pt-4">
-                <div>{/* This empty div can be used for alignment or removed */}</div>
-                <div className="space-y-2">
-                    <Label>Face Capture</Label>
-                    <div className="w-full max-w-xs mx-auto aspect-square bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
-                        {faceImageBase64 ? (
-                            <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                        ) : isCameraOpen ? (
-                            <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
-                        ) : (
-                            <Camera className="h-10 w-10 text-muted-foreground" />
-                        )}
-                        <canvas ref={canvasRef} className="hidden"></canvas>
-                    </div>
-                    {hasCameraPermission === false && (
-                        <Alert variant="destructive" className="text-xs">
-                            <AlertTitle>Camera Access Denied</AlertTitle>
-                        </Alert>
-                    )}
-                    {faceImageBase64 ? (
-                        <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full">
-                            <RefreshCw className="mr-2 h-4 w-4" /> Retake Photo
-                        </Button>
-                    ) : isCameraOpen ? (
-                        <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false} className="w-full">
-                            <Camera className="mr-2 h-4 w-4" /> Capture Photo
-                        </Button>
-                    ): (
-                       <Button type="button" onClick={openCamera} disabled={isSubmitting} className="w-full">
-                            <Camera className="mr-2 h-4 w-4" /> Open Camera
-                        </Button>
-                    )}
+              {/* Right side: Face Capture */}
+              <div className="space-y-2 flex flex-col items-center">
+                <Label className="text-center w-full">Face Capture</Label>
+                <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
+                  {faceImageBase64 ? (
+                    <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
+                  ) : isCameraOpen ? (
+                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                  ) : (
+                    <Camera className="h-10 w-10 text-muted-foreground" />
+                  )}
+                  <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
+                {hasCameraPermission === false && (
+                  <Alert variant="destructive" className="text-xs">
+                    <AlertTitle>Camera Access Denied</AlertTitle>
+                  </Alert>
+                )}
+                {faceImageBase64 ? (
+                  <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full max-w-xs">
+                    <RefreshCw className="mr-2 h-4 w-4" /> Retake Photo
+                  </Button>
+                ) : isCameraOpen ? (
+                  <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false} className="w-full max-w-xs">
+                    <Camera className="mr-2 h-4 w-4" /> Capture Photo
+                  </Button>
+                ) : (
+                  <Button type="button" onClick={openCamera} disabled={isSubmitting} className="w-full max-w-xs">
+                    <Camera className="mr-2 h-4 w-4" /> Open Camera
+                  </Button>
+                )}
+              </div>
             </div>
-            </CardContent>
+          </CardContent>
         </Card>
 
         <div className="flex justify-end pt-4">
