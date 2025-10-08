@@ -30,9 +30,7 @@ export default function LoginPage() {
             <Logo />
           </div>
           <CardTitle className="text-2xl font-headline">Admin Login</CardTitle>
-          <CardDescription>
-            Enter your email and password to access the dashboard.
-          </CardDescription>
+          
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLoginSubmit} className="grid gap-4">
