@@ -1,3 +1,4 @@
+
 import { getAllTransactions } from "@/lib/data";
 import PageHeader from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,25 +35,37 @@ export default async function TransactionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transactions.map((tx) => (
-                <TableRow key={tx.id}>
-                  <TableCell className="font-mono">{tx.id}</TableCell>
-                  <TableCell>{tx.userName}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        tx.type === "Repayment" ? "secondary" : "outline"
-                      }
-                    >
-                      {tx.type}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
-                  <TableCell className="text-right">
-                    {format(new Date(tx.date), "PPpp")}
+              {transactions.length > 0 ? (
+                transactions.map((tx) => (
+                  <TableRow key={tx.id}>
+                    <TableCell className="font-mono">{tx.id}</TableCell>
+                    <TableCell>{tx.userName}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          tx.type === "Repayment" ? "secondary" : "outline"
+                        }
+                      >
+                        {tx.type}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
+                    <TableCell className="text-right">
+                      {format(new Date(tx.date), "PPpp")}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    No transactions yet. Create a user and issue a loan to see
+                    transactions here.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </CardContent>
