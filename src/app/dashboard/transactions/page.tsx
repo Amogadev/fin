@@ -24,7 +24,6 @@ function TransactionTableSkeleton() {
               <TableRow>
                 <TableHead>Transaction ID</TableHead>
                 <TableHead>User</TableHead>
-                <TableHead>Type</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead className="text-right">Date</TableHead>
               </TableRow>
@@ -34,7 +33,6 @@ function TransactionTableSkeleton() {
                     <TableRow key={i}>
                         <TableCell><Skeleton className="h-5 w-24" /></TableCell>
                         <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                        <TableCell><Skeleton className="h-6 w-20 rounded-full" /></TableCell>
                         <TableCell><Skeleton className="h-5 w-16" /></TableCell>
                         <TableCell className="text-right"><Skeleton className="h-5 w-40 ml-auto" /></TableCell>
                     </TableRow>
@@ -83,7 +81,6 @@ export default function TransactionsPage() {
               <TableRow>
                 <TableHead>Transaction ID</TableHead>
                 <TableHead>User</TableHead>
-                <TableHead>Type</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead className="text-right">Date</TableHead>
               </TableRow>
@@ -94,15 +91,6 @@ export default function TransactionsPage() {
                   <TableRow key={tx.id}>
                     <TableCell className="font-mono">{tx.id}</TableCell>
                     <TableCell>{tx.userName}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          tx.type === "Repayment" ? "secondary" : "outline"
-                        }
-                      >
-                        {tx.type}
-                      </Badge>
-                    </TableCell>
                     <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
                     <TableCell className="text-right">
                       {format(new Date(tx.date), "PPpp")}
@@ -112,7 +100,7 @@ export default function TransactionsPage() {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={5}
+                    colSpan={4}
                     className="h-24 text-center text-muted-foreground"
                   >
                     No transactions yet. Create a user and issue a loan to see
