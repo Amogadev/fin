@@ -22,16 +22,14 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
 
   return (
     <Link href={`/dashboard/users/${user.id}`} className="block">
-      <Card className="h-full hover:bg-muted/50 transition-colors">
-        <CardContent className="p-4 space-y-3">
-          <div className="space-y-1">
-            <p className="font-semibold">{user.name}</p>
-            <p className="text-sm text-muted-foreground">
-              {totalLoanAmount > 0 
-                ? `₹${totalLoanAmount.toLocaleString("en-IN")}`
-                : "No active loans"}
-            </p>
-          </div>
+      <Card className="h-32 w-32 hover:bg-muted/50 transition-colors flex flex-col justify-center items-center text-center">
+        <CardContent className="p-2 space-y-1">
+          <p className="font-semibold text-sm">{user.name}</p>
+          <p className="text-xs text-muted-foreground">
+            {totalLoanAmount > 0 
+              ? `₹${totalLoanAmount.toLocaleString("en-IN")}`
+              : "No active loans"}
+          </p>
         </CardContent>
       </Card>
     </Link>
@@ -41,12 +39,12 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
 function AddUserCard() {
   return (
     <Link href="/dashboard/users/new" className="block">
-      <Card className="h-full hover:bg-muted/50 transition-colors">
-        <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-2 h-full">
-            <div className="flex items-center justify-center bg-muted rounded-full w-12 h-12">
-                <Plus className="h-6 w-6 text-muted-foreground" />
+      <Card className="h-32 w-32 hover:bg-muted/50 transition-colors flex flex-col items-center justify-center text-center space-y-2">
+        <CardContent className="p-2 flex flex-col items-center justify-center text-center space-y-2">
+            <div className="flex items-center justify-center bg-muted rounded-full w-10 h-10">
+                <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="font-semibold text-sm">Add New User</p>
+            <p className="font-semibold text-xs">Add New User</p>
         </CardContent>
       </Card>
     </Link>
@@ -93,7 +91,7 @@ export default async function DashboardPage() {
           </Button>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="flex flex-wrap gap-4">
             {recentUsers.map((user) => (
               <UserCard key={user.id} user={user} />
             ))}
