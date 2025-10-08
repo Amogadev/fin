@@ -24,14 +24,6 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
     <Link href={`/dashboard/users/${user.id}`} className="block">
       <Card className="h-full hover:bg-muted/50 transition-colors">
         <CardContent className="p-4 space-y-3">
-          <Image
-            src={user.faceImageUrl}
-            alt={user.name}
-            width={48}
-            height={48}
-            className="rounded-full object-cover"
-            data-ai-hint="person portrait"
-          />
           <div className="space-y-1">
             <p className="font-semibold">{user.name}</p>
             <p className="text-sm text-muted-foreground">
