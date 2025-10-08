@@ -27,13 +27,33 @@ export default function NewUserPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [faceImageBase64, setFaceImageBase64] = useState<string | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    const getCameraPermission = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description: 'Please enable camera permissions in your browser settings.',
+        });
+      }
+    };
+
+    getCameraPermission();
+    
     return () => {
       // Stop camera stream when component unmounts
       if (videoRef.current && videoRef.current.srcObject) {
@@ -41,35 +61,7 @@ export default function NewUserPage() {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
-
-
-  const openCamera = async () => {
-    // Stop any existing stream before starting a new one
-    if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-    }
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      setHasCameraPermission(true);
-      setIsCameraOpen(true);
-      setFaceImageBase64(null); // Clear previous image
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-      setHasCameraPermission(false);
-      toast({
-        variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings.',
-      });
-    }
-  };
+  }, [toast]);
 
   const captureFace = () => {
     if (videoRef.current && canvasRef.current) {
@@ -82,8 +74,7 @@ export default function NewUserPage() {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         const dataUri = canvas.toDataURL('image/png');
         setFaceImageBase64(dataUri);
-        setIsCameraOpen(false); // Close camera view after capture
-        // Stop the camera stream
+        // Stop the camera stream after capture
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
           stream.getTracks().forEach(track => track.stop());
@@ -92,9 +83,18 @@ export default function NewUserPage() {
     }
   };
   
-  const retakePhoto = () => {
+  const retakePhoto = async () => {
     setFaceImageBase64(null);
-    openCamera();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setHasCameraPermission(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setHasCameraPermission(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -111,10 +111,6 @@ export default function NewUserPage() {
     setIsSubmitting(true);
 
     setTimeout(() => {
-      // This is a mock implementation. In a real app, you would:
-      // 1. Upload the faceImageBase64 to a storage service to get a URL.
-      // 2. Save the new user data (name, contact, idProof, faceImageUrl, faceImageBase64) to your database.
-      // 3. The database would return a unique ID for the new user.
       const newUser = {
         id: `user${Date.now().toString().slice(-4)}`,
         name,
@@ -130,9 +126,7 @@ export default function NewUserPage() {
         title: "User Created",
         description: `${name} has been registered successfully.`,
       });
-
-      // We'll use localStorage to pass the new user data to the next page as a temporary solution.
-      // In a real app, you would fetch this from the server on the user detail page.
+      
       localStorage.setItem('temp_new_user', JSON.stringify(newUser));
 
       router.push(`/dashboard/users/${newUser.id}`);
@@ -212,10 +206,8 @@ export default function NewUserPage() {
               <div className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
                 {faceImageBase64 ? (
                   <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                ) : isCameraOpen ? (
-                  <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
                 ) : (
-                  <Camera className="w-16 h-16 text-muted-foreground" />
+                  <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
                 )}
                 <canvas ref={canvasRef} className="hidden"></canvas>
               </div>
@@ -230,17 +222,10 @@ export default function NewUserPage() {
               )}
               
               {!faceImageBase64 ? (
-                isCameraOpen ? (
-                  <Button type="button" onClick={captureFace} disabled={isSubmitting}>
+                  <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false}>
                     <Camera className="mr-2 h-4 w-4" />
                     Capture Photo
                   </Button>
-                ) : (
-                  <Button type="button" variant="outline" onClick={openCamera} disabled={isSubmitting}>
-                    <Camera className="mr-2 h-4 w-4" />
-                    Open Camera
-                  </Button>
-                )
               ) : (
                 <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting}>
                   <RefreshCw className="mr-2 h-4 w-4" />
@@ -253,7 +238,7 @@ export default function NewUserPage() {
         </div>
       </div>
       <div className="flex justify-end pt-4">
-        <Button type="submit" size="lg" disabled={isSubmitting}>
+        <Button type="submit" size="lg" disabled={isSubmitting || !faceImageBase64}>
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
