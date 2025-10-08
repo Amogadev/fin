@@ -53,6 +53,10 @@ const config = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        "notification-popover": {
+          DEFAULT: "hsl(var(--notification-popover))",
+          foreground: "hsl(var(--notification-popover-foreground))",
+        },
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

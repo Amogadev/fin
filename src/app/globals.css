@@ -10,6 +10,8 @@
     --card-foreground: 264 15% 85%;
     --popover: 264 45% 16%;
     --popover-foreground: 264 15% 85%;
+    --notification-popover: 240 10% 98%;
+    --notification-popover-foreground: 264 45% 12%;
     --primary: 231 48% 48%;
     --primary-foreground: 0 0% 98%;
     --secondary: 264 30% 25%;

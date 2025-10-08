@@ -53,7 +53,10 @@ export default function DashboardLayout({
                 <span className="sr-only">Notifications</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuContent
+              align="end"
+              className="w-80 bg-notification-popover text-notification-popover-foreground"
+            >
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <div className="p-2">
