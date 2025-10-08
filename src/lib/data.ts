@@ -22,7 +22,7 @@ export type Loan = {
   totalOwed: number; // This is the repayment amount
   amountRepaid: number;
   status: 'Active' | 'Paid' | 'Overdue';
-  loanType: 'Loan' | 'EMI';
+  loanType: 'Loan' | 'EMI' | 'Diwali Fund';
   paymentFrequency: 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
   createdAt: string;
   dueDate: string;

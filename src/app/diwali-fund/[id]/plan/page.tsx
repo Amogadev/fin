@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, use, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter, notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +18,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { differenceInWeeks, differenceInMonths, addWeeks, addMonths } from 'date-fns';
-import type { User } from "@/lib/data";
+import type { User, Loan } from "@/lib/data";
 import { getUserById } from "@/lib/data";
 
 const CONTRIBUTION_AMOUNTS = [100, 1000, 5000];
@@ -34,7 +34,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [contribution, setContribution] = useState<number | undefined>();
-  const [frequency, setFrequency] = useState<string | undefined>();
+  const [frequency, setFrequency] = useState<"Weekly" | "Monthly" | undefined>();
   
   useEffect(() => {
     getUserById(userId).then(setUser);
@@ -50,11 +50,17 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
         return differenceInMonths(DIWALI_DATE, now);
     }
   }, [frequency]);
+  
+  const totalContribution = useMemo(() => {
+    if (!contribution || !numberOfPayments) return 0;
+    return contribution * numberOfPayments;
+  }, [contribution, numberOfPayments]);
+
 
   const estimatedReturn = useMemo(() => {
-    if (!contribution || !numberOfPayments) return 0;
-    return contribution * numberOfPayments * 1.10;
-  }, [contribution, numberOfPayments]);
+    if (!totalContribution) return 0;
+    return totalContribution * 1.10; // 10% bonus
+  }, [totalContribution]);
 
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,18 +77,68 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
     setIsSubmitting(true);
     
     const nextPaymentDate = frequency === 'Weekly' ? addWeeks(new Date(), 1) : addMonths(new Date(), 1);
+    const createdAt = new Date();
 
-    const fundDetails = {
-      name: user.name,
-      contribution,
-      frequency,
-      estimatedReturn,
-      nextPaymentDate: nextPaymentDate.toISOString(),
+    const allUsersJson = localStorage.getItem('temp_new_users');
+    const allUsers: User[] = allUsersJson ? JSON.parse(allUsersJson) : [];
+    
+    const allLoansJson = localStorage.getItem('temp_new_loans');
+    const allLoans: Record<string, Loan[]> = allLoansJson ? JSON.parse(allLoansJson) : {};
+    
+    const userIndex = allUsers.findIndex(u => u.id === userId);
+    if(userIndex === -1) {
+        toast({ variant: "destructive", title: "User not found!" });
+        setIsSubmitting(false);
+        return;
+    }
+
+    const newLoanId = `diwali${user.id}${Date.now().toString().slice(-3)}`;
+    const newTxnId = `txn${Date.now().toString().slice(-5)}`;
+
+    const newFundLoan: Loan = {
+        id: newLoanId,
+        userId: user.id,
+        amountRequested: totalContribution,
+        interest: totalContribution * 0.10,
+        principal: 0, // No disbursement
+        totalOwed: totalContribution, // This is the savings goal
+        amountRepaid: contribution, // First contribution is made now
+        status: 'Active',
+        loanType: 'Diwali Fund',
+        paymentFrequency: frequency,
+        createdAt: createdAt.toISOString(),
+        dueDate: nextPaymentDate.toISOString(),
+        transactions: [
+            {
+                id: newTxnId,
+                loanId: newLoanId,
+                type: 'Repayment', // Contribution is like a repayment to their own fund
+                amount: contribution,
+                date: createdAt.toISOString(),
+            }
+        ]
     };
+    
+    if (!allLoans[user.id]) {
+      allLoans[user.id] = [];
+    }
+    allLoans[user.id].push(newFundLoan);
+    
+    allUsers[userIndex].loans.push(newFundLoan);
 
     // Simulate submission
     setTimeout(() => {
-      localStorage.setItem('diwali_fund_confirmation', JSON.stringify(fundDetails));
+      localStorage.setItem('temp_new_users', JSON.stringify(allUsers));
+      localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
+
+      const confirmationDetails = {
+        name: user.name,
+        contribution,
+        frequency,
+        estimatedReturn,
+        nextPaymentDate: nextPaymentDate.toISOString(),
+      }
+      localStorage.setItem('diwali_fund_confirmation', JSON.stringify(confirmationDetails));
       
       toast({
         title: "Successfully Joined!",
@@ -130,7 +186,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
                         </div>
                         <div className="space-y-2">
                             <Label>Frequency</Label>
-                            <Select value={frequency} onValueChange={setFrequency}>
+                            <Select value={frequency} onValueChange={(val: "Weekly" | "Monthly") => setFrequency(val)}>
                                 <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
                                 <SelectContent>
                                     {FREQUENCIES.map(freq => (
