@@ -29,12 +29,12 @@ export default function LoginPage() {
 
   return (
     <main className="grid md:grid-cols-2 min-h-screen">
-      <div className="relative hidden md:block">
+      <div className="relative md:block">
         <Image
             src="/finance.jpeg"
             alt="Financial background"
-            layout="fill"
-            objectFit="cover"
+            fill
+            className="object-cover"
             data-ai-hint="finance abstract"
         />
       </div>
