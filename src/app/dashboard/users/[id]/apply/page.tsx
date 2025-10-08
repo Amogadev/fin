@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, use } from "react";
@@ -36,11 +37,11 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
   const { toast } = useToast();
 
   const [amount, setAmount] = useState(0);
-  const [loanType, setLoanType] = useState<"loan" | "emi">("emi");
-  const [paymentFrequency, setPaymentFrequency] = useState<(typeof PAYMENT_FREQUENCIES)[number]>("Monthly");
+  const [loanType, setLoanType] = useState<"loan" | "emi">();
+  const [paymentFrequency, setPaymentFrequency] = useState<(typeof PAYMENT_FREQUENCIES)[number]>();
 
 
-  const interestRate = LOAN_TYPE_CONFIG[loanType].interestRate;
+  const interestRate = loanType ? LOAN_TYPE_CONFIG[loanType].interestRate : 0;
   const interest = amount * interestRate;
   const principal = amount - interest;
   const totalOwed = amount;
@@ -51,6 +52,15 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
   ];
 
   const handleSubmit = () => {
+    if (!loanType || !paymentFrequency) {
+      toast({
+        variant: "destructive",
+        title: "Missing Information",
+        description: "Please select a loan type and payment frequency.",
+      });
+      return;
+    }
+
     const newLoan: Loan = {
       id: `loan${Date.now().toString().slice(-5)}`,
       userId,
@@ -195,7 +205,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
             </CardContent>
             <CardFooter className="p-0 pt-6">
-              <Button onClick={handleSubmit} disabled={amount <= 0} className="w-full" size="lg">
+              <Button onClick={handleSubmit} disabled={amount <= 0 || !loanType || !paymentFrequency} className="w-full" size="lg">
                 Submit Application
               </Button>
             </CardFooter>
