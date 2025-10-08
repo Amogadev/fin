@@ -26,66 +26,67 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-muted p-4 space-y-8">
-      <div className="w-full max-w-xs">
+    <main className="grid min-h-screen md:grid-cols-2">
+      <div className="hidden items-center justify-center bg-muted p-4 md:flex">
+        <div className="w-full max-w-xs">
           <div className="relative aspect-square">
-              <Image
-                  src="/finance.jpg"
-                  alt="Financial background"
-                  fill
-                  className="object-contain"
-                  data-ai-hint="finance abstract"
-              />
+            <Image
+              src="/finance.jpg"
+              alt="Financial background"
+              fill
+              className="object-contain"
+              data-ai-hint="finance abstract"
+            />
           </div>
+        </div>
       </div>
-      
-      <Card className="w-full max-w-xs mx-auto shadow-2xl">
-        <CardHeader className="text-center">
-          <div className="mb-4 inline-block mx-auto">
-            <Logo />
-          </div>
-          <CardTitle className="text-xl font-headline">Admin Login</CardTitle>
-          
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLoginSubmit} className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@example.com"
-                required
-              />
+      <div className="flex items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-xs mx-auto shadow-2xl">
+          <CardHeader className="text-center">
+            <div className="mb-4 inline-block mx-auto">
+              <Logo />
             </div>
-            <div className="grid gap-2 relative">
-              <Label htmlFor="password">Password</Label>
-              <Input 
-                id="password" 
-                type={showPassword ? "text" : "password"} 
-                required 
-                className="pr-10"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:text-foreground"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff /> : <Eye />}
-                <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
+            <CardTitle className="text-xl font-headline">Admin Login</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLoginSubmit} className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="admin@example.com"
+                  required
+                />
+              </div>
+              <div className="grid gap-2 relative">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff /> : <Eye />}
+                  <span className="sr-only">
+                    {showPassword ? 'Hide password' : 'Show password'}
+                  </span>
+                </Button>
+              </div>
+              <Button type="submit" className="w-full">
+                Login
               </Button>
-            </div>
-            <Button
-              type="submit"
-              className="w-full"
-            >
-              Login
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 }
