@@ -22,7 +22,7 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
 
   return (
     <Link href={`/dashboard/users/${user.id}`} className="block">
-      <Card className="h-32 w-32 bg-notification-popover text-notification-popover-foreground hover:bg-notification-popover/90 transition-colors flex flex-col justify-center items-center text-center">
+      <Card className="h-32 w-32 bg-muted/50 hover:bg-muted/80 transition-colors flex flex-col justify-center items-center text-center">
         <CardContent className="p-2 space-y-2 flex flex-col items-center">
           <User className="h-8 w-8 text-muted-foreground" />
           <div>
@@ -42,9 +42,9 @@ function UserCard({ user }: { user: import("@/lib/data").User }) {
 function AddUserCard() {
   return (
     <Link href="/dashboard/users/new" className="block">
-      <Card className="h-32 w-32 bg-notification-popover text-notification-popover-foreground hover:bg-notification-popover/90 transition-colors flex flex-col items-center justify-center text-center space-y-2">
+      <Card className="h-32 w-32 bg-muted/50 hover:bg-muted/80 transition-colors flex flex-col items-center justify-center text-center space-y-2">
         <CardContent className="p-2 flex flex-col items-center justify-center text-center space-y-2">
-            <div className="flex items-center justify-center bg-muted rounded-full w-10 h-10">
+            <div className="flex items-center justify-center bg-background/50 rounded-full w-10 h-10">
                 <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
             <p className="font-semibold text-xs">Add New User</p>
