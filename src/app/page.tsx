@@ -29,14 +29,16 @@ export default function LoginPage() {
 
   return (
     <main className="grid md:grid-cols-2 min-h-screen">
-      <div className="relative hidden md:block p-60">
-        <Image
-            src="/finance.jpg"
-            alt="Financial background"
-            fill
-            className="object-contain"
-            data-ai-hint="finance abstract"
-        />
+      <div className="hidden md:flex items-center justify-center p-8">
+        <div className="relative w-full max-w-sm aspect-square">
+            <Image
+                src="/finance.jpg"
+                alt="Financial background"
+                fill
+                className="object-contain"
+                data-ai-hint="finance abstract"
+            />
+        </div>
       </div>
       <div className="flex items-center justify-center bg-muted p-4">
         <Card className="w-full max-w-sm mx-auto shadow-2xl">
