@@ -50,7 +50,7 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader>
+        <SidebarHeader className="items-center">
           <Logo />
         </SidebarHeader>
         <SidebarContent>
