@@ -33,10 +33,6 @@ export default function DashboardLayout({
         <div>
           <p className="text-sm text-muted-foreground">Welcome Back!</p>
           <h2 className="text-2xl font-bold font-headline">Hi.</h2>
-          <div className="mt-4">
-            <p className="text-sm text-muted-foreground">Wallet Balance</p>
-            <p className="text-3xl font-bold">₹1,00,000</p>
-          </div>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="relative">
