@@ -1,3 +1,4 @@
+
 "use client";
 
 import { notFound, useRouter } from "next/navigation";
@@ -22,9 +23,35 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import { IndianRupee, PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect, useState, use } from "react";
+
+function LoanStatus({ loan }: { loan: Loan }) {
+  const today = new Date();
+  const dueDate = new Date(loan.dueDate);
+
+  if (loan.status === 'Paid') {
+    return <Badge variant="default">Loan fully repaid.</Badge>;
+  }
+
+  if (loan.status === 'Overdue') {
+    const daysOverdue = differenceInDays(today, dueDate);
+    return (
+      <Badge variant="destructive">
+        Overdue by {daysOverdue} day{daysOverdue > 1 ? 's' : ''} — follow-up required.
+      </Badge>
+    );
+  }
+
+  // Active
+  return (
+    <Badge variant="success">
+      Payment pending — due on {format(dueDate, 'PP')}
+    </Badge>
+  );
+}
+
 
 export default function UserDetailPage({
   params: paramsPromise,
@@ -154,17 +181,7 @@ export default function UserDetailPage({
                           ₹{loan.totalOwed.toLocaleString("en-IN")}
                         </TableCell>
                         <TableCell>
-                          <Badge
-                            variant={
-                              loan.status === "Overdue"
-                                ? "destructive"
-                                : loan.status === "Active"
-                                ? "success"
-                                : "secondary"
-                            }
-                          >
-                            {loan.status}
-                          </Badge>
+                          <LoanStatus loan={loan} />
                         </TableCell>
                         <TableCell className="text-right">
                           ₹{loan.amountRepaid.toLocaleString("en-IN")} / ₹
@@ -191,3 +208,4 @@ export default function UserDetailPage({
     </div>
   );
 }
+    

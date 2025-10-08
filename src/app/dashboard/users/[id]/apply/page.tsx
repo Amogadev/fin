@@ -60,14 +60,15 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
   const interestRate = loanType ? LOAN_TYPE_CONFIG[loanType].interestRate : 0;
   const interest = amount * interestRate;
-  const principal = amount;
-  const totalOwed = principal + interest;
+  const principal = amount; // This is the total requested amount
+  const disbursedAmount = principal - interest; // Amount given to user
+  const totalOwed = principal; // User repays the full requested amount
   const dueDate = paymentFrequency ? getDueDate(new Date(), paymentFrequency) : null;
 
 
   const chartData = [
-    { name: "Principal", value: principal, fill: "hsl(var(--primary))" },
-    { name: "Interest", value: interest, fill: "hsl(var(--accent))" },
+    { name: "Amount Disbursed", value: disbursedAmount, fill: "hsl(var(--primary))" },
+    { name: "Interest (Upfront)", value: interest, fill: "hsl(var(--accent))" },
   ];
 
   const handleSubmit = async () => {
@@ -92,8 +93,8 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
       userId,
       amountRequested: amount,
       interest,
-      principal,
-      totalOwed,
+      principal: disbursedAmount, // The amount that leaves the vault
+      totalOwed, // The amount user needs to repay
       amountRepaid: 0,
       status: 'Active',
       loanType: LOAN_TYPE_CONFIG[loanType].label as 'Loan' | 'EMI',
@@ -105,7 +106,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
           id: newTxnId,
           loanId: newLoanId,
           type: 'Disbursement',
-          amount: principal,
+          amount: disbursedAmount, // Log the disbursed amount
           date: new Date().toISOString(),
         }
       ]
@@ -151,7 +152,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
             </CardHeader>
             <CardContent className="flex-grow p-0 space-y-8">
               <div className="space-y-4">
-                <Label htmlFor="amount">Loan Amount</Label>
+                <Label htmlFor="amount">Loan Amount (Total Repayment)</Label>
                 <div className="flex items-center gap-4">
                   <Button
                     variant="outline"
@@ -270,15 +271,15 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
               <div className="w-full max-w-sm space-y-3 text-sm">
                 <Separator className="my-4" />
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Principal:</span>
+                  <span className="text-muted-foreground">Amount Disbursed:</span>
                   <span className="font-medium">
-                    ₹{principal.toLocaleString("en-IN")}
+                    ₹{disbursedAmount.toLocaleString("en-IN")}
                   </span>
                 </div>
                 <div className="flex justify-between items-center gap-2">
                    <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-accent" />
-                    <span>Interest ({interestRate * 100}%):</span>
+                    <span>Interest ({interestRate * 100}%, upfront):</span>
                   </div>
                   <span className="font-medium">
                     ₹{interest.toLocaleString("en-IN")}
@@ -292,7 +293,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                 </div>
                 <Separator className="my-2" />
                 <div className="flex justify-between font-semibold text-base">
-                  <span>Total Owed:</span>
+                  <span>Total To Be Repaid:</span>
                   <span>₹{totalOwed.toLocaleString("en-IN")}</span>
                 </div>
               </div>
@@ -303,3 +304,5 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
     </div>
   );
 }
+
+    

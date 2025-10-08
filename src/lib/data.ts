@@ -17,8 +17,8 @@ export type Loan = {
   userId: string;
   amountRequested: number;
   interest: number;
-  principal: number;
-  totalOwed: number;
+  principal: number; // This is the disbursed amount
+  totalOwed: number; // This is the repayment amount
   amountRepaid: number;
   status: 'Active' | 'Paid' | 'Overdue';
   loanType: 'Loan' | 'EMI';
@@ -38,8 +38,8 @@ export type Transaction = {
 
 export type Vault = {
   balance: number;
-  totalLoansGiven: number;
-  totalInterestEarned: number;
+  totalLoansGiven: number; // disbursed amount
+  totalInterestEarned: number; // expected earnings
 };
 
 // Initial state for the vault. In a real app, this would come from a persistent store.
@@ -81,7 +81,7 @@ function checkAndUpdateLoanStatus(loan: Loan): Loan {
         return { ...loan, status: 'Overdue' };
     }
 
-    return loan;
+    return { ...loan, status: 'Active' };
 }
 
 
@@ -104,12 +104,14 @@ function mergeData(users: User[], allLoans: Record<string, Loan[]>): User[] {
 export const getVaultData = async (): Promise<Vault> => {
   const users = await getUsers();
   
-  let totalLoansGiven = 0;
+  let totalDisbursed = 0;
+  let totalInterest = 0;
   let totalRepaid = 0;
 
   users.forEach(user => {
     user.loans.forEach(loan => {
-      totalLoansGiven += loan.principal;
+      totalDisbursed += loan.principal;
+      totalInterest += loan.interest;
       loan.transactions.forEach(tx => {
         if(tx.type === 'Repayment') {
             totalRepaid += tx.amount;
@@ -118,19 +120,12 @@ export const getVaultData = async (): Promise<Vault> => {
     });
   });
   
-  const interestEarned = users.flatMap(u => u.loans).reduce((acc, loan) => {
-    // A more accurate way to calculate earned interest based on repayments
-    const repaidTowardsPrincipal = Math.min(loan.amountRepaid, loan.principal);
-    const repaidTowardsInterest = Math.max(0, loan.amountRepaid - repaidTowardsPrincipal);
-    return acc + repaidTowardsInterest;
-  }, 0);
-
-  const currentBalance = initialVaultState.balance - totalLoansGiven + totalRepaid;
+  const currentBalance = initialVaultState.balance - totalDisbursed + totalRepaid;
 
   return Promise.resolve({
       balance: currentBalance,
-      totalLoansGiven,
-      totalInterestEarned: interestEarned,
+      totalLoansGiven: totalDisbursed,
+      totalInterestEarned: totalInterest,
   });
 };
 
@@ -171,3 +166,5 @@ export const getAllTransactions = async (): Promise<TransactionWithUser[]> => {
     });
     return Promise.resolve(allTxs.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
 }
+
+    
