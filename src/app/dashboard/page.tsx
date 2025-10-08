@@ -3,7 +3,7 @@
 
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { use, useEffect, useState } from "react";
 import { User, Vault } from "@/lib/data";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function UserCard({ user }: { user: User }) {
   const totalLoanAmount = user.loans
@@ -27,7 +28,21 @@ function UserCard({ user }: { user: User }) {
 
   return (
     <Link href={`/dashboard/users/${user.id}`} className="block">
-      <Card className="h-32 w-32 bg-muted/50 hover:bg-muted/80 transition-colors flex flex-col justify-center items-center text-center">
+      <Card className="h-32 w-32 bg-muted/50 hover:bg-muted/80 transition-colors flex flex-col justify-center items-center text-center relative">
+        {user.registrationType && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="absolute top-2 right-2">
+                    {user.registrationType === 'Loan' ? <FileText className="h-4 w-4 text-muted-foreground" /> : <Gift className="h-4 w-4 text-muted-foreground" />}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Registered for {user.registrationType}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         <CardContent className="p-2 space-y-2 flex flex-col items-center">
           <UserIcon className="h-8 w-8 text-muted-foreground" />
           <div>
@@ -35,7 +50,7 @@ function UserCard({ user }: { user: User }) {
             <p className="text-xs text-muted-foreground">
               {totalLoanAmount > 0
                 ? `₹${totalLoanAmount.toLocaleString("en-IN")}`
-                : "No active loans"}
+                : user.registrationType === 'Diwali Fund' ? 'Diwali Fund' : "No active loans"}
             </p>
           </div>
         </CardContent>
@@ -110,7 +125,7 @@ export default function DashboardPage() {
   }
 
   const { vault: vaultData, users } = use(dataPromise);
-  const recentUsers = users.slice(0, 3);
+  const recentUsers = users.slice(-3).reverse();
 
   return (
     <div className="space-y-8">

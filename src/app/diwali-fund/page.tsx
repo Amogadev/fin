@@ -127,21 +127,35 @@ export default function DiwaliFundPage() {
     
     const nextPaymentDate = frequency === 'Weekly' ? addWeeks(new Date(), 1) : addMonths(new Date(), 1);
 
-    const fundDetails = {
+    const newUser = {
+      id: `user${Date.now().toString().slice(-4)}`,
       name,
       contact,
       idProof,
+      faceImageBase64,
+      faceImageUrl: faceImageBase64, // For demo, use the base64 as the URL
+      createdAt: new Date().toISOString(),
+      loans: [],
+      registrationType: 'Diwali Fund' as const,
+    };
+
+    const fundDetails = {
+      name,
       contribution,
       frequency,
       estimatedReturn,
       nextPaymentDate: nextPaymentDate.toISOString(),
-      joinDate: new Date().toISOString(),
     };
 
     // Simulate submission
     setTimeout(() => {
-      // In a real app, you'd save the data to a backend.
-      // For this demo, we'll store in localStorage and navigate.
+      // Add user to the main user list
+      const tempUsersJson = localStorage.getItem('temp_new_users');
+      const tempUsers = tempUsersJson ? JSON.parse(tempUsersJson) : [];
+      tempUsers.push(newUser);
+      localStorage.setItem('temp_new_users', JSON.stringify(tempUsers));
+      
+      // Store confirmation details for the confirmation page
       localStorage.setItem('diwali_fund_confirmation', JSON.stringify(fundDetails));
       
       toast({
@@ -163,90 +177,95 @@ export default function DiwaliFundPage() {
       />
       
       <form onSubmit={handleSubmit} className="space-y-8">
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Details</CardTitle>
-            <CardDescription>
-              Please provide your information for verification.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="id-proof">Aadhaar Number</Label>
-                <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4 items-start">
-                <div className="space-y-2">
-                    <Label htmlFor="contact">Phone Number</Label>
-                    <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Details</CardTitle>
+                <CardDescription>
+                  Please provide your information for verification.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="id-proof">Aadhaar Number</Label>
+                    <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                    <Label>Face Capture</Label>
-                    <div className="w-full aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
-                         {faceImageBase64 ? (
-                            <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                        ) : (
-                            <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
-                        )}
-                        <canvas ref={canvasRef} className="hidden"></canvas>
+                <div className="grid md:grid-cols-2 gap-4 items-start">
+                    <div className="space-y-2">
+                        <Label htmlFor="contact">Phone Number</Label>
+                        <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
                     </div>
-                    {hasCameraPermission === false && (
-                        <Alert variant="destructive" className="text-xs">
-                            <AlertTitle>Camera Access Denied</AlertTitle>
-                        </Alert>
-                    )}
-                    {!faceImageBase64 ? (
-                        <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false} className="w-full">
-                            <Camera className="mr-2 h-4 w-4" /> Capture Photo
-                        </Button>
-                    ) : (
-                        <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full">
-                            <RefreshCw className="mr-2 h-4 w-4" /> Retake Photo
-                        </Button>
-                    )}
+
+                    <div className="space-y-2">
+                        <Label>Face Capture</Label>
+                        <div className="w-full aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
+                            {faceImageBase64 ? (
+                                <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
+                            ) : (
+                                <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                            )}
+                            <canvas ref={canvasRef} className="hidden"></canvas>
+                        </div>
+                        {hasCameraPermission === false && (
+                            <Alert variant="destructive" className="text-xs">
+                                <AlertTitle>Camera Access Denied</AlertTitle>
+                            </Alert>
+                        )}
+                        {!faceImageBase64 ? (
+                            <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false} className="w-full">
+                                <Camera className="mr-2 h-4 w-4" /> Capture Photo
+                            </Button>
+                        ) : (
+                            <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full">
+                                <RefreshCw className="mr-2 h-4 w-4" /> Retake Photo
+                            </Button>
+                        )}
+                    </div>
                 </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-            <CardHeader>
-                <CardTitle>Contribution Plan</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <Label>Contribution Amount</Label>
-                    <Select value={contribution?.toString()} onValueChange={(val) => setContribution(Number(val))}>
-                        <SelectTrigger><SelectValue placeholder="Select amount" /></SelectTrigger>
-                        <SelectContent>
-                            {CONTRIBUTION_AMOUNTS.map(amount => (
-                                <SelectItem key={amount} value={amount.toString()}>₹{amount.toLocaleString('en-IN')}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="space-y-2">
-                    <Label>Frequency</Label>
-                    <Select value={frequency} onValueChange={setFrequency}>
-                        <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
-                        <SelectContent>
-                            {FREQUENCIES.map(freq => (
-                                <SelectItem key={freq} value={freq}>{freq}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+
+             <Card>
+                <CardHeader>
+                    <CardTitle>Contribution Plan</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label>Contribution Amount</Label>
+                            <Select value={contribution?.toString()} onValueChange={(val) => setContribution(Number(val))}>
+                                <SelectTrigger><SelectValue placeholder="Select amount" /></SelectTrigger>
+                                <SelectContent>
+                                    {CONTRIBUTION_AMOUNTS.map(amount => (
+                                        <SelectItem key={amount} value={amount.toString()}>₹{amount.toLocaleString('en-IN')}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Frequency</Label>
+                            <Select value={frequency} onValueChange={setFrequency}>
+                                <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
+                                <SelectContent>
+                                    {FREQUENCIES.map(freq => (
+                                        <SelectItem key={freq} value={freq}>{freq}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+          </div>
+        </div>
           
         <div className="space-y-8">
             <Alert>
@@ -283,5 +302,3 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
-
-    

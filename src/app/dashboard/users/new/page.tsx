@@ -114,6 +114,7 @@ function LoanUserForm({ onBack }: { onBack: () => void }) {
         faceImageUrl: faceImageBase64, // For demo, use the base64 as the URL
         createdAt: new Date().toISOString(),
         loans: [],
+        registrationType: 'Loan' as const,
       };
       
       const tempUsersJson = localStorage.getItem('temp_new_users');
@@ -262,7 +263,7 @@ export default function NewUserPage() {
         description="Select the registration type to begin."
       >
         <Button asChild variant="outline">
-          <Link href="/dashboard/users">
+          <Link href="/dashboard">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Link>
@@ -295,5 +296,3 @@ export default function NewUserPage() {
     </div>
   );
 }
-
-    

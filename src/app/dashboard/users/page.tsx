@@ -13,11 +13,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon, FilePenLine } from "lucide-react";
+import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon, FilePenLine, FileText, Gift } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
 
 function UserCard({ user }: { user: User }) {
   const loanStatus = user.loans.some((l) => l.status === "Overdue")
@@ -48,6 +50,20 @@ function UserCard({ user }: { user: User }) {
             <CardTitle className="text-base">{user.name}</CardTitle>
             <CardDescription className="text-xs">{user.contact}</CardDescription>
           </div>
+           {user.registrationType && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="cursor-default">
+                    {user.registrationType === 'Loan' ? <FileText className="h-4 w-4 text-muted-foreground" /> : <Gift className="h-4 w-4 text-muted-foreground" />}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Registered for {user.registrationType}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
           <Button asChild variant="ghost" size="icon" className="w-8 h-8">
             <Link href={`/dashboard/users/${user.id}/edit`}>
               <FilePenLine className="h-4 w-4" />
@@ -61,9 +77,13 @@ function UserCard({ user }: { user: User }) {
           <span className="text-muted-foreground">ID Proof:</span>
           <span className="text-xs">{user.idProof}</span>
         </div>
-        <div className="flex justify-between items-center">
-          <span className="text-muted-foreground">Loan Status:</span>
-          <Badge variant={loanStatusVariant}>{loanStatus}</Badge>
+         <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Loan Status:</span>
+            {user.registrationType === 'Diwali Fund' && user.loans.length === 0 ? (
+                 <Badge variant="secondary">Diwali Fund</Badge>
+            ) : (
+                <Badge variant={loanStatusVariant}>{loanStatus}</Badge>
+            )}
         </div>
         {nextDueDate && (
           <div className="flex justify-between">
@@ -150,6 +170,8 @@ export default function UsersPage() {
   }
 
   const users = use(usersPromise);
+  const sortedUsers = users.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
 
   return (
     <div className="space-y-4">
@@ -173,7 +195,7 @@ export default function UsersPage() {
         </div>
       </PageHeader>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {users.map((user) => (
+        {sortedUsers.map((user) => (
           <UserCard key={user.id} user={user} />
         ))}
       </div>

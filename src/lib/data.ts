@@ -10,6 +10,7 @@ export type User = {
   faceImageBase64: string;
   createdAt: string;
   loans: Loan[];
+  registrationType: 'Loan' | 'Diwali Fund';
 };
 
 export type Loan = {
