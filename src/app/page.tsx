@@ -31,7 +31,7 @@ export default function LoginPage() {
     <main className="grid md:grid-cols-2 min-h-screen">
       <div className="relative md:block">
         <Image
-            src="/finance.jpeg"
+            src="/finance.jpg"
             alt="Financial background"
             fill
             className="object-cover"
