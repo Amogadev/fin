@@ -117,7 +117,7 @@ export default function UserDetailPage({
                     <PlusCircle className="mr-2 h-4 w-4" /> Apply for Loan/EMI
                   </Link>
                 </Button>
-                <Button asChild variant="accent">
+                <Button asChild variant="secondary">
                   <Link href={`/dashboard/users/${user.id}/repay`}>
                     <IndianRupee className="mr-2 h-4 w-4" /> Repay Loan
                   </Link>
