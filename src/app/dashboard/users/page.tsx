@@ -29,18 +29,18 @@ function UserCard({ user }: { user: User }) {
 
   return (
     <Card>
-      <CardHeader className="p-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full border bg-muted flex items-center justify-center">
-            <UserIcon className="h-6 w-6 text-muted-foreground" />
+      <CardHeader className="p-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full border bg-muted flex items-center justify-center">
+            <UserIcon className="h-5 w-5 text-muted-foreground" />
           </div>
           <div>
-            <CardTitle className="text-lg">{user.name}</CardTitle>
+            <CardTitle className="text-base">{user.name}</CardTitle>
             <CardDescription className="text-xs">{user.contact}</CardDescription>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="px-4 pb-2 space-y-2 text-sm">
+      <CardContent className="px-3 pb-2 space-y-1 text-xs">
         <div className="flex justify-between">
           <span className="text-muted-foreground">ID Proof:</span>
           <span className="text-xs">{user.idProof}</span>
@@ -50,8 +50,8 @@ function UserCard({ user }: { user: User }) {
           <Badge variant={loanStatusVariant}>{loanStatus}</Badge>
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-2">
-        <Button asChild variant="outline" size="sm" className="w-full">
+      <CardFooter className="p-3 pt-1">
+        <Button asChild variant="outline" size="sm" className="w-full h-8">
           <Link href={`/dashboard/users/${user.id}`}>
             View Details
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -86,7 +86,7 @@ export default async function UsersPage() {
           </Button>
         </div>
       </PageHeader>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {users.map((user) => (
           <UserCard key={user.id} user={user} />
         ))}
