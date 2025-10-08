@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -17,8 +18,9 @@ import PageHeader from "@/components/page-header";
 import { Camera, ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function NewUserPage() {
+function LoanUserForm({ onBack }: { onBack: () => void }) {
   const router = useRouter();
   const { toast } = useToast();
   const [name, setName] = useState("");
@@ -113,8 +115,6 @@ export default function NewUserPage() {
         createdAt: new Date().toISOString(),
         loans: [],
       };
-
-      console.log("Creating new user:", newUser);
       
       const tempUsersJson = localStorage.getItem('temp_new_users');
       const tempUsers = tempUsersJson ? JSON.parse(tempUsersJson) : [];
@@ -131,121 +131,169 @@ export default function NewUserPage() {
       setIsSubmitting(false);
     }, 1000);
   };
+  
+  return (
+      <form onSubmit={handleSubmit} className="space-y-4 pt-6">
+        <div className="grid gap-8 md:grid-cols-3">
+          <div className="md:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Personal Information</CardTitle>
+                <CardDescription>
+                  Please fill in the details of the new applicant.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    placeholder="e.g., Rohan Verma"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="contact">Contact Number</Label>
+                  <Input
+                    id="contact"
+                    placeholder="e.g., +91 98765 43210"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="id-proof">ID Proof (Aadhaar)</Label>
+                  <Input
+                    id="id-proof"
+                    placeholder="e.g., AADHAAR Number"
+                    value={idProof}
+                    onChange={(e) => setIdProof(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="md:col-span-1">
+            <Card className="h-full flex flex-col">
+              <CardHeader>
+                <CardTitle>Face Capture</CardTitle>
+                <CardDescription>
+                  Capture a clear image of the applicant's face.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-grow flex flex-col items-center justify-center space-y-4">
+                <div className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
+                  {faceImageBase64 ? (
+                    <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
+                  ) : (
+                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                  )}
+                  <canvas ref={canvasRef} className="hidden"></canvas>
+                </div>
+
+                {hasCameraPermission === false && (
+                  <Alert variant="destructive" className="text-xs">
+                    <AlertTitle>Camera Access Denied</AlertTitle>
+                    <AlertDescription>
+                      Please grant camera access in your browser to proceed.
+                    </AlertDescription>
+                  </Alert>
+                )}
+                
+                {!faceImageBase64 ? (
+                    <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false}>
+                      <Camera className="mr-2 h-4 w-4" />
+                      Capture Photo
+                    </Button>
+                ) : (
+                  <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting}>
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                    Retake Photo
+                  </Button>
+                )}
+
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        <div className="flex justify-between pt-4">
+            <Button type="button" variant="outline" onClick={onBack}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back
+            </Button>
+          <Button type="submit" size="lg" disabled={isSubmitting || !faceImageBase64}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating User...
+              </>
+            ) : (
+              "Create User & Proceed"
+            )}
+          </Button>
+        </div>
+      </form>
+  );
+}
+
+export default function NewUserPage() {
+  const router = useRouter();
+  const [registrationType, setRegistrationType] = useState<"loan" | "diwali" | null>(null);
+
+  const handleTypeChange = (value: "loan" | "diwali") => {
+    if (value === 'diwali') {
+      router.push('/diwali-fund');
+    } else {
+      setRegistrationType(value);
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="space-y-4">
       <PageHeader
         title="Register New User"
-        description="Collect personal information and capture a face image for identity verification."
+        description="Select the registration type to begin."
       >
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Users
+            Back to Dashboard
           </Link>
         </Button>
       </PageHeader>
-      <div className="grid gap-8 md:grid-cols-3">
-        <div className="md:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>
-                Please fill in the details of the new applicant.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  placeholder="e.g., Rohan Verma"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="contact">Contact Number</Label>
-                <Input
-                  id="contact"
-                  placeholder="e.g., +91 98765 43210"
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="id-proof">ID Proof (Aadhaar)</Label>
-                <Input
-                  id="id-proof"
-                  placeholder="e.g., AADHAAR Number"
-                  value={idProof}
-                  onChange={(e) => setIdProof(e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="md:col-span-1">
-          <Card className="h-full flex flex-col">
-            <CardHeader>
-              <CardTitle>Face Capture</CardTitle>
-              <CardDescription>
-                Capture a clear image of the applicant's face.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow flex flex-col items-center justify-center space-y-4">
-              <div className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
-                {faceImageBase64 ? (
-                  <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                ) : (
-                  <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
-                )}
-                <canvas ref={canvasRef} className="hidden"></canvas>
-              </div>
+      
+      {!registrationType && (
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle>Select Registration Type</CardTitle>
+            <CardDescription>What are you registering this new user for?</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Select onValueChange={handleTypeChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select an option..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="loan">New User for Loan/EMI</SelectItem>
+                <SelectItem value="diwali">Join Diwali Fund</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+      )}
 
-              {hasCameraPermission === false && (
-                <Alert variant="destructive" className="text-xs">
-                  <AlertTitle>Camera Access Denied</AlertTitle>
-                  <AlertDescription>
-                    Please grant camera access in your browser to proceed.
-                  </AlertDescription>
-                </Alert>
-              )}
-              
-              {!faceImageBase64 ? (
-                  <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false}>
-                    <Camera className="mr-2 h-4 w-4" />
-                    Capture Photo
-                  </Button>
-              ) : (
-                <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting}>
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Retake Photo
-                </Button>
-              )}
-
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-      <div className="flex justify-end pt-4">
-        <Button type="submit" size="lg" disabled={isSubmitting || !faceImageBase64}>
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating User...
-            </>
-          ) : (
-            "Create User & Proceed"
-          )}
-        </Button>
-      </div>
-    </form>
+      {registrationType === 'loan' && (
+        <LoanUserForm onBack={() => setRegistrationType(null)} />
+      )}
+    </div>
   );
 }
+
+    
