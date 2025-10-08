@@ -112,7 +112,7 @@ export default function DashboardLayout({
                 className={`flex flex-col items-center justify-center gap-1 w-20 h-full transition-colors ${
                   isActive
                     ? "text-primary"
-                    : "text-muted-foreground hover:text-primary"
+                    : "text-muted-foreground hover:text-accent-foreground/80"
                 }`}
               >
                 <item.icon className="h-6 w-6" />
