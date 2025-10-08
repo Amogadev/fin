@@ -25,10 +25,14 @@ const LOAN_TYPE_CONFIG = {
   emi: { interestRate: 0.12, label: "EMI" }, // 12%
 };
 
+const PAYMENT_FREQUENCIES = ["Daily", "Weekly", "Monthly", "Yearly"] as const;
+
 export default function ApplyLoanPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const { id } = use(paramsPromise);
   const [amount, setAmount] = useState(10000);
   const [loanType, setLoanType] = useState<"loan" | "emi">("loan");
+  const [paymentFrequency, setPaymentFrequency] = useState<(typeof PAYMENT_FREQUENCIES)[number]>("Monthly");
+
 
   const interestRate = LOAN_TYPE_CONFIG[loanType].interestRate;
   const interest = amount * interestRate;
@@ -119,6 +123,26 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                   ))}
                 </RadioGroup>
               </div>
+
+              <div className="space-y-4">
+                <Label>Payment Frequency</Label>
+                <RadioGroup
+                  value={paymentFrequency}
+                  onValueChange={(value: (typeof PAYMENT_FREQUENCIES)[number]) => setPaymentFrequency(value)}
+                  className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+                >
+                  {PAYMENT_FREQUENCIES.map((freq) => (
+                    <Label
+                      key={freq}
+                      className={`flex items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground text-sm ${paymentFrequency === freq ? 'border-primary' : ''}`}
+                    >
+                      <RadioGroupItem value={freq} className="sr-only" />
+                      <span>{freq}</span>
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </div>
+
             </CardContent>
             <CardFooter className="p-0 pt-6">
               <Button disabled={amount <= 0} className="w-full" size="lg">
