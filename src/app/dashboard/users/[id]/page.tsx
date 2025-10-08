@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound, useRouter } from "next/navigation";
-import { getUserById, type User } from "@/lib/data";
+import { getUserById, type User, type Loan } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import PageHeader from "@/components/page-header";
@@ -24,28 +24,28 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { ShieldCheck, PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 
 export default function UserDetailPage({
-  params,
+  params: paramsPromise,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = use(paramsPromise);
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const router = useRouter();
 
   useEffect(() => {
-    const userId = params.id;
     async function loadUser() {
       // Try to get user from mock data first
-      let userData = await getUserById(userId);
+      let userData = await getUserById(id);
 
       // If not found, check localStorage for a newly created user (demo purpose)
       if (!userData) {
         const tempUserJson = localStorage.getItem('temp_new_user');
         if (tempUserJson) {
           const tempUser = JSON.parse(tempUserJson);
-          if (tempUser.id === userId) {
+          if (tempUser.id === id) {
             userData = {
               ...tempUser,
               createdAt: new Date().toISOString(),
@@ -54,17 +54,31 @@ export default function UserDetailPage({
           }
         }
       }
+      
+      // Check for new loans in localStorage
+      if (userData) {
+        const tempLoansJson = localStorage.getItem('temp_new_loans');
+        if (tempLoansJson) {
+            const tempLoans = JSON.parse(tempLoansJson);
+            if (tempLoans[id]) {
+                const existingLoanIds = new Set(userData.loans.map(l => l.id));
+                const newLoans = tempLoans[id].filter((l: Loan) => !existingLoanIds.has(l.id));
+                userData.loans = [...userData.loans, ...newLoans];
+            }
+        }
+      }
+
 
       setUser(userData || null);
     }
 
     loadUser();
 
-    // Clean up localStorage after a short delay
+    // Clean up localStorage after a short delay to avoid stale data
     const timer = setTimeout(() => {
         if (localStorage.getItem('temp_new_user')) {
             const tempUser = JSON.parse(localStorage.getItem('temp_new_user')!);
-            if (tempUser.id === userId) {
+            if (tempUser.id === id) {
                 localStorage.removeItem('temp_new_user');
             }
         }
@@ -72,7 +86,7 @@ export default function UserDetailPage({
 
     return () => clearTimeout(timer);
 
-  }, [params.id]);
+  }, [id]);
 
   if (user === undefined) {
     return (

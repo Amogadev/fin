@@ -2,6 +2,7 @@
 
 import { useState, use } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import PageHeader from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,8 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Pie, PieChart, Cell } from "recharts";
+import { useToast } from "@/hooks/use-toast";
+import type { Loan } from "@/lib/data";
 
 const LOAN_TYPE_CONFIG = {
   loan: { interestRate: 0.1, label: "Standard Loan" }, // 10%
@@ -28,9 +31,12 @@ const LOAN_TYPE_CONFIG = {
 const PAYMENT_FREQUENCIES = ["Daily", "Weekly", "Monthly", "Yearly"] as const;
 
 export default function ApplyLoanPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
-  const { id } = use(paramsPromise);
+  const { id: userId } = use(paramsPromise);
+  const router = useRouter();
+  const { toast } = useToast();
+
   const [amount, setAmount] = useState(10000);
-  const [loanType, setLoanType] = useState<"loan" | "emi">("loan");
+  const [loanType, setLoanType] = useState<"loan" | "emi">("emi");
   const [paymentFrequency, setPaymentFrequency] = useState<(typeof PAYMENT_FREQUENCIES)[number]>("Monthly");
 
 
@@ -44,11 +50,55 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
     { name: "Interest", value: interest, fill: "hsl(var(--accent))" },
   ];
 
+  const handleSubmit = () => {
+    const newLoan: Loan = {
+      id: `loan${Date.now().toString().slice(-5)}`,
+      userId,
+      amountRequested: amount,
+      interest,
+      principal,
+      totalOwed,
+      amountRepaid: 0,
+      status: 'Active',
+      loanType: LOAN_TYPE_CONFIG[loanType].label as 'Loan' | 'EMI',
+      paymentFrequency,
+      createdAt: new Date().toISOString(),
+      transactions: [
+        {
+          id: `txn${Date.now().toString().slice(-5)}`,
+          loanId: '', // will be set below
+          type: 'Disbursement',
+          amount: principal,
+          date: new Date().toISOString(),
+        }
+      ]
+    };
+    newLoan.transactions[0].loanId = newLoan.id;
+
+    // In a real app, you would save this to a database.
+    // For this demo, we'll use localStorage to persist the new loan for the session.
+    const tempLoansJson = localStorage.getItem('temp_new_loans');
+    const tempLoans = tempLoansJson ? JSON.parse(tempLoansJson) : {};
+    if (!tempLoans[userId]) {
+      tempLoans[userId] = [];
+    }
+    tempLoans[userId].push(newLoan);
+    localStorage.setItem('temp_new_loans', JSON.stringify(tempLoans));
+
+    toast({
+      title: "Application Submitted!",
+      description: `The loan for ₹${totalOwed.toLocaleString('en-IN')} has been approved.`,
+    });
+
+    router.push(`/dashboard/users/${userId}`);
+  };
+
+
   return (
     <div className="space-y-6">
       <PageHeader title="New Loan Application">
         <Button asChild variant="outline" size="sm">
-          <Link href={`/dashboard/users/${id}`}>
+          <Link href={`/dashboard/users/${userId}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to User
           </Link>
@@ -145,7 +195,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
             </CardContent>
             <CardFooter className="p-0 pt-6">
-              <Button disabled={amount <= 0} className="w-full" size="lg">
+              <Button onClick={handleSubmit} disabled={amount <= 0} className="w-full" size="lg">
                 Submit Application
               </Button>
             </CardFooter>
