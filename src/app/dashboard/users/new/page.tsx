@@ -109,7 +109,6 @@ function LoanUserForm() {
         name,
         contact,
         idProof,
-        faceImageBase64,
         faceImageUrl: faceImageBase64, // For demo, use the base64 as the URL
         createdAt: new Date().toISOString(),
         loans: [],

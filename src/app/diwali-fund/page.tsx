@@ -104,20 +104,19 @@ export default function DiwaliFundPage() {
 
     setIsSubmitting(true);
 
-    const newUser = {
-      id: `user${Date.now().toString().slice(-4)}`,
-      name,
-      contact,
-      idProof,
-      faceImageBase64,
-      faceImageUrl: faceImageBase64, // For demo, use the base64 as the URL
-      createdAt: new Date().toISOString(),
-      loans: [],
-      registrationType: 'Diwali Fund' as const,
-    };
-
     // Simulate submission
     setTimeout(() => {
+      const newUser = {
+        id: `user${Date.now().toString().slice(-4)}`,
+        name,
+        contact,
+        idProof,
+        faceImageUrl: faceImageBase64, // For demo, use the base64 as the URL
+        createdAt: new Date().toISOString(),
+        loans: [],
+        registrationType: 'Diwali Fund' as const,
+      };
+
       const tempUsersJson = localStorage.getItem('temp_new_users');
       const tempUsers = tempUsersJson ? JSON.parse(tempUsersJson) : [];
       tempUsers.push(newUser);

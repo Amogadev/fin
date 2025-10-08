@@ -7,7 +7,7 @@ export type User = {
   contact: string;
   idProof: string;
   faceImageUrl: string;
-  faceImageBase64: string;
+  faceImageBase64?: string; // This is now optional
   createdAt: string;
   loans: Loan[];
   registrationType: 'Loan' | 'Diwali Fund';
