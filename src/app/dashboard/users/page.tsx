@@ -41,7 +41,7 @@ export default async function UsersPage() {
           </Button>
         </div>
       </PageHeader>
-      <Card>
+      <Card className="bg-muted text-muted-foreground">
         <CardContent className="pt-6">
           <Table>
             <TableHeader>
@@ -57,7 +57,7 @@ export default async function UsersPage() {
               {users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>
-                    <div className="font-medium">{user.name}</div>
+                    <div className="font-medium text-foreground">{user.name}</div>
                   </TableCell>
                   <TableCell>{user.contact}</TableCell>
                   <TableCell>{user.idProof}</TableCell>
