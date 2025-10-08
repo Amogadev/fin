@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Logo from "@/components/logo";
 
 export default function DashboardLayout({
   children,
@@ -50,8 +49,8 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader className="items-center">
-          <Logo />
+        <SidebarHeader className="items-center justify-center">
+          <h2 className="text-xl font-semibold font-headline">Welcome back!</h2>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
