@@ -154,7 +154,7 @@ export default function DashboardPage() {
        <div className="space-y-4">
            <Card className="bg-primary text-primary-foreground">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">மொத்தக் களஞ்சிய இருப்பு</CardTitle>
+                    <CardTitle className="text-sm font-medium">மொத்த இருப்பு</CardTitle>
                     <Wallet className="h-5 w-5 text-primary-foreground/80" />
                 </CardHeader>
                 <CardContent>
@@ -230,6 +230,8 @@ export default function DashboardPage() {
 
 
 
+
+    
 
     
 
