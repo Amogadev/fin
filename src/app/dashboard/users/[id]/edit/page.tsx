@@ -155,7 +155,7 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
             <Label htmlFor="name">முழு பெயர்</Label>
             <Input
               id="name"
-              placeholder="எ.கா., ரோஹன் வர்மா"
+              placeholder="எ.கா., விராட்"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
