@@ -26,6 +26,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Pie, PieChart, Cell } from "recharts";
 import { addDays, addMonths, addYears, format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 
 // --- Loan Application Form Component (previously from apply/page.tsx) ---
@@ -51,13 +52,14 @@ function getDueDate(startDate: Date, frequency: PaymentFrequency): Date {
   }
 }
 
-function ApplyLoanForm({ user, onLoanApplied }: { user: User, onLoanApplied: () => void }) {
+function ApplyLoanForm({ user, onLoanApplied, isDisabled }: { user: User | null, onLoanApplied: () => void, isDisabled: boolean }) {
   const router = useRouter();
   const { toast } = useToast();
 
   const [amount, setAmount] = useState(0);
   const [loanType, setLoanType] = useState<"loan" | "emi">();
   const [paymentFrequency, setPaymentFrequency] = useState<PaymentFrequency>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const interestRate = loanType ? LOAN_TYPE_CONFIG[loanType].interestRate : 0;
@@ -74,6 +76,14 @@ function ApplyLoanForm({ user, onLoanApplied }: { user: User, onLoanApplied: () 
   ];
 
   const handleSubmit = async () => {
+    if (!user) {
+         toast({
+          variant: "destructive",
+          title: "பயனர் பதிவு செய்யப்படவில்லை!",
+          description: `படி 1 ஐ முதலில் முடிக்கவும்.`,
+        });
+        return;
+    }
     if (!loanType || !paymentFrequency || !dueDate) {
       toast({
         variant: "destructive",
@@ -82,6 +92,8 @@ function ApplyLoanForm({ user, onLoanApplied }: { user: User, onLoanApplied: () 
       });
       return;
     }
+
+    setIsSubmitting(true);
 
     const tempUsersJson = localStorage.getItem('temp_new_users');
     const users: User[] = tempUsersJson ? JSON.parse(tempUsersJson) : [];
@@ -143,12 +155,13 @@ function ApplyLoanForm({ user, onLoanApplied }: { user: User, onLoanApplied: () 
           description: `கடன் விண்ணப்பத்தைச் சேமிக்க முடியவில்லை.`,
         });
     }
+     setIsSubmitting(false);
   };
 
 
   return (
-     <div className="space-y-6 mt-8">
-      <PageHeader title={`படி 2: ${user.name}க்கான கடன் விண்ணப்பம்`} />
+     <div className={cn("space-y-6 mt-8", isDisabled && "opacity-50 pointer-events-none")}>
+      <PageHeader title={`படி 2: கடன் விண்ணப்பம்`} description={user ? `${user.name}க்கான கடன் விவரங்களை உள்ளிடவும்` : `முதலில் படி 1 ஐ முடிக்கவும்`}/>
 
       <Card>
         <div className="grid md:grid-cols-2">
@@ -239,11 +252,6 @@ function ApplyLoanForm({ user, onLoanApplied }: { user: User, onLoanApplied: () 
               </div>
 
             </CardContent>
-            <CardFooter className="p-0 pt-6">
-              <Button onClick={handleSubmit} disabled={amount <= 0 || !loanType || !paymentFrequency} className="w-full" size="lg">
-                விண்ணப்பத்தை சமர்ப்பித்து முடிக்கவும்
-              </Button>
-            </CardFooter>
           </div>
 
           {/* Right Side: Summary */}
@@ -310,6 +318,18 @@ function ApplyLoanForm({ user, onLoanApplied }: { user: User, onLoanApplied: () 
             </CardContent>
           </div>
         </div>
+         <CardFooter className="p-0 pt-6">
+            <Button onClick={handleSubmit} disabled={isSubmitting || amount <= 0 || !loanType || !paymentFrequency} className="w-full" size="lg">
+                 {isSubmitting ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        விண்ணப்பத்தை சமர்ப்பிக்கிறது...
+                    </>
+                ) : (
+                    "விண்ணப்பத்தை சமர்ப்பித்து முடிக்கவும்"
+                )}
+            </Button>
+        </CardFooter>
       </Card>
     </div>
   );
@@ -318,7 +338,7 @@ function ApplyLoanForm({ user, onLoanApplied }: { user: User, onLoanApplied: () 
 
 // --- User Registration Form Component ---
 
-function LoanUserForm({ onUserRegistered }: { onUserRegistered: (user: User) => void }) {
+function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (user: User) => void, isDisabled: boolean }) {
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
@@ -366,7 +386,7 @@ function LoanUserForm({ onUserRegistered }: { onUserRegistered: (user: User) => 
   }
 
 
-  const captureFace = () => {
+ const captureFace = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -374,15 +394,16 @@ function LoanUserForm({ onUserRegistered }: { onUserRegistered: (user: User) => 
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const context = canvas.getContext('2d');
+
       if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUri = canvas.toDataURL('image/png');
+        
         // Stop the stream tracks before setting the image
         if (streamRef.current) {
           streamRef.current.getTracks().forEach(track => track.stop());
           streamRef.current = null;
         }
-        
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUri = canvas.toDataURL('image/png');
         
         setFaceImageBase64(dataUri);
         setIsCameraOpen(false);
@@ -437,7 +458,8 @@ function LoanUserForm({ onUserRegistered }: { onUserRegistered: (user: User) => 
   };
   
   return (
-      <form onSubmit={handleSubmit} className="space-y-4 pt-6">
+      <form onSubmit={handleSubmit} className={cn("space-y-4 pt-6", isDisabled && "opacity-50 pointer-events-none")}>
+        <PageHeader title="படி 1: பயனர் பதிவு" />
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-2">
             <Card>
@@ -576,7 +598,7 @@ export default function NewUserPage() {
     <div className="space-y-4">
       <PageHeader
         title="கடன் / EMIக்கு புதிய பயனரைப் பதிவு செய்யவும்"
-        description={!registeredUser ? "படி 1: தனிப்பட்ட தகவல்களைச் சேகரித்து, அடையாள சரிபார்ப்புக்காக ஒரு முகப் படத்தைப் பிடிக்கவும்." : "படி 2: கடன் விவரங்களை உள்ளிடவும்"}
+        description="புதிய பயனரைச் சேர்த்து உடனடியாக கடன் விண்ணப்பத்தை முடிக்கவும்."
       >
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
@@ -586,11 +608,13 @@ export default function NewUserPage() {
         </Button>
       </PageHeader>
       
-      {!registeredUser ? (
-        <LoanUserForm onUserRegistered={handleUserRegistered} />
-      ) : (
-        <ApplyLoanForm user={registeredUser} onLoanApplied={handleLoanApplied} />
-      )}
+      <LoanUserForm onUserRegistered={handleUserRegistered} isDisabled={!!registeredUser} />
+      
+      <Separator className="my-8"/>
+
+      <ApplyLoanForm user={registeredUser} onLoanApplied={handleLoanApplied} isDisabled={!registeredUser} />
     </div>
   );
 }
+
+    
