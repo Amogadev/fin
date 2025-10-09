@@ -163,7 +163,7 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
             
-            <h3 className="text-lg font-semibold pt-2">கடன் சேவைகள்</h3>
+            <h3 className="text-lg font-semibold pt-2">கடன்</h3>
 
             <div className="grid gap-4 md:grid-cols-3">
                 <NewLoanRegistrationCard />
@@ -229,3 +229,6 @@ export default function DashboardPage() {
     
 
 
+
+
+    
