@@ -73,7 +73,7 @@ function AddUserCard() {
             <div className="flex items-center justify-center bg-background/50 rounded-full w-10 h-10">
                 <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="font-semibold text-xs">புதிய பயனரைச் சேர்க்கவும்</p>
+            <p className="font-semibold text-xs">புதிய பயனர்</p>
         </CardContent>
       </Card>
     </Link>

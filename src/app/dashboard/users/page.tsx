@@ -156,7 +156,7 @@ export default function UsersPage() {
             <Button asChild>
               <Link href="/dashboard/users/new">
                 <PlusCircle className="mr-2 h-4 w-4" />
-                புதிய பயனரைப் பதிவு செய்யவும்
+                புதிய பயனர்
               </Link>
             </Button>
           </div>
@@ -187,7 +187,7 @@ export default function UsersPage() {
           <Button asChild>
             <Link href="/dashboard/users/new">
               <PlusCircle className="mr-2 h-4 w-4" />
-              புதிய பயனரைப் பதிவு செய்யவும்
+              புதிய பயனர்
             </Link>
           </Button>
         </div>
