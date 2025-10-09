@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Vault 360",
-  description: "ഒരു സ്മാർട്ട് ഫിനാൻസ് / ലോൺ മാനേജ്മെന്റ് സിസ്റ്റം",
+  title: "வைப்புத்தொகை 360",
+  description: "ஒரு சிறந்த நிதி / கடன் மேலாண்மை அமைப்பு",
 };
 
 export default function RootLayout({

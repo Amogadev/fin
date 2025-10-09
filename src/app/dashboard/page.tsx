@@ -73,7 +73,7 @@ function AddUserCard() {
             <div className="flex items-center justify-center bg-background/50 rounded-full w-10 h-10">
                 <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="font-semibold text-xs">புதிய பயனரைச் சேர்</p>
+            <p className="font-semibold text-xs">புதிய பயனரைச் சேர்க்கவும்</p>
         </CardContent>
       </Card>
     </Link>
@@ -154,7 +154,7 @@ export default function DashboardPage() {
        <div className="space-y-4">
            <Card className="bg-primary text-primary-foreground">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">வாலட்டில் உள்ள மொத்த தொகை</CardTitle>
+                    <CardTitle className="text-sm font-medium">மொத்தக் களஞ்சிய இருப்பு</CardTitle>
                     <Wallet className="h-5 w-5 text-primary-foreground/80" />
                 </CardHeader>
                 <CardContent>
