@@ -152,7 +152,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
             </CardHeader>
             <CardContent className="flex-grow p-0 space-y-8">
               <div className="space-y-4">
-                <Label htmlFor="amount">கடன் தொகை (திருப்பிச் செலுத்த வேண்டிய మొత్తం)</Label>
+                <Label htmlFor="amount">கடன் தொகை (திருப்பிச் செலுத்த வேண்டிய மொத்தம்)</Label>
                 <div className="flex items-center gap-4">
                   <Button
                     variant="outline"
