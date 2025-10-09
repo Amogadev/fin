@@ -141,7 +141,7 @@ export default function DashboardLayout({
                 );
             }
             
-            const isActive = pathname === item.href;
+            const isActive = 'href' in item && pathname.startsWith(item.href!);
             return (
               <Link
                 key={item.href}

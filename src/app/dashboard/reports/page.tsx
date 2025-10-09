@@ -115,26 +115,22 @@ function ReportsPageContent() {
     const [dataPromise, setDataPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }> | null>(null);
 
     useEffect(() => {
-        // This effect runs when the `tab` changes, fetching the new data.
         setDataPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, [tab]); 
+    }, []); 
     
     if (!dataPromise) {
-        // This case will be handled by Suspense on the initial render.
-        // It can also be a state during client-side transitions if needed.
         return null;
     }
     
     const { loans, funds } = use(dataPromise);
 
     const handleTabChange = (value: string) => {
-        // Update the URL, which will trigger the useEffect to re-fetch data
-        router.push(`/dashboard/reports?tab=${value}`);
+        router.push(`/dashboard/reports?tab=${value}`, { scroll: false });
     };
     
-    const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
+    const pageTitle = "அறிக்கைகள்";
     const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
 
     return (
