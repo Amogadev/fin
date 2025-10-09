@@ -37,31 +37,32 @@ export default function DiwaliFundPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
+   useEffect(() => {
+    let stream: MediaStream | null = null;
     const enableCamera = async () => {
-        if (!isCameraOpen) return;
+      if (isCameraOpen) {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-            }
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
         } catch (error) {
-            console.error('கேமராவை அணுகுவதில் பிழை:', error);
-            setHasCameraPermission(false);
-            toast({
-                variant: 'destructive',
-                title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
-                description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
-            });
+          console.error("கேமராவை அணுகுவதில் பிழை:", error);
+          setHasCameraPermission(false);
+          toast({
+            variant: "destructive",
+            title: "கேமரா அணுகல் மறுக்கப்பட்டது",
+            description: "பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.",
+          });
         }
+      }
     };
     enableCamera();
 
     return () => {
-        if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-        }
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
     };
   }, [isCameraOpen, toast]);
 
@@ -93,14 +94,18 @@ export default function DiwaliFundPage() {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         const dataUri = canvas.toDataURL('image/png');
         setFaceImageBase64(dataUri);
-        setIsCameraOpen(false); // Close camera view
+        setIsCameraOpen(false); // Close camera after capture
+        if (video.srcObject) {
+          const stream = video.srcObject as MediaStream;
+          stream.getTracks().forEach((track) => track.stop());
+        }
       }
     }
   };
 
   const retakePhoto = () => {
     setFaceImageBase64(null);
-    setIsCameraOpen(true);
+    openCamera();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -191,15 +196,16 @@ export default function DiwaliFundPage() {
               <div className="space-y-2 flex flex-col items-center">
                 <Label className="text-center w-full">முகப் புகைப்படம்</Label>
                 <div
-                  className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden cursor-pointer"
-                  onClick={!isCameraOpen && !faceImageBase64 ? openCamera : undefined}
+                  className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden"
                 >
-                  {faceImageBase64 ? (
+                  {faceImageBase64 && !isCameraOpen ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
                   ) : isCameraOpen ? (
                      <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
                   ) : (
-                    <Camera className="h-16 w-16 text-muted-foreground" />
+                    <div onClick={openCamera} className="cursor-pointer">
+                      <Camera className="h-16 w-16 text-muted-foreground" />
+                    </div>
                   )}
                   <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
@@ -242,3 +248,5 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
+
+    
