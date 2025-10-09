@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "வைப்புத்தொகை 360",
-  description: "ஒரு சிறந்த நிதி / கடன் மேலாண்மை அமைப்பு",
+  description: "சிறந்த நிதி மற்றும் கடன் மேலாண்மை அமைப்பு",
 };
 
 export default function RootLayout({

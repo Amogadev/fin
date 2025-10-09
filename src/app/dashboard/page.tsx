@@ -87,8 +87,8 @@ function NewLoanRegistrationCard() {
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <UserPlus className="h-6 w-6 text-primary" />
         </div>
-        <p className="font-semibold text-sm text-primary">கடனுக்காக சேரவும்</p>
-        <p className="text-xs text-muted-foreground">புதிய பயனரை உள்வாங்கவும்</p>
+        <p className="font-semibold text-sm text-primary">புதிய கடன் பதிவு</p>
+        <p className="text-xs text-muted-foreground">ஒரு புதிய பயனரைச் சேர்க்கவும்</p>
       </Card>
     </Link>
   )
@@ -101,7 +101,7 @@ function DiwaliFundCard() {
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <Gift className="h-6 w-6 text-primary" />
         </div>
-        <p className="font-semibold text-sm text-primary">தீபாவளி நிதியில் சேரவும்</p>
+        <p className="font-semibold text-sm text-primary">தீபாவளி நிதிக்கு பதிவு செய்யவும்</p>
         <p className="text-xs text-muted-foreground">சேமித்து பண்டிகை போனஸ் பெறுங்கள்</p>
       </Card>
     </Link>
@@ -163,7 +163,7 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
             
-            <h3 className="text-lg font-semibold pt-2">கடன்</h3>
+            <h3 className="text-lg font-semibold pt-2">கடன் சேவைகள்</h3>
 
             <div className="grid gap-4 md:grid-cols-3">
                 <NewLoanRegistrationCard />
@@ -177,7 +177,7 @@ export default function DashboardPage() {
                 title="மொத்த கடன் பயனர்கள்"
                 value={loanUsers.length.toString()}
                 icon={Users}
-                description="செயலில் உள்ள கடன்களைக் கொண்ட பயனர்கள்"
+                description="கடன் பெற்ற பயனர்கள்"
                 />
             </div>
             

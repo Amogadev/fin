@@ -31,7 +31,7 @@ function EditUserSkeleton() {
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர்கள் பக்கத்திற்கு திரும்ப
+            பயனர்கள் பக்கத்திற்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
@@ -139,7 +139,7 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர்கள் பக்கத்திற்கு திரும்ப
+            பயனர்கள் பக்கத்திற்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>

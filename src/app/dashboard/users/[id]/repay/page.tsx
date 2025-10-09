@@ -58,7 +58,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
       toast({
         variant: "destructive",
         title: "தவறான திருப்பிச் செலுத்துதல்",
-        description: "దయచేసి ఒక кредитуను ఎంచుకుని, చెల్లుబాటు అయ్యే మొత్తాన్ని నమోదు చేయండి.",
+        description: "దయచేసి ఒక రుణத்தைத் தேர்ந்தெடுத்து, செல்லுபடியாகும் தொகையை உள்ளிடவும்.",
       });
       return;
     }
@@ -132,7 +132,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
         <Button asChild variant="outline" size="sm">
           <Link href={`/dashboard/users/${userId}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர் விவரங்களுக்கு திரும்ப
+            பயனர் விவரங்களுக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
@@ -171,7 +171,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
                     <div className="space-y-4 pt-4">
                          <div className="p-4 border rounded-lg bg-muted/50 space-y-2">
                             <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">மொத்த செலுத்த வேண்டியது:</span>
+                                <span className="text-muted-foreground">மொத்த கடன் தொகை:</span>
                                 <span className="font-mono">₹{selectedLoan.totalOwed.toLocaleString('en-IN')}</span>
                             </div>
                              <div className="flex justify-between text-sm">

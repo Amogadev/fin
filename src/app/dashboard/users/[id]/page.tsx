@@ -104,7 +104,7 @@ export default function UserDetailPage({
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            அனைத்து பயனர்கள்
+            அனைத்து பயனர்களுக்கும் திரும்பு
           </Link>
         </Button>
       </PageHeader>
@@ -128,7 +128,7 @@ export default function UserDetailPage({
               </div>
               <div className="text-sm space-y-2">
                 <p>
-                  <strong>தொடர்பு:</strong> {user.contact}
+                  <strong>தொடர்பு எண்:</strong> {user.contact}
                 </p>
                 <p>
                   <strong>அடையாளச் சான்று:</strong> {user.idProof}
@@ -141,7 +141,7 @@ export default function UserDetailPage({
               <div className="flex flex-col gap-2 pt-2">
                 <Button asChild>
                   <Link href={`/dashboard/users/${user.id}/apply`}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> கடன்/EMI க்கு விண்ணப்பிக்கவும்
+                    <PlusCircle className="mr-2 h-4 w-4" /> கடன்/EMIக்கு விண்ணப்பிக்கவும்
                   </Link>
                 </Button>
                 <Button asChild variant="secondary">

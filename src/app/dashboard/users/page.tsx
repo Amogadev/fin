@@ -59,7 +59,7 @@ function UserCard({ user }: { user: User }) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{user.registrationType === 'Loan' ? 'கடன்' : 'தீபாவளி நிதி'} பதிவு</p>                
+                  <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி நிதி பதிவு'}</p>                
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

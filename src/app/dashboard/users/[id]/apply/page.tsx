@@ -32,7 +32,7 @@ const LOAN_TYPE_CONFIG = {
   emi: { interestRate: 0.12, label: "EMI" }, // 12%
 };
 
-const PAYMENT_FREQUENCIES = ["தினசரி", "வாராந்திர", "மாதாந்திர", "ஆண்டுதோறும்"] as const;
+const PAYMENT_FREQUENCIES = ["தினசரி", "வாராந்திர", "மாதாந்திர", "வருடாந்திர"] as const;
 type PaymentFrequency = (typeof PAYMENT_FREQUENCIES)[number];
 
 function getDueDate(startDate: Date, frequency: PaymentFrequency): Date {
@@ -43,7 +43,7 @@ function getDueDate(startDate: Date, frequency: PaymentFrequency): Date {
       return addDays(startDate, 7);
     case "மாதாந்திர":
       return addMonths(startDate, 1);
-    case "ஆண்டுதோறும்":
+    case "வருடாந்திர":
       return addYears(startDate, 1);
   }
 }
@@ -76,7 +76,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
       toast({
         variant: "destructive",
         title: "முழுமையற்ற தகவல்",
-        description: "கடன் வகை மற்றும் చెల్లింపు తరచుదనాన్ని ఎంచుకోండి.",
+        description: "கடன் வகை மற்றும் செலுத்தும் கால இடைவெளியைத் தேர்ந்தெடுக்கவும்.",
       });
       return;
     }
@@ -135,7 +135,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
         <Button asChild variant="outline" size="sm">
           <Link href={`/dashboard/users/${userId}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர் விவரங்களுக்கு திரும்ப
+            பயனர் விவரங்களுக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
@@ -145,9 +145,9 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
           {/* Left Side: Form */}
           <div className="p-6 flex flex-col">
             <CardHeader className="p-0 mb-6">
-              <CardTitle>உங்கள் கடனை உள்ளமைக்கவும்</CardTitle>
+              <CardTitle>உங்கள் கடனை அமைக்கவும்</CardTitle>
               <CardDescription>
-                தொகையை சரிசெய்து கடன் வகையை தேர்ந்தெடுக்கவும்.
+                தொகையை சரிசெய்து கடன் வகையைத் தேர்ந்தெடுக்கவும்.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow p-0 space-y-8">
@@ -241,7 +241,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
             <CardHeader className="p-0 mb-6">
               <CardTitle>கடன் சுருக்கம்</CardTitle>
               <CardDescription>
-                உங்கள் கோரப்பட்ட கடனின் விவரம்.
+                நீங்கள் கோரிய கடனின் விவரங்கள்.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0 flex-grow flex flex-col items-center justify-center">
@@ -271,7 +271,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
               <div className="w-full max-w-sm space-y-3 text-sm">
                 <Separator className="my-4" />
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">வழங்கப்பட்ட தொகை:</span>
+                  <span className="text-muted-foreground">கடன் தொகை:</span>
                   <span className="font-medium">
                     ₹{disbursedAmount.toLocaleString("en-IN")}
                   </span>

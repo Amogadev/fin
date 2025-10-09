@@ -181,7 +181,7 @@ export default function DiwaliFundPage() {
 
               {/* Right side: Face Capture */}
               <div className="space-y-2 flex flex-col items-center">
-                <Label className="text-center w-full">முகப் பிடிப்பு</Label>
+                <Label className="text-center w-full">முகப் புகைப்படம்</Label>
                 <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />

@@ -185,9 +185,9 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label>அதிர்வெண்</Label>
+                            <Label>கால இடைவெளி</Label>
                             <Select value={frequency} onValueChange={(val: "வாராந்திர" | "மாதாந்திர") => setFrequency(val)}>
-                                <SelectTrigger><SelectValue placeholder="அதிர்வெண்ணைத் தேர்ந்தெடுக்கவும்" /></SelectTrigger>
+                                <SelectTrigger><SelectValue placeholder="கால இடைவெளியைத் தேர்ந்தெடுக்கவும்" /></SelectTrigger>
                                 <SelectContent>
                                     {FREQUENCIES.map(freq => (
                                         <SelectItem key={freq} value={freq}>{freq}</SelectItem>

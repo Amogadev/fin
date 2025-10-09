@@ -185,7 +185,7 @@ function LoanUserForm() {
           <div className="md:col-span-1">
             <Card className="h-full flex flex-col">
               <CardHeader>
-                <CardTitle>முகப் பிடிப்பு</CardTitle>
+                <CardTitle>முகப் புகைப்படம்</CardTitle>
                 <CardDescription>
                   விண்ணப்பதாரரின் முகத்தின் தெளிவான படத்தைப் பிடிக்கவும்.
                 </CardDescription>
@@ -252,13 +252,13 @@ export default function NewUserPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="கடன் / EMI க்கு புதிய பயனரைப் பதிவு செய்யவும்"
+        title="கடன் / EMIக்கு புதிய பயனரைப் பதிவு செய்யவும்"
         description="தனிப்பட்ட தகவல்களைச் சேகரித்து, அடையாள சரிபார்ப்புக்காக ஒரு முகப் படத்தைப் பிடிக்கவும்."
       >
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர்கள் பக்கத்திற்கு திரும்ப
+            பயனர்கள் பக்கத்திற்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
