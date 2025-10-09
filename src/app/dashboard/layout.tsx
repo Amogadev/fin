@@ -121,33 +121,33 @@ export default function DashboardLayout({
           </DropdownMenu>
         </div>
       </header>
-      <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
-      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border rounded-full shadow-lg overflow-hidden">
-        <div className="flex justify-around items-center h-full max-w-lg mx-auto px-4">
+      <main className="flex-1 p-4 md:p-6 lg:p-8 pb-28">{children}</main>
+      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-24 bg-card border rounded-full shadow-lg overflow-hidden">
+        <div className="flex justify-around items-center h-full max-w-xl mx-auto px-4">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center gap-1 h-full transition-colors px-4 ${
+                className={`flex flex-col items-center justify-center gap-2 h-full transition-colors px-5 ${
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-accent-foreground/80"
                 }`}
               >
-                <item.icon className="h-6 w-6" />
-                <span className="text-xs text-center w-full">{item.label}</span>
+                <item.icon className="h-7 w-7" />
+                <span className="text-sm text-center w-full">{item.label}</span>
               </Link>
             );
           })}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className={`flex flex-col items-center justify-center gap-1 px-4 h-full transition-colors text-muted-foreground hover:text-accent-foreground/80`}
+                className={`flex flex-col items-center justify-center gap-2 px-5 h-full transition-colors text-muted-foreground hover:text-accent-foreground/80`}
               >
-                <Settings className="h-6 w-6" />
-                <span className="text-xs text-center w-full">அமைப்புகள்</span>
+                <Settings className="h-7 w-7" />
+                <span className="text-sm text-center w-full">அமைப்புகள்</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
