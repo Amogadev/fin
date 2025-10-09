@@ -109,7 +109,7 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
         localStorage.setItem('temp_new_users', JSON.stringify(tempUsers));
 
         toast({
-          title: "பயனர் புதுப்பிக்கப்பட்டது",
+          title: "பயனர் புதுப்பிக்கப்பட்டார்",
           description: `${name} இன் விவரங்கள் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டன.`,
         });
         
@@ -204,3 +204,5 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
     </form>
   );
 }
+
+    

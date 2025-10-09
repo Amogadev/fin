@@ -124,7 +124,7 @@ function LoanUserForm() {
       localStorage.setItem('temp_new_users', JSON.stringify(tempUsers));
 
       toast({
-        title: "பயனர் உருவாக்கப்பட்டது",
+        title: "பயனர் உருவாக்கப்பட்டார்",
         description: `${name} வெற்றிகரமாகப் பதிவு செய்யப்பட்டுள்ளார்.`,
       });
       
@@ -237,7 +237,7 @@ function LoanUserForm() {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                பயனரை உருவாக்குகிறது...
+                பயனரை உருவாக்குகிறீர்கள்...
               </>
             ) : (
               "பயனரை உருவாக்கி தொடரவும்"
@@ -267,3 +267,5 @@ export default function NewUserPage() {
     </div>
   );
 }
+
+    

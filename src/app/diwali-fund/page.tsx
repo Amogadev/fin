@@ -165,7 +165,7 @@ export default function DiwaliFundPage() {
               <div className="md:col-span-2 space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">முழு பெயர்</Label>
-                  <Input id="name" placeholder="எ.கா., பிரியா சர்மா" value={name} onChange={(e) => setName(e.target.value)} required />
+                  <Input id="name" placeholder="எ.கா., பிரியா" value={name} onChange={(e) => setName(e.target.value)} required />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -231,3 +231,5 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
+
+    
