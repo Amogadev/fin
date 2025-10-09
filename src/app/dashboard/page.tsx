@@ -206,7 +206,7 @@ export default function DashboardPage() {
           </div>
           <Button asChild size="sm" className="ml-auto gap-1">
             <Link href="/dashboard/users">
-              அனைத்து பயனர்களையும் காண்க
+              அனைத்து பயனர்கள்
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -223,3 +223,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
