@@ -3,7 +3,7 @@
 
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText, Wallet } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText, Wallet, PiggyBank } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -161,6 +161,24 @@ export default function DashboardPage() {
                 description="Users with accounts"
                 />
             </div>
+            
+            <h3 className="text-lg font-semibold pt-2">DIWALI FUND</h3>
+            
+            <div className="grid gap-4 md:grid-cols-2">
+                <StatCard
+                title="Total Fund Contributions"
+                value={`₹${vaultData.totalDiwaliFundContributions.toLocaleString("en-IN")}`}
+                icon={PiggyBank}
+                description="Total amount saved by users"
+                />
+                <StatCard
+                title="Diwali Fund Users"
+                value={vaultData.diwaliFundUsers.toString()}
+                icon={Gift}
+                description="Users participating in the fund"
+                />
+            </div>
+
 
             <div className="h-36">
                 <DiwaliFundCard />

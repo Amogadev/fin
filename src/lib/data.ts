@@ -41,6 +41,8 @@ export type Vault = {
   balance: number;
   totalLoansGiven: number; // disbursed amount
   totalInterestEarned: number; // expected earnings
+  diwaliFundUsers: number;
+  totalDiwaliFundContributions: number;
 };
 
 // Initial state for the vault. In a real app, this would come from a persistent store.
@@ -48,6 +50,8 @@ const initialVaultState: Vault = {
   balance: 100000,
   totalLoansGiven: 0,
   totalInterestEarned: 0,
+  diwaliFundUsers: 0,
+  totalDiwaliFundContributions: 0,
 };
 
 
@@ -108,17 +112,28 @@ export const getVaultData = async (): Promise<Vault> => {
   let totalDisbursed = 0;
   let totalInterest = 0;
   let totalRepaid = 0;
+  let diwaliFundUsers = 0;
+  let totalDiwaliFundContributions = 0;
 
   users.forEach(user => {
+    let hasDiwaliFund = false;
     user.loans.forEach(loan => {
-      totalDisbursed += loan.principal;
-      totalInterest += loan.interest;
+        if (loan.loanType === 'Diwali Fund') {
+            hasDiwaliFund = true;
+            totalDiwaliFundContributions += loan.amountRepaid;
+        } else {
+             totalDisbursed += loan.principal;
+             totalInterest += loan.interest;
+        }
       loan.transactions.forEach(tx => {
         if(tx.type === 'Repayment') {
             totalRepaid += tx.amount;
         }
       })
     });
+    if (hasDiwaliFund) {
+        diwaliFundUsers++;
+    }
   });
   
   const currentBalance = initialVaultState.balance - totalDisbursed + totalRepaid;
@@ -127,6 +142,8 @@ export const getVaultData = async (): Promise<Vault> => {
       balance: currentBalance,
       totalLoansGiven: totalDisbursed,
       totalInterestEarned: totalInterest,
+      diwaliFundUsers,
+      totalDiwaliFundContributions
   });
 };
 
@@ -167,5 +184,3 @@ export const getAllTransactions = async (): Promise<TransactionWithUser[]> => {
     });
     return Promise.resolve(allTxs.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
 }
-
-    
