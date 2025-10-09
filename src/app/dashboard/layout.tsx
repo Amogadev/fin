@@ -101,13 +101,13 @@ export default function DashboardLayout({
             <p className="text-sm text-muted-foreground">மீண்டும் வருக!</p>
             <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
           </div>
-           <Button asChild variant="outline" size="sm">
-              <Link href="/dashboard/reports?tab=loans">
-                <FileText className="mr-2 h-4 w-4" />
-                அறிக்கைகள்
-              </Link>
-            </Button>
         </div>
+         <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard/reports?tab=loans">
+              <FileText className="mr-2 h-4 w-4" />
+              அறிக்கைகள்
+            </Link>
+          </Button>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
       <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border rounded-full shadow-lg overflow-hidden">
