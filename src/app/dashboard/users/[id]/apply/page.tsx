@@ -145,7 +145,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
           {/* Left Side: Form */}
           <div className="p-6 flex flex-col">
             <CardHeader className="p-0 mb-6">
-              <CardTitle>உங்கள் கடனை அமைக்கவும்</CardTitle>
+              <CardTitle>கடன் அமைப்பு</CardTitle>
               <CardDescription>
                 தொகையை சரிசெய்து கடன் வகையைத் தேர்ந்தெடுக்கவும்.
               </CardDescription>
