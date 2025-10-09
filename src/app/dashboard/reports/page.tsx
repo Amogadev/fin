@@ -69,14 +69,9 @@ function DiwaliFundReportTable({ funds }: { funds: DiwaliFundReport[] }) {
 }
 
 function ReportsSkeleton() {
-    const searchParams = useSearchParams();
-    const tab = searchParams.get('tab') || 'loans';
-    const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
-    const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
-
     return (
         <div className="space-y-4">
-            <PageHeader title={pageTitle} description={pageDescription} />
+            <PageHeader title="அறிக்கைகள் ஏற்றப்படுகின்றன..." description="செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்." />
             <Card>
                 <CardContent className="pt-6">
                     <Table>
@@ -112,13 +107,16 @@ function ReportsPageContent() {
     const [reportsPromise, setReportsPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }>>();
 
     useEffect(() => {
+        // This effect runs whenever the `tab` changes, ensuring the data is re-fetched.
         setReportsPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
     }, [tab]); 
     
     if (!reportsPromise) {
-        return <ReportsSkeleton />;
+        // This can happen on the very first render before useEffect runs.
+        // The Suspense boundary will catch this and show the skeleton.
+        return null;
     }
     
     const { loans, funds } = use(reportsPromise);
