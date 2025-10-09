@@ -352,37 +352,50 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-
-
+  
   useEffect(() => {
-    return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
+    const enableCamera = async () => {
+        if (!isCameraOpen) return;
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (error) {
+            console.error('கேமராவை அணுகுவதில் பிழை:', error);
+            setHasCameraPermission(false);
+            toast({
+                variant: 'destructive',
+                title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
+                description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
+            });
+        }
     };
-  }, []);
+    enableCamera();
+
+    return () => {
+        if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+        }
+    };
+  }, [isCameraOpen, toast]);
+  
 
   const openCamera = async () => {
-    if (faceImageBase64 || isCameraOpen) return;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      streamRef.current = stream;
-      setHasCameraPermission(true);
-      setIsCameraOpen(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      console.error('கேமராவை அணுகுவதில் பிழை:', error);
-      setHasCameraPermission(false);
-      setIsCameraOpen(false);
-      toast({
-        variant: 'destructive',
-        title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
-        description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
-      });
+    setFaceImageBase64(null);
+    const permission = await navigator.permissions.query({ name: 'camera' as PermissionName });
+    if (permission.state === 'denied') {
+        toast({
+            variant: 'destructive',
+            title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
+            description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
+        });
+        setHasCameraPermission(false);
+        return;
     }
+    setHasCameraPermission(true);
+    setIsCameraOpen(true);
   }
 
 
@@ -398,22 +411,15 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
       if (context) {
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataUri = canvas.toDataURL('image/png');
-        
-        // Stop the stream tracks before setting the image
-        if (streamRef.current) {
-          streamRef.current.getTracks().forEach(track => track.stop());
-          streamRef.current = null;
-        }
-        
         setFaceImageBase64(dataUri);
-        setIsCameraOpen(false);
+        setIsCameraOpen(false); // Close camera view
       }
     }
   };
   
-  const retakePhoto = async () => {
+  const retakePhoto = () => {
     setFaceImageBase64(null);
-    await openCamera();
+    setIsCameraOpen(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -517,7 +523,7 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
               <CardContent className="flex-grow flex flex-col items-center justify-center space-y-4">
                 <div 
                   className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden cursor-pointer"
-                  onClick={openCamera}
+                  onClick={!isCameraOpen && !faceImageBase64 ? openCamera : undefined}
                 >
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
@@ -616,5 +622,3 @@ export default function NewUserPage() {
     </div>
   );
 }
-
-    
