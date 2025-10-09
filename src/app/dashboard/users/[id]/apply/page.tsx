@@ -48,7 +48,8 @@ function getDueDate(startDate: Date, frequency: PaymentFrequency): Date {
   }
 }
 
-export default function ApplyLoanPage({ params }: { params: { id: string } }) {
+export default function ApplyLoanPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  const { id } = use(paramsPromise);
   const router = useRouter();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
@@ -59,11 +60,11 @@ export default function ApplyLoanPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
       async function fetchUser() {
-          const userData = await getUserById(params.id);
+          const userData = await getUserById(id);
           setUser(userData || null);
       }
       fetchUser();
-  }, [params.id]);
+  }, [id]);
 
 
   const interestRate = loanType ? LOAN_TYPE_CONFIG[loanType].interestRate : 0;

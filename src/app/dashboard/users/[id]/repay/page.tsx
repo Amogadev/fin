@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/page-header";
@@ -38,7 +38,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
   const [selectedLoanId, setSelectedLoanId] = useState<string | undefined>();
   const [repaymentAmount, setRepaymentAmount] = useState(0);
 
-  useState(() => {
+  useEffect(() => {
     async function loadUser() {
       const userData = await getUserById(userId);
       setUser(userData || null);
@@ -48,7 +48,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
       }
     }
     loadUser();
-  });
+  }, [userId]);
 
   const selectedLoan = user?.loans.find(l => l.id === selectedLoanId);
   const remainingBalance = selectedLoan ? selectedLoan.totalOwed - selectedLoan.amountRepaid : 0;
@@ -217,3 +217,5 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
     </div>
   );
 }
+
+    
