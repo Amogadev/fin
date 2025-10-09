@@ -141,32 +141,34 @@ export default function DashboardLayout({
               </Link>
             );
           })}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className={`flex flex-col items-center justify-center gap-1 px-4 h-full transition-colors text-muted-foreground hover:text-accent-foreground/80`}
+          <div className="flex flex-col items-center justify-center gap-1 h-full px-4 text-muted-foreground">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="flex flex-col items-center justify-center gap-1 h-full w-full transition-colors hover:text-accent-foreground/80"
+                >
+                  <Settings className="h-6 w-6" />
+                  <span className="text-xs text-center w-full">அமைப்புகள்</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                align="center"
+                className="mb-2"
               >
-                <Settings className="h-6 w-6" />
-                <span className="text-xs text-center w-full">அமைப்புகள்</span>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="top"
-              align="center"
-              className="mb-2"
-            >
-              <div onMouseDown={(e) => e.preventDefault()}>
-                <ThemeToggle />
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>வெளியேறு</span>
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <div onMouseDown={(e) => e.preventDefault()}>
+                  <ThemeToggle />
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>வெளியேறு</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </nav>
     </div>
