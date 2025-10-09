@@ -102,12 +102,23 @@ export default function DashboardLayout({
             <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
           </div>
         </div>
-         <Button asChild variant="outline" size="sm">
-            <Link href="/dashboard/reports?tab=loans">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
               <FileText className="mr-2 h-4 w-4" />
-              அறிக்கைகள்
-            </Link>
-          </Button>
+              <span>அறிக்கைகள்</span>
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard/reports?tab=loans">கடன்</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard/reports?tab=funds">தீபாவளி சேமிப்புத் திட்டம்</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
       <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border rounded-full shadow-lg overflow-hidden">
