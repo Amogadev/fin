@@ -118,9 +118,11 @@ function ReportsPageContent() {
         setDataPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, []); 
+    }, [tab]); 
     
     if (!dataPromise) {
+        // This case should ideally not be hit if useEffect is set up correctly,
+        // but it's a safeguard. The skeleton will be shown by Suspense.
         return null;
     }
     
