@@ -186,10 +186,10 @@ export default function DashboardPage() {
             <div className="grid gap-4 md:grid-cols-3">
                 <DiwaliFundCard />
                 <StatCard
-                title="மொத்த நிதி பங்களிப்புகள்"
+                title="மொத்த சேமிப்பு"
                 value={`₹${vaultData.totalDiwaliFundContributions.toLocaleString("en-IN")}`}
                 icon={PiggyBank}
-                description="பயனர்கள் சேமித்த மொத்த தொகை"
+                description="பயனர்கள் சேமித்தவை"
                 />
                 <StatCard
                 title="சேமிப்புத் திட்ட பயனர்கள்"
@@ -223,5 +223,7 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
 
     
