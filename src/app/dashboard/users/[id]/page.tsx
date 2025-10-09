@@ -46,7 +46,7 @@ function LoanStatus({ loan }: { loan: Loan }) {
 
   // Active
   return (
-    <Badge variant="success">
+    <Badge variant="success" className="whitespace-nowrap">
       நிலுவையில் உள்ளது — செலுத்த வேண்டிய நாள்: {format(dueDate, 'PP')}
     </Badge>
   );
