@@ -106,14 +106,12 @@ export default function DashboardPage() {
   if (!dataPromise) {
     return (
         <div className="space-y-8">
-            <div className="grid gap-4 md:grid-cols-4">
-                <div className="md:col-span-3 grid gap-4 md:grid-cols-3">
-                    <StatCard.Skeleton />
-                    <StatCard.Skeleton />
-                    <StatCard.Skeleton />
-                </div>
-                <div className="h-36 bg-muted/50 rounded-md"></div>
+            <div className="grid gap-4 md:grid-cols-2">
+                <StatCard.Skeleton />
+                <StatCard.Skeleton />
+                <StatCard.Skeleton />
             </div>
+             <div className="h-36 bg-muted/50 rounded-md"></div>
             <Card>
                 <CardHeader>
                     <CardTitle>Recent Users</CardTitle>
@@ -135,35 +133,35 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-       <div className="grid gap-4 md:grid-cols-4">
-            <div className="md:col-span-3 space-y-4">
+       <div className="space-y-4">
+            <StatCard
+                title="Wallet Balance"
+                value={`₹${(vaultData.balance).toLocaleString("en-IN")}`}
+                icon={Landmark}
+                description={
+                    <div>
+                    <span>Total available funds</span>
+                    <span className="block text-xs text-muted-foreground/80">Initial Balance: ₹1,00,000</span>
+                    </div>
+                }
+            />
+            <div className="grid gap-4 md:grid-cols-2">
                 <StatCard
-                    title="Wallet Balance"
-                    value={`₹${(vaultData.balance).toLocaleString("en-IN")}`}
-                    icon={Landmark}
-                    description={
-                        <div>
-                        <span>Total available funds</span>
-                        <span className="block text-xs text-muted-foreground/80">Initial Balance: ₹1,00,000</span>
-                        </div>
-                    }
+                title="Total Loans Given"
+                value={`₹${vaultData.totalLoansGiven.toLocaleString("en-IN")}`}
+                icon={IndianRupee}
+                description="Principal amount disbursed"
                 />
-                <div className="grid gap-4 md:grid-cols-2">
-                    <StatCard
-                    title="Total Loans Given"
-                    value={`₹${vaultData.totalLoansGiven.toLocaleString("en-IN")}`}
-                    icon={IndianRupee}
-                    description="Principal amount disbursed"
-                    />
-                    <StatCard
-                    title="Total Active Users"
-                    value={users.length.toString()}
-                    icon={Users}
-                    description="Users with accounts"
-                    />
-                </div>
+                <StatCard
+                title="Total Active Users"
+                value={users.length.toString()}
+                icon={Users}
+                description="Users with accounts"
+                />
             </div>
-            <DiwaliFundCard />
+             <div className="h-36">
+                <DiwaliFundCard />
+             </div>
         </div>
       <Card>
         <CardHeader className="flex flex-row items-center">
