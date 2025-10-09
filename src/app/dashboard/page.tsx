@@ -163,6 +163,10 @@ export default function DashboardPage() {
             </div>
             
             <h3 className="text-lg font-semibold pt-2">DIWALI FUND</h3>
+
+            <div className="h-36">
+                <DiwaliFundCard />
+            </div>
             
             <div className="grid gap-4 md:grid-cols-2">
                 <StatCard
@@ -177,11 +181,6 @@ export default function DashboardPage() {
                 icon={Gift}
                 description="Users participating in the fund"
                 />
-            </div>
-
-
-            <div className="h-36">
-                <DiwaliFundCard />
             </div>
         </div>
       <Card>
