@@ -147,7 +147,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
             <CardHeader className="p-0 mb-6">
               <CardTitle>கடன் அமைப்பு</CardTitle>
               <CardDescription>
-                தொகையை சரிசெய்து கடன் வகையைத் தேர்ந்தெடுக்கவும்.
+                தொகையைச் சரிசெய்து, கடன் வகையைத் தேர்ந்தெடுக்கவும்.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow p-0 space-y-8">
