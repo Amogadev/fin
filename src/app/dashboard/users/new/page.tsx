@@ -55,13 +55,13 @@ function LoanUserForm() {
         videoRef.current.srcObject = stream;
       }
     } catch (error) {
-      console.error('Error accessing camera:', error);
+      console.error('கேமராவை அணுகுவதில் பிழை:', error);
       setHasCameraPermission(false);
       setIsCameraOpen(false);
       toast({
         variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings.',
+        title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
+        description: 'உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
       });
     }
   }
@@ -98,8 +98,8 @@ function LoanUserForm() {
     if (!faceImageBase64) {
       toast({
         variant: "destructive",
-        title: "Missing Face Image",
-        description: "Please capture a face image before creating the user.",
+        title: "முகப் படம் இல்லை",
+        description: "பயனரை உருவாக்கும் முன் ஒரு முகப் படத்தைப் பிடிக்கவும்.",
       });
       return;
     }
@@ -124,8 +124,8 @@ function LoanUserForm() {
       localStorage.setItem('temp_new_users', JSON.stringify(tempUsers));
 
       toast({
-        title: "User Created",
-        description: `${name} has been registered successfully.`,
+        title: "பயனர் உருவாக்கப்பட்டது",
+        description: `${name} வெற்றிகரமாகப் பதிவு செய்யப்பட்டுள்ளார்.`,
       });
       
       router.push(`/dashboard/users/${newUser.id}`);
@@ -140,17 +140,17 @@ function LoanUserForm() {
           <div className="md:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
+                <CardTitle>தனிப்பட்ட தகவல்</CardTitle>
                 <CardDescription>
-                  Please fill in the details of the new applicant.
+                  புதிய விண்ணப்பதாரரின் விவரங்களை நிரப்பவும்.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">முழு பெயர்</Label>
                   <Input
                     id="name"
-                    placeholder="e.g., Rohan Verma"
+                    placeholder="எ.கா., ரோஹன் வர்மா"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -158,10 +158,10 @@ function LoanUserForm() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="contact">Contact Number</Label>
+                  <Label htmlFor="contact">தொடர்பு எண்</Label>
                   <Input
                     id="contact"
-                    placeholder="e.g., +91 98765 43210"
+                    placeholder="எ.கா., +91 98765 43210"
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
                     required
@@ -169,10 +169,10 @@ function LoanUserForm() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="id-proof">ID Proof (Aadhaar)</Label>
+                  <Label htmlFor="id-proof">அடையாளச் சான்று (ஆதார்)</Label>
                   <Input
                     id="id-proof"
-                    placeholder="e.g., AADHAAR Number"
+                    placeholder="எ.கா., ஆதார் எண்"
                     value={idProof}
                     onChange={(e) => setIdProof(e.target.value)}
                     required
@@ -185,9 +185,9 @@ function LoanUserForm() {
           <div className="md:col-span-1">
             <Card className="h-full flex flex-col">
               <CardHeader>
-                <CardTitle>Face Capture</CardTitle>
+                <CardTitle>முகப் பிடிப்பு</CardTitle>
                 <CardDescription>
-                  Capture a clear image of the applicant's face.
+                  விண்ணப்பதாரரின் முகத்தின் தெளிவான படத்தைப் பிடிக்கவும்.
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col items-center justify-center space-y-4">
@@ -204,9 +204,9 @@ function LoanUserForm() {
 
                 {hasCameraPermission === false && (
                   <Alert variant="destructive" className="text-xs">
-                    <AlertTitle>Camera Access Denied</AlertTitle>
+                    <AlertTitle>கேமரா அணுகல் மறுக்கப்பட்டது</AlertTitle>
                     <AlertDescription>
-                      Please grant camera access in your browser to proceed.
+                      தொடர உங்கள் உலாவியில் கேமரா அணுகலை வழங்கவும்.
                     </AlertDescription>
                   </Alert>
                 )}
@@ -214,17 +214,17 @@ function LoanUserForm() {
                 {faceImageBase64 ? (
                   <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting}>
                     <RefreshCw className="mr-2 h-4 w-4" />
-                    Retake Photo
+                    புகைப்படத்தை மீண்டும் எடு
                   </Button>
                 ) : isCameraOpen ? (
                     <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false}>
                       <Camera className="mr-2 h-4 w-4" />
-                      Capture Photo
+                      புகைப்படத்தைப் பிடி
                     </Button>
                 ) : (
                   <Button type="button" onClick={openCamera} disabled={isSubmitting}>
                      <Camera className="mr-2 h-4 w-4" />
-                    Open Camera
+                    கேமராவைத் திற
                   </Button>
                 )}
 
@@ -237,10 +237,10 @@ function LoanUserForm() {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating User...
+                பயனரை உருவாக்குகிறது...
               </>
             ) : (
-              "Create User & Proceed"
+              "பயனரை உருவாக்கி தொடரவும்"
             )}
           </Button>
         </div>
@@ -252,13 +252,13 @@ export default function NewUserPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="Register New User for Loan / EMI"
-        description="Collect personal information and capture a face image for identity verification."
+        title="கடன் / EMI க்கு புதிய பயனரைப் பதிவு செய்யவும்"
+        description="தனிப்பட்ட தகவல்களைச் சேகரித்து, அடையாள சரிபார்ப்புக்காக ஒரு முகப் படத்தைப் பிடிக்கவும்."
       >
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Users
+            பயனர்களுக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>

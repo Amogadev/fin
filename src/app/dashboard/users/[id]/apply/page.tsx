@@ -28,22 +28,22 @@ import { addDays, addMonths, addYears, format } from "date-fns";
 
 
 const LOAN_TYPE_CONFIG = {
-  loan: { interestRate: 0.1, label: "Standard Loan" }, // 10%
+  loan: { interestRate: 0.1, label: "வழக்கமான கடன்" }, // 10%
   emi: { interestRate: 0.12, label: "EMI" }, // 12%
 };
 
-const PAYMENT_FREQUENCIES = ["Daily", "Weekly", "Monthly", "Yearly"] as const;
+const PAYMENT_FREQUENCIES = ["தினசரி", "வாராந்திர", "மாதாந்திர", "ஆண்டுதோறும்"] as const;
 type PaymentFrequency = (typeof PAYMENT_FREQUENCIES)[number];
 
 function getDueDate(startDate: Date, frequency: PaymentFrequency): Date {
   switch (frequency) {
-    case "Daily":
+    case "தினசரி":
       return addDays(startDate, 1);
-    case "Weekly":
+    case "வாராந்திர":
       return addDays(startDate, 7);
-    case "Monthly":
+    case "மாதாந்திர":
       return addMonths(startDate, 1);
-    case "Yearly":
+    case "ஆண்டுதோறும்":
       return addYears(startDate, 1);
   }
 }
@@ -67,16 +67,16 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
 
   const chartData = [
-    { name: "Amount Disbursed", value: disbursedAmount, fill: "hsl(var(--primary))" },
-    { name: "Interest (Upfront)", value: interest, fill: "hsl(var(--accent))" },
+    { name: "வழங்கப்பட்ட தொகை", value: disbursedAmount, fill: "hsl(var(--primary))" },
+    { name: "வட்டி (முன்பணம்)", value: interest, fill: "hsl(var(--accent))" },
   ];
 
   const handleSubmit = async () => {
     if (!loanType || !paymentFrequency || !dueDate) {
       toast({
         variant: "destructive",
-        title: "Missing Information",
-        description: "Please select a loan type and payment frequency.",
+        title: "தகவல் இல்லை",
+        description: "கடன் வகை மற்றும் செலுத்தும் கால இடைவெளியைத் தேர்ந்தெடுக்கவும்.",
       });
       return;
     }
@@ -97,8 +97,8 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
       totalOwed, // The amount user needs to repay
       amountRepaid: 0,
       status: 'Active',
-      loanType: LOAN_TYPE_CONFIG[loanType].label as 'Loan' | 'EMI',
-      paymentFrequency,
+      loanType: (loanType === 'loan' ? 'Loan' : 'EMI'),
+      paymentFrequency: (paymentFrequency as 'Daily' | 'Weekly' | 'Monthly' | 'Yearly'),
       createdAt: createdAt.toISOString(),
       dueDate: dueDate.toISOString(),
       transactions: [
@@ -121,8 +121,8 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
     localStorage.setItem('temp_new_loans', JSON.stringify(tempLoans));
 
     toast({
-      title: "Application Submitted!",
-      description: `The loan for ₹${totalOwed.toLocaleString('en-IN')} has been approved.`,
+      title: "விண்ணப்பம் சமர்ப்பிக்கப்பட்டது!",
+      description: `₹${totalOwed.toLocaleString('en-IN')} க்கான கடன் அங்கீகரிக்கப்பட்டுள்ளது.`,
     });
 
     router.push(`/dashboard/users/${userId}`);
@@ -131,11 +131,11 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
   return (
     <div className="space-y-6">
-      <PageHeader title="New Loan Application">
+      <PageHeader title="புதிய கடன் விண்ணப்பம்">
         <Button asChild variant="outline" size="sm">
           <Link href={`/dashboard/users/${userId}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to User
+            பயனருக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
@@ -145,14 +145,14 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
           {/* Left Side: Form */}
           <div className="p-6 flex flex-col">
             <CardHeader className="p-0 mb-6">
-              <CardTitle>Configure Your Loan</CardTitle>
+              <CardTitle>உங்கள் கடனை உள்ளமைக்கவும்</CardTitle>
               <CardDescription>
-                Adjust the amount and select the loan type.
+                தொகையை சரிசெய்து கடன் வகையைத் தேர்ந்தெடுக்கவும்.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow p-0 space-y-8">
               <div className="space-y-4">
-                <Label htmlFor="amount">Loan Amount (Total Repayment)</Label>
+                <Label htmlFor="amount">கடன் தொகை (மொத்த திருப்பிச் செலுத்துதல்)</Label>
                 <div className="flex items-center gap-4">
                   <Button
                     variant="outline"
@@ -162,7 +162,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                     disabled={amount <= 0}
                   >
                     <Minus className="h-4 w-4" />
-                    <span className="sr-only">Decrease</span>
+                    <span className="sr-only">குறை</span>
                   </Button>
                   <div className="flex-1 text-center">
                     <div className="text-3xl font-bold tracking-tighter">
@@ -176,7 +176,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                     onClick={() => setAmount(amount + 1000)}
                   >
                     <Plus className="h-4 w-4" />
-                    <span className="sr-only">Increase</span>
+                    <span className="sr-only">அதிகரி</span>
                   </Button>
                 </div>
                 <Slider
@@ -190,7 +190,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
               </div>
 
               <div className="space-y-4">
-                <Label>Loan Type</Label>
+                <Label>கடன் வகை</Label>
                 <RadioGroup
                   value={loanType}
                   onValueChange={(value: "loan" | "emi") => setLoanType(value)}
@@ -203,14 +203,14 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                     >
                       <RadioGroupItem value={type} className="sr-only" />
                       <span>{LOAN_TYPE_CONFIG[type].label}</span>
-                      <span className="text-xs text-muted-foreground mt-1">({LOAN_TYPE_CONFIG[type].interestRate * 100}% Interest)</span>
+                      <span className="text-xs text-muted-foreground mt-1">({LOAN_TYPE_CONFIG[type].interestRate * 100}% வட்டி)</span>
                     </Label>
                   ))}
                 </RadioGroup>
               </div>
 
               <div className="space-y-4">
-                <Label>Payment Frequency</Label>
+                <Label>செலுத்தும் கால இடைவெளி</Label>
                 <RadioGroup
                   value={paymentFrequency}
                   onValueChange={(value: (typeof PAYMENT_FREQUENCIES)[number]) => setPaymentFrequency(value)}
@@ -231,7 +231,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
             </CardContent>
             <CardFooter className="p-0 pt-6">
               <Button onClick={handleSubmit} disabled={amount <= 0 || !loanType || !paymentFrequency} className="w-full" size="lg">
-                Submit Application
+                விண்ணப்பத்தைச் சமர்ப்பிக்கவும்
               </Button>
             </CardFooter>
           </div>
@@ -239,9 +239,9 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
           {/* Right Side: Summary */}
           <div className="bg-muted/50 p-6 flex flex-col rounded-r-lg border-l">
             <CardHeader className="p-0 mb-6">
-              <CardTitle>Loan Summary</CardTitle>
+              <CardTitle>கடன் சுருக்கம்</CardTitle>
               <CardDescription>
-                A breakdown of your requested loan.
+                உங்கள் கோரப்பட்ட கடனின் விவரம்.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0 flex-grow flex flex-col items-center justify-center">
@@ -271,7 +271,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
               <div className="w-full max-w-sm space-y-3 text-sm">
                 <Separator className="my-4" />
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Amount Disbursed:</span>
+                  <span className="text-muted-foreground">வழங்கப்பட்ட தொகை:</span>
                   <span className="font-medium">
                     ₹{disbursedAmount.toLocaleString("en-IN")}
                   </span>
@@ -279,21 +279,21 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                 <div className="flex justify-between items-center gap-2">
                    <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-accent" />
-                    <span>Interest ({interestRate * 100}%, upfront):</span>
+                    <span>வட்டி ({interestRate * 100}%, முன்பணம்):</span>
                   </div>
                   <span className="font-medium">
                     ₹{interest.toLocaleString("en-IN")}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                    <span className="text-muted-foreground">Due Date:</span>
+                    <span className="text-muted-foreground">செலுத்த வேண்டிய தேதி:</span>
                     <span className="font-medium">
                         {dueDate ? format(dueDate, 'PPP') : 'N/A'}
                     </span>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex justify-between font-semibold text-base">
-                  <span>Total To Be Repaid:</span>
+                  <span>திருப்பிச் செலுத்த வேண்டிய மொத்த தொகை:</span>
                   <span>₹{totalOwed.toLocaleString("en-IN")}</span>
                 </div>
               </div>
@@ -304,5 +304,3 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
     </div>
   );
 }
-
-    

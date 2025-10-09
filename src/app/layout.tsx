@@ -1,10 +1,11 @@
+
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Vault 360",
-  description: "A Smart Finance / Loan Management System",
+  description: "ഒരു സ്മാർട്ട് ഫിനാൻസ് / ലോൺ മാനേജ്മെന്റ് സിസ്റ്റം",
 };
 
 export default function RootLayout({
@@ -13,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ta" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

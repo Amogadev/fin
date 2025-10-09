@@ -25,21 +25,21 @@ function EditUserSkeleton() {
   return (
     <div className="space-y-4">
        <PageHeader
-        title="Edit User"
-        description="Update the user's personal information."
+        title="பயனரைத் திருத்து"
+        description="பயனரின் தனிப்பட்ட தகவலைப் புதுப்பிக்கவும்."
       >
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Users
+            பயனர்களுக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
+          <CardTitle>தனிப்பட்ட தகவல்</CardTitle>
           <CardDescription>
-            Modify the details for the user.
+            பயனருக்கான விவரங்களை மாற்றியமைக்கவும்.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -109,16 +109,16 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
         localStorage.setItem('temp_new_users', JSON.stringify(tempUsers));
 
         toast({
-          title: "User Updated",
-          description: `${name}'s details have been updated successfully.`,
+          title: "பயனர் புதுப்பிக்கப்பட்டது",
+          description: `${name} இன் விவரங்கள் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டன.`,
         });
         
         router.push(`/dashboard/users`);
       } else {
         toast({
             variant: "destructive",
-            title: "Update failed",
-            description: "User could not be found.",
+            title: "புதுப்பித்தல் தோல்வியடைந்தது",
+            description: "பயனரைக் கண்டுபிடிக்க முடியவில்லை.",
         })
       }
 
@@ -133,29 +133,29 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <PageHeader
-        title="Edit User"
-        description="Update the user's personal information."
+        title="பயனரைத் திருத்து"
+        description="பயனரின் தனிப்பட்ட தகவலைப் புதுப்பிக்கவும்."
       >
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Users
+            பயனர்களுக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
+          <CardTitle>தனிப்பட்ட தகவல்</CardTitle>
           <CardDescription>
-            Modify the details for {user.name}.
+            {user.name} க்கான விவரங்களை மாற்றியமைக்கவும்.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name">முழு பெயர்</Label>
             <Input
               id="name"
-              placeholder="e.g., Rohan Verma"
+              placeholder="எ.கா., ரோஹன் வர்மா"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -163,10 +163,10 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="contact">Contact Number</Label>
+            <Label htmlFor="contact">தொடர்பு எண்</Label>
             <Input
               id="contact"
-              placeholder="e.g., +91 98765 43210"
+              placeholder="எ.கா., +91 98765 43210"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
               required
@@ -174,10 +174,10 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="id-proof">ID Proof (Aadhaar)</Label>
+            <Label htmlFor="id-proof">அடையாளச் சான்று (ஆதார்)</Label>
             <Input
               id="id-proof"
-              placeholder="e.g., AADHAAR Number"
+              placeholder="எ.கா., ஆதார் எண்"
               value={idProof}
               onChange={(e) => setIdProof(e.target.value)}
               required
@@ -190,12 +190,12 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
             {isSubmitting ? (
                 <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                சேமிக்கப்படுகிறது...
                 </>
             ) : (
                 <>
                 <Save className="mr-2 h-4 w-4" />
-                Save Changes
+                மாற்றங்களைச் சேமி
                 </>
             )}
             </Button>

@@ -23,10 +23,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 function UserCard({ user }: { user: User }) {
   const loanStatus = user.loans.some((l) => l.status === "Overdue")
-    ? "Overdue"
+    ? "தாமதம்"
     : user.loans.some((l) => l.status === "Active")
-    ? "Active"
-    : "Clear";
+    ? "செயலில்"
+    : "தெளிவு";
   
   const loanStatusVariant = user.loans.some((l) => l.status === "Overdue")
     ? "destructive"
@@ -59,7 +59,7 @@ function UserCard({ user }: { user: User }) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Registered for {user.registrationType}</p>
+                  <p>{user.registrationType === 'Loan' ? 'கடன்' : 'தீபாவளி நிதி'} க்காக பதிவு செய்யப்பட்டது</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -67,27 +67,27 @@ function UserCard({ user }: { user: User }) {
           <Button asChild variant="ghost" size="icon" className="w-8 h-8">
             <Link href={`/dashboard/users/${user.id}/edit`}>
               <FilePenLine className="h-4 w-4" />
-              <span className="sr-only">Edit User</span>
+              <span className="sr-only">பயனரைத் திருத்து</span>
             </Link>
           </Button>
         </div>
       </CardHeader>
       <CardContent className="px-3 pb-2 text-xs space-y-1">
         <div className="flex justify-between">
-          <span className="text-muted-foreground">ID Proof:</span>
+          <span className="text-muted-foreground">அடையாளச் சான்று:</span>
           <span className="text-xs">{user.idProof}</span>
         </div>
          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Loan Status:</span>
+            <span className="text-muted-foreground">கடன் நிலை:</span>
             {user.registrationType === 'Diwali Fund' && user.loans.length === 0 ? (
-                 <Badge variant="secondary">Diwali Fund</Badge>
+                 <Badge variant="secondary">தீபாவளி நிதி</Badge>
             ) : (
                 <Badge variant={loanStatusVariant}>{loanStatus}</Badge>
             )}
         </div>
         {nextDueDate && (
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Next Due Date:</span>
+            <span className="text-muted-foreground">அடுத்த செலுத்த வேண்டிய தேதி:</span>
             <span className="text-xs">{format(new Date(nextDueDate), "PP")}</span>
           </div>
         )}
@@ -95,7 +95,7 @@ function UserCard({ user }: { user: User }) {
       <CardFooter className="p-3 pt-1">
         <Button asChild variant="outline" size="sm" className="w-full h-8">
           <Link href={`/dashboard/users/${user.id}`}>
-            View Details
+            விவரங்களைக் காண்க
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
@@ -144,19 +144,19 @@ export default function UsersPage() {
     return (
       <div className="space-y-4">
         <PageHeader
-          title="Users"
+          title="பயனர்கள்"
         >
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" size="sm">
               <Link href="/dashboard">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
+                பின்செல்
               </Link>
             </Button>
             <Button asChild>
               <Link href="/dashboard/users/new">
                 <PlusCircle className="mr-2 h-4 w-4" />
-                Register New User
+                புதிய பயனரைப் பதிவு செய்யவும்
               </Link>
             </Button>
           </div>
@@ -175,19 +175,19 @@ export default function UsersPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="Users"
+        title="பயனர்கள்"
       >
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
+              பின்செல்
             </Link>
           </Button>
           <Button asChild>
             <Link href="/dashboard/users/new">
               <PlusCircle className="mr-2 h-4 w-4" />
-              Register New User
+              புதிய பயனரைப் பதிவு செய்யவும்
             </Link>
           </Button>
         </div>

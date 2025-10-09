@@ -39,7 +39,7 @@ function UserCard({ user }: { user: User }) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Registered for {user.registrationType}</p>
+                  <p>{user.registrationType}-க்காக பதிவு செய்யப்பட்டது</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -55,7 +55,7 @@ function UserCard({ user }: { user: User }) {
                 </div>
             ) : (
                  <p className="text-xs text-muted-foreground">
-                    {user.registrationType === 'Diwali Fund' ? 'Diwali Fund' : "No active loans"}
+                    {user.registrationType === 'Diwali Fund' ? 'தீபாவளி நிதி' : "செயலில் கடன் இல்லை"}
                  </p>
             )}
           </div>
@@ -73,7 +73,7 @@ function AddUserCard() {
             <div className="flex items-center justify-center bg-background/50 rounded-full w-10 h-10">
                 <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="font-semibold text-xs">Add New User</p>
+            <p className="font-semibold text-xs">புதிய பயனரைச் சேர்க்கவும்</p>
         </CardContent>
       </Card>
     </Link>
@@ -87,8 +87,8 @@ function NewLoanRegistrationCard() {
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <UserPlus className="h-6 w-6 text-primary" />
         </div>
-        <p className="font-semibold text-sm text-primary">Join for loan</p>
-        <p className="text-xs text-muted-foreground">Onboard a new user</p>
+        <p className="font-semibold text-sm text-primary">கடன் பெற சேரவும்</p>
+        <p className="text-xs text-muted-foreground">புதிய பயனரை உள்வாங்கவும்</p>
       </Card>
     </Link>
   )
@@ -101,8 +101,8 @@ function DiwaliFundCard() {
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <Gift className="h-6 w-6 text-primary" />
         </div>
-        <p className="font-semibold text-sm text-primary">Join Diwali Fund</p>
-        <p className="text-xs text-muted-foreground">Save & get a festive bonus</p>
+        <p className="font-semibold text-sm text-primary">தீபாவளி நிதியில் சேரவும்</p>
+        <p className="text-xs text-muted-foreground">சேமித்து பண்டிகை போனஸ் பெறுங்கள்</p>
       </Card>
     </Link>
   )
@@ -128,7 +128,7 @@ export default function DashboardPage() {
              <div className="h-36 bg-muted/50 rounded-md"></div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Recent Users</CardTitle>
+                    <CardTitle>சமீபத்திய பயனர்கள்</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex space-x-4">
@@ -154,59 +154,59 @@ export default function DashboardPage() {
        <div className="space-y-4">
            <Card className="bg-primary text-primary-foreground">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">TOTAL AMOUNT IN WALLET</CardTitle>
+                    <CardTitle className="text-sm font-medium">வாலட்டில் உள்ள மொத்த தொகை</CardTitle>
                     <Wallet className="h-5 w-5 text-primary-foreground/80" />
                 </CardHeader>
                 <CardContent>
                     <div className="text-4xl font-bold">₹{(vaultData.balance).toLocaleString("en-IN")}</div>
-                    <p className="text-xs text-primary-foreground/80">Initial Balance: ₹1,00,000</p>
+                    <p className="text-xs text-primary-foreground/80">ஆரம்ப இருப்பு: ₹1,00,000</p>
                 </CardContent>
             </Card>
             
-            <h3 className="text-lg font-semibold pt-2">LOAN</h3>
+            <h3 className="text-lg font-semibold pt-2">கடன்</h3>
 
             <div className="grid gap-4 md:grid-cols-3">
                 <NewLoanRegistrationCard />
                 <StatCard
-                title="Total Loans Given"
+                title="வழங்கப்பட்ட மொத்த கடன்கள்"
                 value={`₹${vaultData.totalLoansGiven.toLocaleString("en-IN")}`}
                 icon={IndianRupee}
-                description="Principal amount disbursed"
+                description="வழங்கப்பட்ட அசல் தொகை"
                 />
                 <StatCard
-                title="Total Loan Users"
+                title="மொத்த கடன் பயனர்கள்"
                 value={loanUsers.length.toString()}
                 icon={Users}
-                description="Users with active loans"
+                description="செயலில் உள்ள கடன்களைக் கொண்ட பயனர்கள்"
                 />
             </div>
             
-            <h3 className="text-lg font-semibold pt-2">DIWALI FUND</h3>
+            <h3 className="text-lg font-semibold pt-2">தீபாவளி நிதி</h3>
             
             <div className="grid gap-4 md:grid-cols-3">
                 <DiwaliFundCard />
                 <StatCard
-                title="Total Fund Contributions"
+                title="மொத்த நிதி பங்களிப்புகள்"
                 value={`₹${vaultData.totalDiwaliFundContributions.toLocaleString("en-IN")}`}
                 icon={PiggyBank}
-                description="Total amount saved by users"
+                description="பயனர்கள் சேமித்த மொத்த தொகை"
                 />
                 <StatCard
-                title="Diwali Fund Users"
+                title="தீபாவளி நிதி பயனர்கள்"
                 value={vaultData.diwaliFundUsers.toString()}
                 icon={Gift}
-                description="Users participating in the fund"
+                description="நிதியில் பங்கேற்கும் பயனர்கள்"
                 />
             </div>
         </div>
       <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle>விரைவு நடவடிக்கைகள்</CardTitle>
           </div>
           <Button asChild size="sm" className="ml-auto gap-1">
             <Link href="/dashboard/users">
-              View All Users
+              அனைத்து பயனர்களையும் காண்க
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>

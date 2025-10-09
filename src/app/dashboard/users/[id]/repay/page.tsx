@@ -57,8 +57,8 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
     if (!selectedLoan || repaymentAmount <= 0) {
       toast({
         variant: "destructive",
-        title: "Invalid Repayment",
-        description: "Please select a loan and enter a valid amount.",
+        title: "தவறான திருப்பிச் செலுத்துதல்",
+        description: "దయచేసి ఒక кредитуను ఎంచుకుని, చెల్లుబాటు అయ్యే మొత్తాన్ని నమోదు చేయండి.",
       });
       return;
     }
@@ -66,8 +66,8 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
     if (repaymentAmount > remainingBalance) {
       toast({
         variant: "destructive",
-        title: "Invalid Amount",
-        description: `Repayment cannot exceed the remaining balance of ₹${remainingBalance.toLocaleString('en-IN')}.`,
+        title: "தவறான தொகை",
+        description: `திருப்பிச் செலுத்தும் தொகை மீதமுள்ள இருப்பை விட அதிகமாக இருக்கக்கூடாது ₹${remainingBalance.toLocaleString('en-IN')}.`,
       });
       return;
     }
@@ -109,16 +109,16 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
         localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
         
         toast({
-            title: "Repayment Successful",
-            description: `₹${repaymentAmount.toLocaleString('en-IN')} has been paid for loan ${selectedLoanId}.`,
+            title: "திருப்பிச் செலுத்துதல் வெற்றி பெற்றது",
+            description: `₹${repaymentAmount.toLocaleString('en-IN')} கடன் ${selectedLoanId} க்காக செலுத்தப்பட்டது.`,
         });
 
         router.push(`/dashboard/users/${userId}`);
     } else {
         toast({
             variant: "destructive",
-            title: "Loan not found",
-            description: "Could not process repayment. Please try again.",
+            title: "கடன் கிடைக்கவில்லை",
+            description: "திருப்பிச் செலுத்துதலைச் செயல்படுத்த முடியவில்லை. தயவுசெய்து மீண்டும் முயற்சிக்கவும்.",
         });
     }
 
@@ -128,39 +128,39 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Loan Repayment">
+      <PageHeader title="கடன் திருப்பிச் செலுத்துதல்">
         <Button asChild variant="outline" size="sm">
           <Link href={`/dashboard/users/${userId}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to User
+            பயனருக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
 
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Submit a Repayment</CardTitle>
+          <CardTitle>திருப்பிச் செலுத்துதலைச் சமர்ப்பிக்கவும்</CardTitle>
           <CardDescription>
-            Select a loan and enter the amount to repay.
+            ഒരു கடனைத் தேர்ந்தெடுத்து, திருப்பிச் செலுத்த வேண்டிய தொகையை உள்ளிடவும்.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
             {!activeLoans || activeLoans.length === 0 ? (
                  <div className="text-center text-muted-foreground py-8">
-                    <p>{user?.name} has no active loans to repay.</p>
+                    <p>{user?.name} திருப்பிச் செலுத்த செயலில் கடன்கள் இல்லை.</p>
                 </div>
             ) : (
                 <>
                 <div className="space-y-2">
-                    <Label htmlFor="loan-select">Select Loan</Label>
+                    <Label htmlFor="loan-select">கடன் தேர்ந்தெடுக்கவும்</Label>
                     <Select value={selectedLoanId} onValueChange={setSelectedLoanId}>
                     <SelectTrigger id="loan-select">
-                        <SelectValue placeholder="Choose an active loan..." />
+                        <SelectValue placeholder="செயலில் உள்ள கடனைத் தேர்ந்தெடுக்கவும்..." />
                     </SelectTrigger>
                     <SelectContent>
                         {activeLoans.map(loan => (
                         <SelectItem key={loan.id} value={loan.id}>
-                            Loan {loan.id} - (Owed: ₹{(loan.totalOwed - loan.amountRepaid).toLocaleString('en-IN')})
+                            கடன் {loan.id} - (செலுத்த வேண்டியது: ₹{(loan.totalOwed - loan.amountRepaid).toLocaleString('en-IN')})
                         </SelectItem>
                         ))}
                     </SelectContent>
@@ -171,21 +171,21 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
                     <div className="space-y-4 pt-4">
                          <div className="p-4 border rounded-lg bg-muted/50 space-y-2">
                             <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Total Owed:</span>
+                                <span className="text-muted-foreground">மொத்த செலுத்த வேண்டியது:</span>
                                 <span className="font-mono">₹{selectedLoan.totalOwed.toLocaleString('en-IN')}</span>
                             </div>
                              <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Amount Repaid:</span>
+                                <span className="text-muted-foreground">திருப்பிச் செலுத்திய தொகை:</span>
                                 <span className="font-mono">₹{selectedLoan.amountRepaid.toLocaleString('en-IN')}</span>
                             </div>
                              <div className="flex justify-between font-semibold text-base">
-                                <span>Remaining Balance:</span>
+                                <span>மீதமுள்ள இருப்பு:</span>
                                 <span className="font-mono">₹{remainingBalance.toLocaleString('en-IN')}</span>
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="repayment-amount">Repayment Amount</Label>
+                            <Label htmlFor="repayment-amount">திருப்பிச் செலுத்தும் தொகை</Label>
                              <div className="flex items-center gap-4">
                                 <div className="flex-1 text-center">
                                     <div className="text-3xl font-bold tracking-tighter">
@@ -210,7 +210,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
         </CardContent>
         <CardFooter>
           <Button onClick={handleRepayment} disabled={!selectedLoan || repaymentAmount <= 0} className="w-full" size="lg">
-            Submit Repayment
+            திருப்பிச் செலுத்துதலைச் சமர்ப்பிக்கவும்
           </Button>
         </CardFooter>
       </Card>

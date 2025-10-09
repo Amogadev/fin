@@ -32,14 +32,14 @@ function LoanStatus({ loan }: { loan: Loan }) {
   const dueDate = new Date(loan.dueDate);
 
   if (loan.status === 'Paid') {
-    return <Badge variant="default">Loan fully repaid.</Badge>;
+    return <Badge variant="default">கடன் முழுமையாக திருப்பிச் செலுத்தப்பட்டது.</Badge>;
   }
 
   if (loan.status === 'Overdue') {
     const daysOverdue = differenceInDays(today, dueDate);
     return (
       <Badge variant="destructive">
-        Overdue by {daysOverdue} day{daysOverdue > 1 ? 's' : ''} — follow-up required.
+        {daysOverdue} நாள்{daysOverdue > 1 ? 'கள்' : ''} தாமதம் — பின்தொடர்தல் தேவை.
       </Badge>
     );
   }
@@ -47,7 +47,7 @@ function LoanStatus({ loan }: { loan: Loan }) {
   // Active
   return (
     <Badge variant="success">
-      Payment pending — due on {format(dueDate, 'PP')}
+      செலுத்துதல் நிலுவையில் உள்ளது — {format(dueDate, 'PP')} அன்று செலுத்த வேண்டும்
     </Badge>
   );
 }
@@ -100,11 +100,11 @@ export default function UserDetailPage({
 
   return (
     <div className="space-y-6">
-      <PageHeader title={user.name} description={`User ID: ${user.id}`}>
+      <PageHeader title={user.name} description={`பயனர் ஐடி: ${user.id}`}>
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            All Users
+            அனைத்து பயனர்கள்
           </Link>
         </Button>
       </PageHeader>
@@ -113,7 +113,7 @@ export default function UserDetailPage({
         <div className="md:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>User Profile</CardTitle>
+              <CardTitle>பயனர் சுயவிவரம்</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-center">
@@ -128,25 +128,25 @@ export default function UserDetailPage({
               </div>
               <div className="text-sm space-y-2">
                 <p>
-                  <strong>Contact:</strong> {user.contact}
+                  <strong>தொடர்பு:</strong> {user.contact}
                 </p>
                 <p>
-                  <strong>ID Proof:</strong> {user.idProof}
+                  <strong>அடையாளச் சான்று:</strong> {user.idProof}
                 </p>
                 <p>
-                  <strong>Member Since:</strong>{" "}
+                  <strong>உறுப்பினர் ஆன நாள்:</strong>{" "}
                   {format(new Date(user.createdAt), "PPP")}
                 </p>
               </div>
               <div className="flex flex-col gap-2 pt-2">
                 <Button asChild>
                   <Link href={`/dashboard/users/${user.id}/apply`}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Apply for Loan/EMI
+                    <PlusCircle className="mr-2 h-4 w-4" /> கடன்/EMI க்கு விண்ணப்பிக்கவும்
                   </Link>
                 </Button>
                 <Button asChild variant="secondary">
                   <Link href={`/dashboard/users/${user.id}/repay`}>
-                    <IndianRupee className="mr-2 h-4 w-4" /> Repay Loan
+                    <IndianRupee className="mr-2 h-4 w-4" /> கடனைத் திருப்பிச் செலுத்து
                   </Link>
                 </Button>
               </div>
@@ -157,19 +157,19 @@ export default function UserDetailPage({
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Loan History</CardTitle>
+              <CardTitle>கடன் வரலாறு</CardTitle>
               <CardDescription>
-                All loans and EMIs taken by {user.name}.
+                {user.name} எடுத்த அனைத்து கடன்கள் மற்றும் EMIகள்.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Loan ID</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Repaid</TableHead>
+                    <TableHead>கடன் ஐடி</TableHead>
+                    <TableHead>தொகை</TableHead>
+                    <TableHead>நிலை</TableHead>
+                    <TableHead className="text-right">திருப்பிச் செலுத்தப்பட்டது</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -195,7 +195,7 @@ export default function UserDetailPage({
                         colSpan={4}
                         className="text-center text-muted-foreground h-24"
                       >
-                        No loans taken yet.
+                        இன்னும் கடன்கள் எடுக்கப்படவில்லை.
                       </TableCell>
                     </TableRow>
                   )}
@@ -208,4 +208,3 @@ export default function UserDetailPage({
     </div>
   );
 }
-    

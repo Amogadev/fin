@@ -22,11 +22,11 @@ function TransactionTableSkeleton() {
         <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Transaction ID</TableHead>
-                <TableHead>User</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Date</TableHead>
+                <TableHead>பரிவர்த்தனை ஐடி</TableHead>
+                <TableHead>பயனர்</TableHead>
+                <TableHead>தொகை</TableHead>
+                <TableHead>நிலை</TableHead>
+                <TableHead className="text-right">தேதி</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -56,7 +56,7 @@ export default function TransactionsPage() {
     return (
          <div className="space-y-4">
             <PageHeader
-                title="All Transactions"
+                title="அனைத்து பரிவர்த்தனைகள்"
             />
             <Card>
                 <CardContent className="pt-6">
@@ -72,18 +72,18 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="All Transactions"
+        title="அனைத்து பரிவர்த்தனைகள்"
       />
       <Card>
         <CardContent className="pt-6">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Transaction ID</TableHead>
-                <TableHead>User</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Date</TableHead>
+                <TableHead>பரிவர்த்தனை ஐடி</TableHead>
+                <TableHead>பயனர்</TableHead>
+                <TableHead>தொகை</TableHead>
+                <TableHead>நிலை</TableHead>
+                <TableHead className="text-right">தேதி</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -95,7 +95,7 @@ export default function TransactionsPage() {
                     <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
                      <TableCell>
                       <Badge variant={tx.type === 'Disbursement' ? 'destructive' : 'success'}>
-                        {tx.type === 'Disbursement' ? 'Debited' : 'Credited'}
+                        {tx.type === 'Disbursement' ? 'பற்று' : 'வரவு'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -109,8 +109,7 @@ export default function TransactionsPage() {
                     colSpan={5}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    No transactions yet. Create a user and issue a loan to see
-                    transactions here.
+                    இன்னும் பரிவர்த்தனைகள் இல்லை. ஒரு பயனரை உருவாக்கி, பரிவர்த்தனைகளைப் பார்க்க கடன் வழங்கவும்.
                   </TableCell>
                 </TableRow>
               )}

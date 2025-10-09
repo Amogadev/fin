@@ -58,13 +58,13 @@ export default function DiwaliFundPage() {
         videoRef.current.srcObject = stream;
       }
     } catch (error) {
-      console.error('Error accessing camera:', error);
+      console.error('கேமராவை அணுகுவதில் பிழை:', error);
       setHasCameraPermission(false);
       setIsCameraOpen(false);
       toast({
         variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings.',
+        title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
+        description: 'உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
       });
     }
   }
@@ -100,8 +100,8 @@ export default function DiwaliFundPage() {
     if (!faceImageBase64 || !name || !contact || !idProof) {
       toast({
         variant: "destructive",
-        title: "Missing Information",
-        description: "Please fill all fields and capture a photo.",
+        title: "தகவல் இல்லை",
+        description: "தயவுசெய்து அனைத்து புலங்களையும் பூர்த்தி செய்து ஒரு புகைப்படத்தைப் பிடிக்கவும்.",
       });
       return;
     }
@@ -127,8 +127,8 @@ export default function DiwaliFundPage() {
       localStorage.setItem('temp_new_users', JSON.stringify(tempUsers));
       
       toast({
-        title: "User Details Saved!",
-        description: `Proceed to set up the contribution plan for ${name}.`,
+        title: "பயனர் விவரங்கள் சேமிக்கப்பட்டன!",
+        description: `${name} க்கான பங்களிப்புத் திட்டத்தை அமைக்க தொடரவும்.`,
       });
       
       router.push(`/diwali-fund/${newUser.id}/plan`);
@@ -140,13 +140,13 @@ export default function DiwaliFundPage() {
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <PageHeader
-        title="Join the Diwali Fund"
-        description="Step 1: Provide your information for verification."
+        title="தீபாவளி நிதியில் சேரவும்"
+        description="படி 1: சரிபார்ப்புக்காக உங்கள் தகவலை வழங்கவும்."
       >
           <Button asChild variant="outline">
           <Link href="/dashboard">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            முகப்புக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
@@ -154,9 +154,9 @@ export default function DiwaliFundPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         <Card>
           <CardHeader>
-            <CardTitle>Your Details</CardTitle>
+            <CardTitle>உங்கள் விவரங்கள்</CardTitle>
             <CardDescription>
-              Please provide your information and capture a photo for verification.
+              தயவுசெய்து உங்கள் தகவலை அளித்து, சரிபார்ப்புக்காக ஒரு புகைப்படத்தைப் பிடிக்கவும்.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -164,24 +164,24 @@ export default function DiwaliFundPage() {
               {/* Left side: Form inputs */}
               <div className="md:col-span-2 space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" placeholder="e.g., Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
+                  <Label htmlFor="name">முழு பெயர்</Label>
+                  <Input id="name" placeholder="எ.கா., பிரியா சர்மா" value={name} onChange={(e) => setName(e.target.value)} required />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="id-proof">Aadhaar Number</Label>
-                    <Input id="id-proof" placeholder="e.g., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
+                    <Label htmlFor="id-proof">ஆதார் எண்</Label>
+                    <Input id="id-proof" placeholder="எ.கா., 1234 5678 9012" value={idProof} onChange={(e) => setIdProof(e.target.value)} required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="contact">Phone Number</Label>
-                    <Input id="contact" placeholder="e.g., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
+                    <Label htmlFor="contact">தொலைபேசி எண்</Label>
+                    <Input id="contact" placeholder="எ.கா., +91 98765 43210" value={contact} onChange={(e) => setContact(e.target.value)} required />
                   </div>
                 </div>
               </div>
 
               {/* Right side: Face Capture */}
               <div className="space-y-2 flex flex-col items-center">
-                <Label className="text-center w-full">Face Capture</Label>
+                <Label className="text-center w-full">முகப் பிடிப்பு</Label>
                 <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden">
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
@@ -194,20 +194,20 @@ export default function DiwaliFundPage() {
                 </div>
                 {hasCameraPermission === false && (
                   <Alert variant="destructive" className="text-xs">
-                    <AlertTitle>Camera Access Denied</AlertTitle>
+                    <AlertTitle>கேமரா அணுகல் மறுக்கப்பட்டது</AlertTitle>
                   </Alert>
                 )}
                 {faceImageBase64 ? (
                   <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full max-w-xs">
-                    <RefreshCw className="mr-2 h-4 w-4" /> Retake Photo
+                    <RefreshCw className="mr-2 h-4 w-4" /> மீண்டும் புகைப்படம் எடு
                   </Button>
                 ) : isCameraOpen ? (
                   <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false} className="w-full max-w-xs">
-                    <Camera className="mr-2 h-4 w-4" /> Capture Photo
+                    <Camera className="mr-2 h-4 w-4" /> புகைப்படத்தைப் பிடி
                   </Button>
                 ) : (
                   <Button type="button" onClick={openCamera} disabled={isSubmitting} className="w-full max-w-xs">
-                    <Camera className="mr-2 h-4 w-4" /> Open Camera
+                    <Camera className="mr-2 h-4 w-4" /> கேமராவைத் திற
                   </Button>
                 )}
               </div>
@@ -220,10 +220,10 @@ export default function DiwaliFundPage() {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving User...
+                பயனரைச் சேமிக்கிறது...
               </>
             ) : (
-              "Create User & Proceed"
+              "பயனரை உருவாக்கி தொடரவும்"
             )}
           </Button>
         </div>

@@ -22,7 +22,7 @@ import type { User, Loan } from "@/lib/data";
 import { getUserById } from "@/lib/data";
 
 const CONTRIBUTION_AMOUNTS = [100, 1000, 5000];
-const FREQUENCIES = ["Weekly", "Monthly"];
+const FREQUENCIES = ["வாராந்திர", "மாதாந்திர"];
 const DIWALI_DATE = new Date(new Date().getFullYear(), 10, 1); // Approx. Nov 1st
 
 export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
@@ -34,7 +34,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [contribution, setContribution] = useState<number | undefined>();
-  const [frequency, setFrequency] = useState<"Weekly" | "Monthly" | undefined>();
+  const [frequency, setFrequency] = useState<"வாராந்திர" | "மாதாந்திர" | undefined>();
   
   useEffect(() => {
     getUserById(userId).then(setUser);
@@ -44,7 +44,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
   const numberOfPayments = useMemo(() => {
     if (!frequency) return 0;
     const now = new Date();
-    if (frequency === 'Weekly') {
+    if (frequency === 'வாராந்திர') {
         return differenceInWeeks(DIWALI_DATE, now);
     } else { // Monthly
         return differenceInMonths(DIWALI_DATE, now);
@@ -68,15 +68,15 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
     if (!contribution || !frequency || !user) {
       toast({
         variant: "destructive",
-        title: "Missing Information",
-        description: "Please select a contribution plan.",
+        title: "தகவல் இல்லை",
+        description: "பங்களிப்புத் திட்டத்தைத் தேர்ந்தெடுக்கவும்.",
       });
       return;
     }
 
     setIsSubmitting(true);
     
-    const nextPaymentDate = frequency === 'Weekly' ? addWeeks(new Date(), 1) : addMonths(new Date(), 1);
+    const nextPaymentDate = frequency === 'வாராந்திர' ? addWeeks(new Date(), 1) : addMonths(new Date(), 1);
     const createdAt = new Date();
 
     const allUsersJson = localStorage.getItem('temp_new_users');
@@ -87,7 +87,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
     
     const userIndex = allUsers.findIndex(u => u.id === userId);
     if(userIndex === -1) {
-        toast({ variant: "destructive", title: "User not found!" });
+        toast({ variant: "destructive", title: "பயனர் கிடைக்கவில்லை!" });
         setIsSubmitting(false);
         return;
     }
@@ -105,7 +105,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
         amountRepaid: contribution, // First contribution is made now
         status: 'Active',
         loanType: 'Diwali Fund',
-        paymentFrequency: frequency,
+        paymentFrequency: (frequency as 'Weekly' | 'Monthly'),
         createdAt: createdAt.toISOString(),
         dueDate: nextPaymentDate.toISOString(),
         transactions: [
@@ -141,8 +141,8 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
       localStorage.setItem('diwali_fund_confirmation', JSON.stringify(confirmationDetails));
       
       toast({
-        title: "Successfully Joined!",
-        description: `Welcome to the Diwali Fund, ${user.name}!`,
+        title: "வெற்றிகரமாக சேர்ந்தீர்கள்!",
+        description: `தீபாவளி நிதிக்கு வரவேற்கிறோம், ${user.name}!`,
       });
       
       router.push(`/diwali-fund/confirmation`);
@@ -162,21 +162,21 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <PageHeader
-        title="Join the Diwali Fund"
-        description={`Step 2: Choose a contribution plan for ${user.name}.`}
+        title="தீபாவளி நிதியில் சேரவும்"
+        description={`படி 2: ${user.name} க்கான பங்களிப்புத் திட்டத்தைத் தேர்ந்தெடுக்கவும்.`}
       />
       
       <form onSubmit={handleSubmit} className="space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle>Contribution Plan</CardTitle>
+                    <CardTitle>பங்களிப்புத் திட்டம்</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label>Contribution Amount</Label>
+                            <Label>பங்களிப்புத் தொகை</Label>
                             <Select value={contribution?.toString()} onValueChange={(val) => setContribution(Number(val))}>
-                                <SelectTrigger><SelectValue placeholder="Select amount" /></SelectTrigger>
+                                <SelectTrigger><SelectValue placeholder="தொகையைத் தேர்ந்தெடுக்கவும்" /></SelectTrigger>
                                 <SelectContent>
                                     {CONTRIBUTION_AMOUNTS.map(amount => (
                                         <SelectItem key={amount} value={amount.toString()}>₹{amount.toLocaleString('en-IN')}</SelectItem>
@@ -185,9 +185,9 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label>Frequency</Label>
-                            <Select value={frequency} onValueChange={(val: "Weekly" | "Monthly") => setFrequency(val)}>
-                                <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
+                            <Label>அதிர்வெண்</Label>
+                            <Select value={frequency} onValueChange={(val: "வாராந்திர" | "மாதாந்திர") => setFrequency(val)}>
+                                <SelectTrigger><SelectValue placeholder="அதிர்வெண்ணைத் தேர்ந்தெடுக்கவும்" /></SelectTrigger>
                                 <SelectContent>
                                     {FREQUENCIES.map(freq => (
                                         <SelectItem key={freq} value={freq}>{freq}</SelectItem>
@@ -202,15 +202,15 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
         <div className="space-y-8">
             <Alert>
                 <Info className="h-4 w-4" />
-                <AlertTitle>How it Works</AlertTitle>
+                <AlertTitle>இது எப்படி வேலை செய்கிறது</AlertTitle>
                 <AlertDescription>
-                    Save ₹100, ₹1,000, or ₹5,000 weekly or monthly and receive a <span className="font-bold text-primary">+10% bonus</span> at Diwali. Early withdrawal will incur a 10% deduction on your total saved amount.
+                    ₹100, ₹1,000, அல்லது ₹5,000 வாராந்திரம் அல்லது மாதாந்திரம் சேமித்து, தீபாவளி அன்று <span className="font-bold text-primary">+10% போனஸ்</span> பெறுங்கள். முன்கூட்டியே எடுத்தால் உங்கள் மொத்த சேமிப்பில் 10% கழிக்கப்படும்.
                 </AlertDescription>
             </Alert>
             <Card className="bg-primary text-primary-foreground">
                 <CardHeader>
-                    <CardTitle>Estimated Diwali Return</CardTitle>
-                    <CardDescription className="text-primary-foreground/80">Your total contribution plus your 10% bonus.</CardDescription>
+                    <CardTitle>மதிப்பிடப்பட்ட தீபாவளி வருமானம்</CardTitle>
+                    <CardDescription className="text-primary-foreground/80">உங்கள் மொத்த பங்களிப்பு மற்றும் உங்கள் 10% போனஸ்.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <p className="text-3xl font-bold">₹{Math.round(estimatedReturn).toLocaleString('en-IN')}</p>
@@ -223,10 +223,10 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Joining...
+                சேர்கிறீர்கள்...
               </>
             ) : (
-              "Join Now"
+              "இப்போது சேரவும்"
             )}
           </Button>
         </div>

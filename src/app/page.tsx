@@ -33,12 +33,12 @@ export default function LoginPage() {
             <div className="mb-4 inline-block mx-auto">
               <Logo />
             </div>
-            <CardTitle className="text-xl font-headline">Admin Login</CardTitle>
+            <CardTitle className="text-xl font-headline">நிர்வாகி உள்நுழைவு</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLoginSubmit} className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">மின்னஞ்சல்</Label>
                 <Input
                   id="email"
                   type="email"
@@ -47,7 +47,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="grid gap-2 relative">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">கடவுச்சொல்</Label>
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -63,12 +63,12 @@ export default function LoginPage() {
                 >
                   {showPassword ? <EyeOff /> : <Eye />}
                   <span className="sr-only">
-                    {showPassword ? 'Hide password' : 'Show password'}
+                    {showPassword ? 'கடவுச்சொல்லை மறை' : 'கடவுச்சொல்லைக் காட்டு'}
                   </span>
                 </Button>
               </div>
               <Button type="submit" className="w-full">
-                Login
+                உள்நுழைய
               </Button>
             </form>
           </CardContent>

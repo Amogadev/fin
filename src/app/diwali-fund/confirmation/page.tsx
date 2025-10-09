@@ -36,7 +36,7 @@ export default function ConfirmationPage() {
     if (!details) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <p>Loading your confirmation...</p>
+                <p>உங்கள் உறுதிப்படுத்தல் ஏற்றப்படுகிறது...</p>
             </div>
         );
     }
@@ -48,34 +48,34 @@ export default function ConfirmationPage() {
                     <div className="p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">
                         <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-400" />
                     </div>
-                    <CardTitle className="text-2xl font-headline">Confirmation</CardTitle>
+                    <CardTitle className="text-2xl font-headline">உறுதிப்படுத்தல்</CardTitle>
                     <CardDescription>
-                        Congratulations, {details.name}! You've successfully joined the Diwali Fund.
+                        வாழ்த்துக்கள், {details.name}! நீங்கள் தீபாவளி நிதியில் வெற்றிகரமாக சேர்ந்துவிட்டீர்கள்.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="p-4 border rounded-lg bg-muted/50 space-y-3 text-sm">
-                        <h3 className="font-semibold mb-2">Your Plan Summary</h3>
+                        <h3 className="font-semibold mb-2">உங்கள் திட்டத்தின் சுருக்கம்</h3>
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">Contribution:</span>
-                            <span className="font-medium">₹{details.contribution.toLocaleString('en-IN')} / {details.frequency.slice(0, -2)}</span>
+                            <span className="text-muted-foreground">பங்களிப்பு:</span>
+                            <span className="font-medium">₹{details.contribution.toLocaleString('en-IN')} / {details.frequency.endsWith('ly') ? details.frequency.slice(0, -2) : details.frequency}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">Next Payment Due:</span>
+                            <span className="text-muted-foreground">அடுத்த செலுத்த வேண்டிய தேதி:</span>
                             <span className="font-medium">{format(new Date(details.nextPaymentDate), 'PPP')}</span>
                         </div>
                         <div className="flex justify-between text-base font-semibold text-primary">
-                            <span>Estimated Diwali Return:</span>
+                            <span>மதிப்பிடப்பட்ட தீபாவளி வருமானம்:</span>
                             <span>₹{Math.round(details.estimatedReturn).toLocaleString('en-IN')}</span>
                         </div>
                     </div>
                     <div className="text-center text-muted-foreground text-xs">
-                        You will receive reminders for your payments. Remember, early withdrawal will incur a 10% deduction.
+                        உங்கள் கொடுப்பனவுகளுக்கான நினைவூட்டல்களைப் பெறுவீர்கள். நினைவிருக்கட்டும், முன்கூட்டியே எடுத்தால் 10% கழிக்கப்படும்.
                     </div>
                     <Button asChild className="w-full" size="lg">
                         <Link href="/dashboard">
                             <PartyPopper className="mr-2 h-4 w-4" />
-                            Back to Dashboard
+                            முகப்புக்குத் திரும்பு
                         </Link>
                     </Button>
                 </CardContent>

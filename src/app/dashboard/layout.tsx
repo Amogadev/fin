@@ -59,7 +59,7 @@ function ThemeToggle() {
      <div className="flex items-center space-x-2 px-2 py-1.5" onClick={(e) => { e.stopPropagation(); }}>
       <Label htmlFor="dark-mode-switch" className="flex items-center gap-2 text-sm cursor-pointer">
         {theme === 'light' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        <span>Dark Mode</span>
+        <span>இருண்ட режим</span>
       </Label>
       <Switch
         id="dark-mode-switch"
@@ -84,17 +84,17 @@ export default function DashboardLayout({
   }, []);
 
   const menuItems = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/users", label: "Users", icon: Users },
-    { href: "/dashboard/transactions", label: "Transactions", icon: Receipt },
+    { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
+    { href: "/dashboard/users", label: "பயனர்கள்", icon: Users },
+    { href: "/dashboard/transactions", label: "பரிவர்த்தனைகள்", icon: Receipt },
   ];
 
   return (
     <div className="flex flex-col min-h-screen bg-muted/40 dark:bg-background">
       <header className="flex items-center justify-between p-4 border-b bg-card">
         <div>
-          <p className="text-sm text-muted-foreground">Welcome Back!</p>
-          <h2 className="text-2xl font-bold font-headline">Hi.</h2>
+          <p className="text-sm text-muted-foreground">மீண்டும் வருக!</p>
+          <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
         </div>
         <div className="flex items-center gap-4">
         </div>
@@ -125,7 +125,7 @@ export default function DashboardLayout({
                 className={`flex flex-col items-center justify-center gap-1 w-20 h-full transition-colors text-muted-foreground hover:text-accent-foreground/80`}
               >
                 <Settings className="h-6 w-6" />
-                <span className="text-xs">Settings</span>
+                <span className="text-xs">அமைப்புகள்</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -140,7 +140,7 @@ export default function DashboardLayout({
               <DropdownMenuItem asChild>
                 <Link href="/">
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log Out</span>
+                  <span>வெளியேறு</span>
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
