@@ -115,20 +115,26 @@ function ReportsPageContent() {
     const [dataPromise, setDataPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }> | null>(null);
 
     useEffect(() => {
+        // This effect runs whenever the 'tab' changes in the URL.
+        // It sets a new promise into state, which will cause the component
+        // to re-suspend until the new data is fetched.
         setDataPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
     }, [tab]); 
     
     if (!dataPromise) {
-        // This case should ideally not be hit if useEffect is set up correctly,
-        // but it's a safeguard. The skeleton will be shown by Suspense.
+        // This should not happen if useEffect runs on mount, but it's a safeguard.
+        // The parent <Suspense> will show the skeleton.
         return null;
     }
     
+    // The `use` hook will "unwrap" the promise. While the promise is pending,
+    // it will pause rendering and let the nearest <Suspense> boundary show its fallback.
     const { loans, funds } = use(dataPromise);
 
     const handleTabChange = (value: string) => {
+        // Update the URL without a full page reload. This triggers the `useEffect` above.
         router.push(`/dashboard/reports?tab=${value}`, { scroll: false });
     };
     
