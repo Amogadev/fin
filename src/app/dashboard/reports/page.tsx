@@ -115,17 +115,17 @@ function ReportsPageContent() {
     const [dataPromise, setDataPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }> | null>(null);
 
     useEffect(() => {
-        // This effect runs whenever the 'tab' changes in the URL.
+        // This effect runs whenever the 'tab' changes.
         // It sets a new promise into state, which will cause the component
-        // to re-suspend until the new data is fetched.
+        // to re-suspend via the use() hook until the new data is fetched.
         setDataPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, [tab]); 
+    }, [tab]); // The dependency array is key. This re-runs the effect ONLY when the tab changes.
     
+    // The component will suspend here if dataPromise is null on the first render,
+    // allowing the parent <Suspense> boundary to show the skeleton.
     if (!dataPromise) {
-        // This should not happen if useEffect runs on mount, but it's a safeguard.
-        // The parent <Suspense> will show the skeleton.
         return null;
     }
     
