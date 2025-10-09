@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import {
   LayoutDashboard,
@@ -14,6 +14,7 @@ import {
   Sun,
   FileText,
   ChevronDown,
+  ArrowLeft,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -75,6 +76,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const menuItems = [
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
@@ -83,12 +85,22 @@ export default function DashboardLayout({
     { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: FileText },
   ];
 
+  const showBackButton = pathname !== "/dashboard";
+
   return (
     <div className="flex flex-col min-h-screen bg-muted/40 dark:bg-background">
       <header className="flex items-center justify-between p-4 border-b bg-card">
-        <div>
-          <p className="text-sm text-muted-foreground">மீண்டும் வருக!</p>
-          <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
+        <div className="flex items-center gap-4">
+           {showBackButton && (
+             <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => router.back()}>
+                <ArrowLeft className="h-4 w-4" />
+                <span className="sr-only">பின்செல்</span>
+              </Button>
+           )}
+          <div>
+            <p className="text-sm text-muted-foreground">மீண்டும் வருக!</p>
+            <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
+          </div>
         </div>
         <div className="flex items-center gap-4">
            <DropdownMenu>
