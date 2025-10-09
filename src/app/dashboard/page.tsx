@@ -163,12 +163,9 @@ export default function DashboardPage() {
             </div>
             
             <h3 className="text-lg font-semibold pt-2">DIWALI FUND</h3>
-
-            <div className="h-36">
-                <DiwaliFundCard />
-            </div>
             
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-3">
+                <DiwaliFundCard />
                 <StatCard
                 title="Total Fund Contributions"
                 value={`₹${vaultData.totalDiwaliFundContributions.toLocaleString("en-IN")}`}
