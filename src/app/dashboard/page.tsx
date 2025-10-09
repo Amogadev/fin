@@ -168,7 +168,7 @@ export default function DashboardPage() {
             <div className="grid gap-4 md:grid-cols-3">
                 <NewLoanRegistrationCard />
                 <StatCard
-                title="வழங்கப்பட்ட மொத்த கடன்கள்"
+                title="வழங்கப்பட்ட மொத்தக் கடன்கள்"
                 value={`₹${vaultData.totalLoansGiven.toLocaleString("en-IN")}`}
                 icon={IndianRupee}
                 description="வழங்கப்பட்ட அசல் தொகை"
