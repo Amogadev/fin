@@ -113,7 +113,7 @@ function ReportsPageContent() {
     if (!reportsPromise) {
         return (
              <div className="space-y-4">
-                <PageHeader title="அறிக்கைகள்" description={pageDescription} />
+                <PageHeader title={pageTitle} description={pageDescription} />
                 <Card>
                     <CardContent className="pt-6">
                         <ReportsSkeleton />
