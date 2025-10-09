@@ -105,7 +105,7 @@ function ReportsPageContent() {
         setReportsPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, [tab]); // Re-fetch when tab changes
+    }, [tab]); 
 
     const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
     const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
