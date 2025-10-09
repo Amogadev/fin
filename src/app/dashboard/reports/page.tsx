@@ -7,7 +7,6 @@ import PageHeader from "@/components/page-header";
 import { getLoanReports, getDiwaliFundReports, type LoanReport, type DiwaliFundReport } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -98,16 +97,9 @@ function ReportsSkeleton() {
 
 function ReportsPageContent() {
     const searchParams = useSearchParams();
-    const initialTab = searchParams.get('tab') || 'loans';
+    const tab = searchParams.get('tab') || 'loans';
     
     const [reportsPromise, setReportsPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }>>();
-    const [activeTab, setActiveTab] = useState(initialTab);
-
-     useEffect(() => {
-        // This effect synchronizes the activeTab state with the URL's `tab` query parameter.
-        // It ensures that when the user navigates using the header dropdown, the correct tab is displayed.
-        setActiveTab(initialTab);
-    }, [initialTab]);
 
     useEffect(() => {
         setReportsPromise(
@@ -115,10 +107,13 @@ function ReportsPageContent() {
         );
     }, []);
 
+    const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
+    const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
+
     if (!reportsPromise) {
         return (
              <div className="space-y-4">
-                <PageHeader title="அறிக்கைகள்" description="செயலில் உள்ள கடன்கள் மற்றும் தீபாவளி சேமிப்புத் திட்டங்களின் கண்ணோட்டம்." />
+                <PageHeader title="அறிக்கைகள்" description={pageDescription} />
                 <Card>
                     <CardContent className="pt-6">
                         <ReportsSkeleton />
@@ -132,27 +127,13 @@ function ReportsPageContent() {
 
     return (
         <div className="space-y-4">
-            <PageHeader title="அறிக்கைகள்" description="செயலில் உள்ள கடன்கள் மற்றும் தீபாவளி சேமிப்புத் திட்டங்களின் கண்ணோட்டம்." />
-            <Tabs value={activeTab} onValueChange={setActiveTab} key={initialTab}>
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="loans">கடன்</TabsTrigger>
-                    <TabsTrigger value="funds">தீபாவளி சேமிப்புத் திட்டம்</TabsTrigger>
-                </TabsList>
-                <TabsContent value="loans">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <LoanReportTable loans={loans} />
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-                <TabsContent value="funds">
-                    <Card>
-                        <CardContent className="pt-6">
-                           <DiwaliFundReportTable funds={funds} />
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-            </Tabs>
+            <PageHeader title={pageTitle} description={pageDescription} />
+             <Card>
+                <CardContent className="pt-6">
+                    {tab === 'loans' && <LoanReportTable loans={loans} />}
+                    {tab === 'funds' && <DiwaliFundReportTable funds={funds} />}
+                </CardContent>
+            </Card>
         </div>
     );
 }
