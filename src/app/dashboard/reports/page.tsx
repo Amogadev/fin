@@ -101,6 +101,8 @@ function ReportsPageContent() {
     const initialTab = searchParams.get('tab') || 'loans';
     
     const [reportsPromise, setReportsPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }>>();
+    
+    // We use a key on the Tabs component to force re-mount when the tab from URL changes
     const [activeTab, setActiveTab] = useState(initialTab);
 
      useEffect(() => {
@@ -131,7 +133,7 @@ function ReportsPageContent() {
     return (
         <div className="space-y-4">
             <PageHeader title="அறிக்கைகள்" description="செயலில் உள்ள கடன்கள் மற்றும் தீபாவளி சேமிப்புத் திட்டங்களின் கண்ணோட்டம்." />
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <Tabs value={activeTab} onValueChange={setActiveTab} key={initialTab}>
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="loans">கடன்</TabsTrigger>
                     <TabsTrigger value="funds">தீபாவளி சேமிப்புத் திட்டம்</TabsTrigger>
