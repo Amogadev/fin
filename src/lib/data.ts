@@ -45,6 +45,22 @@ export type Vault = {
   totalDiwaliFundContributions: number;
 };
 
+export type LoanReport = {
+    loanId: string;
+    userName: string;
+    startDate: string;
+    disbursedAmount: number;
+    remainingBalance: number;
+};
+
+export type DiwaliFundReport = {
+    userId: string;
+    userName: string;
+    contributionAmount: number;
+    frequency: 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
+    endDate: string;
+};
+
 // Initial state for the vault. In a real app, this would come from a persistent store.
 const initialVaultState: Vault = {
   balance: 100000,
@@ -183,4 +199,46 @@ export const getAllTransactions = async (): Promise<TransactionWithUser[]> => {
         )
     });
     return Promise.resolve(allTxs.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+}
+
+export const getLoanReports = async (): Promise<LoanReport[]> => {
+    const allUsers = await getUsers();
+    const loanReports: LoanReport[] = [];
+
+    allUsers.forEach(user => {
+        user.loans.forEach(loan => {
+            if ((loan.loanType === 'Loan' || loan.loanType === 'EMI') && (loan.status === 'Active' || loan.status === 'Overdue')) {
+                loanReports.push({
+                    loanId: loan.id,
+                    userName: user.name,
+                    startDate: loan.createdAt,
+                    disbursedAmount: loan.principal,
+                    remainingBalance: loan.totalOwed - loan.amountRepaid,
+                });
+            }
+        });
+    });
+
+    return Promise.resolve(loanReports);
+}
+
+export const getDiwaliFundReports = async (): Promise<DiwaliFundReport[]> => {
+    const allUsers = await getUsers();
+    const fundReports: DiwaliFundReport[] = [];
+
+    allUsers.forEach(user => {
+        const fund = user.loans.find(l => l.loanType === 'Diwali Fund');
+        if (fund) {
+            const firstContribution = fund.transactions.find(t => t.type === 'Repayment');
+            fundReports.push({
+                userId: user.id,
+                userName: user.name,
+                contributionAmount: firstContribution?.amount || 0,
+                frequency: fund.paymentFrequency,
+                endDate: new Date(new Date().getFullYear(), 10, 1).toISOString(), // Diwali Approx Nov 1st
+            });
+        }
+    });
+
+    return Promise.resolve(fundReports);
 }

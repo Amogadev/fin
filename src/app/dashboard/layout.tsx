@@ -12,6 +12,7 @@ import {
   Receipt,
   Moon,
   Sun,
+  FileText,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -78,6 +79,7 @@ export default function DashboardLayout({
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
     { href: "/dashboard/users", label: "பயனர்கள்", icon: Users },
     { href: "/dashboard/transactions", label: "பரிவர்த்தனைகள்", icon: Receipt },
+    { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: FileText },
   ];
 
   return (
