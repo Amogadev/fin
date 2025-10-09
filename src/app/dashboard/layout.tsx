@@ -115,7 +115,7 @@ export default function DashboardLayout({
                 }`}
               >
                 <item.icon className="h-6 w-6" />
-                <span className="text-xs">{item.label}</span>
+                <span className="text-xs text-center w-full">{item.label}</span>
               </Link>
             );
           })}
