@@ -202,7 +202,7 @@ export default function DashboardPage() {
       <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
-            <CardTitle>விரைவு நடவடிக்கைகள்</CardTitle>
+            <CardTitle>விரைவு அணுகல்</CardTitle>
           </div>
           <Button asChild size="sm" className="ml-auto gap-1">
             <Link href="/dashboard/users">
