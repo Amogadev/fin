@@ -82,7 +82,6 @@ export default function DashboardLayout({
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
     { href: "/dashboard/users", label: "பயனர்கள்", icon: Users },
     { href: "/dashboard/transactions", label: "பரிவர்த்தனைகள்", icon: Receipt },
-    { href: "/dashboard/reports?tab=loans", label: "அறிக்கைகள்", icon: FileText },
     { id: "settings", label: "அமைப்புகள்", icon: Settings },
   ];
 
@@ -102,6 +101,12 @@ export default function DashboardLayout({
             <p className="text-sm text-muted-foreground">மீண்டும் வருக!</p>
             <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
           </div>
+           <Button asChild variant="outline" size="sm">
+              <Link href="/dashboard/reports?tab=loans">
+                <FileText className="mr-2 h-4 w-4" />
+                அறிக்கைகள்
+              </Link>
+            </Button>
         </div>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
