@@ -144,7 +144,12 @@ export default function DashboardPage() {
 
   const { vault: vaultData, users } = use(dataPromise);
   const recentUsers = users.slice(-3).reverse();
-  const loanUsers = users.filter(user => user.loans.some(loan => loan.loanType === 'Loan' || loan.loanType === 'EMI'));
+  const loanUsers = users.filter(user => 
+    user.loans.some(loan => 
+      (loan.loanType === 'Loan' || loan.loanType === 'EMI') && 
+      (loan.status === 'Active' || loan.status === 'Overdue')
+    )
+  );
 
 
   return (
