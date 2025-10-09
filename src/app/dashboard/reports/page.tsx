@@ -72,36 +72,37 @@ function DiwaliFundReportTable({ funds }: { funds: DiwaliFundReport[] }) {
 function ReportsSkeleton() {
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between space-y-2 mb-6">
-                <div>
-                    <Skeleton className="h-8 w-48 mb-2" />
-                    <Skeleton className="h-4 w-64" />
-                </div>
-            </div>
-            <Card>
-                <CardContent className="pt-6">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                 <TableHead><Skeleton className="h-5 w-24" /></TableHead>
-                                 <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                                 <TableHead><Skeleton className="h-5 w-20" /></TableHead>
-                                 <TableHead className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <TableRow key={i}>
-                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                                    <TableCell className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableCell>
+            <PageHeader title="அறிக்கைகள் ஏற்றப்படுகின்றன..." description="செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்." />
+            <Tabs defaultValue="loans" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="loans">கடன்</TabsTrigger>
+                    <TabsTrigger value="funds">தீபாவளி சேமிப்புத் திட்டம்</TabsTrigger>
+                </TabsList>
+                 <Card className="mt-2">
+                    <CardContent className="pt-6">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                                    <TableHead><Skeleton className="h-5 w-32" /></TableHead>
+                                    <TableHead><Skeleton className="h-5 w-20" /></TableHead>
+                                    <TableHead className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+                            </TableHeader>
+                            <TableBody>
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <TableRow key={i}>
+                                        <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                        <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                                        <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                                        <TableCell className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            </Tabs>
         </div>
     )
 }
@@ -111,22 +112,25 @@ function ReportsPageContent() {
     const searchParams = useSearchParams();
     const tab = searchParams.get('tab') || 'loans';
     
-    const [reportsPromise, setReportsPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }>>();
+    const [dataPromise, setDataPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }> | null>(null);
 
     useEffect(() => {
-        setReportsPromise(
+        // This effect runs when the `tab` changes, fetching the new data.
+        setDataPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, []); 
+    }, [tab]); 
     
-    if (!reportsPromise) {
-        // This will be handled by the Suspense fallback on initial render.
+    if (!dataPromise) {
+        // This case will be handled by Suspense on the initial render.
+        // It can also be a state during client-side transitions if needed.
         return null;
     }
     
-    const { loans, funds } = use(reportsPromise);
+    const { loans, funds } = use(dataPromise);
 
     const handleTabChange = (value: string) => {
+        // Update the URL, which will trigger the useEffect to re-fetch data
         router.push(`/dashboard/reports?tab=${value}`);
     };
     
@@ -135,7 +139,7 @@ function ReportsPageContent() {
 
     return (
         <div className="space-y-4">
-             <PageHeader title={pageTitle} description={pageDescription} />
+            <PageHeader title={pageTitle} description={pageDescription} />
             <Tabs value={tab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="loans">கடன்</TabsTrigger>
