@@ -110,12 +110,11 @@ function ReportsPageContent() {
         setReportsPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, [tab]); // This dependency array ensures the effect re-runs when the tab changes.
+    }, [tab]); 
     
     if (!reportsPromise) {
-        // This can happen on the very first render before useEffect runs.
-        // The Suspense fallback will be shown.
-        return null;
+        // Fallback for initial render before useEffect runs
+        return <ReportsSkeleton />;
     }
     
     const { loans, funds } = use(reportsPromise);
@@ -128,8 +127,7 @@ function ReportsPageContent() {
             <PageHeader title={pageTitle} description={pageDescription} />
              <Card>
                 <CardContent className="pt-6">
-                    {tab === 'loans' && <LoanReportTable loans={loans} />}
-                    {tab === 'funds' && <DiwaliFundReportTable funds={funds} />}
+                    {tab === 'loans' ? <LoanReportTable loans={loans} /> : <DiwaliFundReportTable funds={funds} />}
                 </CardContent>
             </Card>
         </div>
