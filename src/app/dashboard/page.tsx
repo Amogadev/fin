@@ -3,7 +3,7 @@
 
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText, Wallet, PiggyBank } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText, Wallet, PiggyBank, UserPlus } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -80,6 +80,20 @@ function AddUserCard() {
   )
 }
 
+function NewLoanRegistrationCard() {
+  return (
+    <Link href="/dashboard/users/new" className="block h-full">
+      <Card className="h-full bg-primary/5 hover:bg-primary/10 transition-colors flex flex-col items-center justify-center text-center space-y-2 p-4">
+        <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
+            <UserPlus className="h-6 w-6 text-primary" />
+        </div>
+        <p className="font-semibold text-sm text-primary">New Loan Registration</p>
+        <p className="text-xs text-muted-foreground">Onboard a new user</p>
+      </Card>
+    </Link>
+  )
+}
+
 function DiwaliFundCard() {
   return (
     <Link href="/diwali-fund" className="block h-full">
@@ -147,7 +161,8 @@ export default function DashboardPage() {
             
             <h3 className="text-lg font-semibold pt-2">LOAN</h3>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-3">
+                <NewLoanRegistrationCard />
                 <StatCard
                 title="Total Loans Given"
                 value={`₹${vaultData.totalLoansGiven.toLocaleString("en-IN")}`}
