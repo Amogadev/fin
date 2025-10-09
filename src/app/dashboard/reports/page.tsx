@@ -113,8 +113,8 @@ function ReportsPageContent() {
     }, [tab]); 
     
     if (!reportsPromise) {
-        // Fallback for initial render before useEffect runs
-        return <ReportsSkeleton />;
+        // This will be handled by the Suspense fallback on initial render.
+        return null;
     }
     
     const { loans, funds } = use(reportsPromise);
