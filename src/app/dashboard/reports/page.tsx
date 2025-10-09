@@ -69,28 +69,38 @@ function DiwaliFundReportTable({ funds }: { funds: DiwaliFundReport[] }) {
 }
 
 function ReportsSkeleton() {
+    const searchParams = useSearchParams();
+    const tab = searchParams.get('tab') || 'loans';
+    const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
+    const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
+
     return (
         <div className="space-y-4">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                         <TableHead><Skeleton className="h-5 w-24" /></TableHead>
-                         <TableHead><Skeleton className="h-5 w-32" /></TableHead>
-                         <TableHead><Skeleton className="h-5 w-20" /></TableHead>
-                         <TableHead className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                        <TableRow key={i}>
-                            <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                            <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                            <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                            <TableCell className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            <PageHeader title={pageTitle} description={pageDescription} />
+            <Card>
+                <CardContent className="pt-6">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                 <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                                 <TableHead><Skeleton className="h-5 w-32" /></TableHead>
+                                 <TableHead><Skeleton className="h-5 w-20" /></TableHead>
+                                 <TableHead className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {Array.from({ length: 5 }).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                                    <TableCell className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
         </div>
     )
 }
@@ -109,18 +119,10 @@ function ReportsPageContent() {
 
     const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
     const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
-
+    
     if (!reportsPromise) {
-        return (
-             <div className="space-y-4">
-                <PageHeader title={pageTitle} description={pageDescription} />
-                <Card>
-                    <CardContent className="pt-6">
-                        <ReportsSkeleton />
-                    </CardContent>
-                </Card>
-            </div>
-        )
+        // This can be a skeleton or loading state shown before the effect runs
+        return <ReportsSkeleton />;
     }
     
     const { loans, funds } = use(reportsPromise);
