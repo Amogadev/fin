@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/page-header";
@@ -15,15 +15,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Minus, Plus } from "lucide-react";
+import { ArrowLeft, Minus, Plus, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Pie, PieChart, Cell } from "recharts";
 import { useToast } from "@/hooks/use-toast";
-import type { Loan } from "@/lib/data";
-import { getUsers } from "@/lib/data";
+import type { Loan, User } from "@/lib/data";
+import { getUsers, getUserById } from "@/lib/data";
 import { addDays, addMonths, addYears, format } from "date-fns";
 
 
@@ -48,14 +48,22 @@ function getDueDate(startDate: Date, frequency: PaymentFrequency): Date {
   }
 }
 
-export default function ApplyLoanPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
-  const { id: userId } = use(paramsPromise);
+export default function ApplyLoanPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { toast } = useToast();
+  const [user, setUser] = useState<User | null>(null);
 
   const [amount, setAmount] = useState(0);
   const [loanType, setLoanType] = useState<"loan" | "emi">();
   const [paymentFrequency, setPaymentFrequency] = useState<PaymentFrequency>();
+
+  useEffect(() => {
+      async function fetchUser() {
+          const userData = await getUserById(params.id);
+          setUser(userData || null);
+      }
+      fetchUser();
+  }, [params.id]);
 
 
   const interestRate = loanType ? LOAN_TYPE_CONFIG[loanType].interestRate : 0;
@@ -72,7 +80,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
   ];
 
   const handleSubmit = async () => {
-    if (!loanType || !paymentFrequency || !dueDate) {
+    if (!loanType || !paymentFrequency || !dueDate || !user) {
       toast({
         variant: "destructive",
         title: "முழுமையற்ற தகவல்",
@@ -90,7 +98,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
     const newLoan: Loan = {
       id: newLoanId,
-      userId,
+      userId: user.id,
       amountRequested: amount,
       interest,
       principal: disbursedAmount, // The amount that leaves the vault
@@ -114,10 +122,10 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
     const tempLoansJson = localStorage.getItem('temp_new_loans');
     const tempLoans = tempLoansJson ? JSON.parse(tempLoansJson) : {};
-    if (!tempLoans[userId]) {
-      tempLoans[userId] = [];
+    if (!tempLoans[user.id]) {
+      tempLoans[user.id] = [];
     }
-    tempLoans[userId].push(newLoan);
+    tempLoans[user.id].push(newLoan);
     localStorage.setItem('temp_new_loans', JSON.stringify(tempLoans));
 
     toast({
@@ -125,15 +133,19 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
       description: `₹${totalOwed.toLocaleString('en-IN')} க்கான கடன் ஒப்புதல் அளிக்கப்பட்டது.`,
     });
 
-    router.push(`/dashboard/users/${userId}`);
+    router.push(`/dashboard/users/${user.id}`);
   };
+
+  if (!user) {
+    return <div className="flex h-screen items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>
+  }
 
 
   return (
     <div className="space-y-6">
-      <PageHeader title="புதிய கடன் விண்ணப்பம்">
+      <PageHeader title="புதிய கடன் விண்ணப்பம்" description={`விண்ணப்பதாரர்: ${user.name}`}>
         <Button asChild variant="outline" size="sm">
-          <Link href={`/dashboard/users/${userId}`}>
+          <Link href={`/dashboard/users/${user.id}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             பயனர் விவரங்களுக்குத் திரும்பு
           </Link>
@@ -304,3 +316,5 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
     </div>
   );
 }
+
+    
