@@ -59,7 +59,7 @@ function UserCard({ user }: { user: User }) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி நிதி பதிவு'}</p>                
+                  <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி சேமிப்புத் திட்டம்'}</p>                
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -80,7 +80,7 @@ function UserCard({ user }: { user: User }) {
          <div className="flex justify-between items-center">
             <span className="text-muted-foreground">கடன் நிலை:</span>
             {user.registrationType === 'Diwali Fund' && user.loans.length === 0 ? (
-                 <Badge variant="secondary">தீபாவளி நிதி</Badge>
+                 <Badge variant="secondary">தீபாவளி சேமிப்பு</Badge>
             ) : (
                 <Badge variant={loanStatusVariant}>{loanStatus}</Badge>
             )}

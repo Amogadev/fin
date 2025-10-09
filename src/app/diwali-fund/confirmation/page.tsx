@@ -50,7 +50,7 @@ export default function ConfirmationPage() {
                     </div>
                     <CardTitle className="text-2xl font-headline">உறுதிப்படுத்தல்</CardTitle>
                     <CardDescription>
-                        வாழ்த்துக்கள், {details.name}! நீங்கள் தீபாவளி நிதியில் வெற்றிகரமாக சேர்ந்துவிட்டீர்கள்.
+                        வாழ்த்துக்கள், {details.name}! நீங்கள் தீபாவளி சேமிப்புத் திட்டத்தில் வெற்றிகரமாக சேர்ந்துவிட்டீர்கள்.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">

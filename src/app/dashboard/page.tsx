@@ -39,7 +39,7 @@ function UserCard({ user }: { user: User }) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி நிதி பதிவு'}</p>
+                  <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி சேமிப்புத் திட்டம்'}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -55,7 +55,7 @@ function UserCard({ user }: { user: User }) {
                 </div>
             ) : (
                  <p className="text-xs text-muted-foreground">
-                    {user.registrationType === 'Diwali Fund' ? 'தீபாவளி நிதி' : "செயலில் கடன்கள் இல்லை"}
+                    {user.registrationType === 'Diwali Fund' ? 'தீபாவளி சேமிப்பு' : "செயலில் கடன்கள் இல்லை"}
                  </p>
             )}
           </div>
@@ -101,7 +101,7 @@ function DiwaliFundCard() {
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <Gift className="h-6 w-6 text-primary" />
         </div>
-        <p className="font-semibold text-sm text-primary">தீபாவளி நிதிக்கு பதிவு செய்யவும்</p>
+        <p className="font-semibold text-sm text-primary">தீபாவளி சேமிப்புத் திட்டத்தில் சேரவும்</p>
         <p className="text-xs text-muted-foreground">சேமித்து பண்டிகை போனஸ் பெறுங்கள்</p>
       </Card>
     </Link>
@@ -181,7 +181,7 @@ export default function DashboardPage() {
                 />
             </div>
             
-            <h3 className="text-lg font-semibold pt-2">தீபாவளி நிதி</h3>
+            <h3 className="text-lg font-semibold pt-2">தீபாவளி சேமிப்புத் திட்டம்</h3>
             
             <div className="grid gap-4 md:grid-cols-3">
                 <DiwaliFundCard />
@@ -192,10 +192,10 @@ export default function DashboardPage() {
                 description="பயனர்கள் சேமித்த மொத்த தொகை"
                 />
                 <StatCard
-                title="தீபாவளி நிதி பயனர்கள்"
+                title="சேமிப்புத் திட்ட பயனர்கள்"
                 value={vaultData.diwaliFundUsers.toString()}
                 icon={Gift}
-                description="நிதியில் பங்கேற்கும் பயனர்கள்"
+                description="திட்டத்தில் பங்கேற்கும் பயனர்கள்"
                 />
             </div>
         </div>

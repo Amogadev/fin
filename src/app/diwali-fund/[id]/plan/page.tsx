@@ -142,7 +142,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
       
       toast({
         title: "வெற்றிகரமாக சேர்ந்தீர்கள்!",
-        description: `தீபாவளி நிதிக்கு வரவேற்கிறோம், ${user.name}!`,
+        description: `தீபாவளி சேமிப்புத் திட்டத்திற்கு வரவேற்கிறோம், ${user.name}!`,
       });
       
       router.push(`/diwali-fund/confirmation`);
@@ -162,7 +162,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <PageHeader
-        title="தீபாவளி நிதியில் சேரவும்"
+        title="தீபாவளி சேமிப்புத் திட்டத்தில் சேரவும்"
         description={`படி 2: ${user.name} க்கான பங்களிப்புத் திட்டத்தைத் தேர்ந்தெடுக்கவும்.`}
       />
       

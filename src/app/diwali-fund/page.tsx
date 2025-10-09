@@ -140,7 +140,7 @@ export default function DiwaliFundPage() {
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       <PageHeader
-        title="தீபாவளி நிதியில் சேரவும்"
+        title="தீபாவளி சேமிப்புத் திட்டத்தில் சேரவும்"
         description="படி 1: சரிபார்ப்புக்காக உங்கள் தகவலை வழங்கவும்."
       >
           <Button asChild variant="outline">
