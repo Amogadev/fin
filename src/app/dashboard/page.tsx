@@ -159,7 +159,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="text-4xl font-bold">₹{(vaultData.balance).toLocaleString("en-IN")}</div>
-                    <p className="text-xs text-primary-foreground/80">ஆரம்ப இருப்பு: ₹1,00,000</p>
+                    <p className="text-xs text-primary-foreground/80">தொடக்க இருப்பு: ₹1,00,000</p>
                 </CardContent>
             </Card>
             
@@ -227,4 +227,5 @@ export default function DashboardPage() {
     
 
     
+
 
