@@ -87,7 +87,7 @@ function NewLoanRegistrationCard() {
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <UserPlus className="h-6 w-6 text-primary" />
         </div>
-        <p className="font-semibold text-sm text-primary">New Loan Registration</p>
+        <p className="font-semibold text-sm text-primary">Join for loan</p>
         <p className="text-xs text-muted-foreground">Onboard a new user</p>
       </Card>
     </Link>
