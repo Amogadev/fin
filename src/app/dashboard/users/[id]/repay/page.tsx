@@ -109,7 +109,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
         localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
         
         toast({
-            title: "திருப்பிச் செலுத்துதல் வெற்றி பெற்றது",
+            title: "திருப்பிச் செலுத்துதல் வெற்றி",
             description: `₹${repaymentAmount.toLocaleString('en-IN')} கடன் ${selectedLoanId} க்காக செலுத்தப்பட்டது.`,
         });
 
@@ -132,7 +132,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
         <Button asChild variant="outline" size="sm">
           <Link href={`/dashboard/users/${userId}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனருக்குத் திரும்பு
+            பயனர் விவரங்களுக்கு திரும்ப
           </Link>
         </Button>
       </PageHeader>
@@ -141,7 +141,7 @@ export default function RepayLoanPage({ params: paramsPromise }: { params: Promi
         <CardHeader>
           <CardTitle>திருப்பிச் செலுத்துதலைச் சமர்ப்பிக்கவும்</CardTitle>
           <CardDescription>
-            ഒരു கடனைத் தேர்ந்தெடுத்து, திருப்பிச் செலுத்த வேண்டிய தொகையை உள்ளிடவும்.
+            ஒரு கடனைத் தேர்ந்தெடுத்து, திருப்பிச் செலுத்த வேண்டிய தொகையை உள்ளிடவும்.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

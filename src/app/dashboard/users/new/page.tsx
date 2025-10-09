@@ -61,7 +61,7 @@ function LoanUserForm() {
       toast({
         variant: 'destructive',
         title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
-        description: 'உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
+        description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
       });
     }
   }
@@ -98,8 +98,8 @@ function LoanUserForm() {
     if (!faceImageBase64) {
       toast({
         variant: "destructive",
-        title: "முகப் படம் இல்லை",
-        description: "பயனரை உருவாக்கும் முன் ஒரு முகப் படத்தைப் பிடிக்கவும்.",
+        title: "முகம் படம் இல்லை",
+        description: "பயனரை உருவாக்கும் முன், முகப் படத்தைப் பிடிக்கவும்.",
       });
       return;
     }
@@ -125,7 +125,7 @@ function LoanUserForm() {
 
       toast({
         title: "பயனர் உருவாக்கப்பட்டார்",
-        description: `${name} வெற்றிகரமாகப் பதிவு செய்யப்பட்டுள்ளார்.`,
+        description: `${name} வெற்றிகரமாக பதிவு செய்யப்பட்டார்.`,
       });
       
       router.push(`/dashboard/users/${newUser.id}`);
@@ -206,7 +206,7 @@ function LoanUserForm() {
                   <Alert variant="destructive" className="text-xs">
                     <AlertTitle>கேமரா அணுகல் மறுக்கப்பட்டது</AlertTitle>
                     <AlertDescription>
-                      தொடர உங்கள் உலாவியில் கேமரா அணுகலை வழங்கவும்.
+                      தொடர, உங்கள் உலாவியில் கேமரா அணுகலை வழங்கவும்.
                     </AlertDescription>
                   </Alert>
                 )}
@@ -214,12 +214,12 @@ function LoanUserForm() {
                 {faceImageBase64 ? (
                   <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting}>
                     <RefreshCw className="mr-2 h-4 w-4" />
-                    புகைப்படத்தை மீண்டும் எடு
+                    மீண்டும் படம் எடு
                   </Button>
                 ) : isCameraOpen ? (
                     <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false}>
                       <Camera className="mr-2 h-4 w-4" />
-                      புகைப்படத்தைப் பிடி
+                      படம் பிடி
                     </Button>
                 ) : (
                   <Button type="button" onClick={openCamera} disabled={isSubmitting}>
@@ -237,7 +237,7 @@ function LoanUserForm() {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                பயனரை உருவாக்குகிறீர்கள்...
+                பயனரை உருவாக்குக হচ্ছে...
               </>
             ) : (
               "பயனரை உருவாக்கி தொடரவும்"
@@ -258,7 +258,7 @@ export default function NewUserPage() {
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர்களுக்குத் திரும்பு
+            பயனர்கள் பக்கத்திற்கு திரும்ப
           </Link>
         </Button>
       </PageHeader>
@@ -267,7 +267,3 @@ export default function NewUserPage() {
     </div>
   );
 }
-
-    
-
-    

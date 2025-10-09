@@ -10,22 +10,18 @@ import {
   LogOut,
   Settings,
   Receipt,
-  Bell,
   Moon,
   Sun,
 } from "lucide-react";
-import { getAllTransactions } from "@/lib/data";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { TransactionWithUser } from "@/lib/data";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -77,11 +73,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const menuItems = [
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
@@ -108,7 +99,7 @@ export default function DashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center gap-1 px-4 h-full transition-colors ${
+                className={`flex flex-col items-center justify-center gap-1 h-full transition-colors px-4 ${
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-accent-foreground/80"

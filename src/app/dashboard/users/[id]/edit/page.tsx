@@ -31,7 +31,7 @@ function EditUserSkeleton() {
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர்களுக்குத் திரும்பு
+            பயனர்கள் பக்கத்திற்கு திரும்ப
           </Link>
         </Button>
       </PageHeader>
@@ -110,7 +110,7 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
 
         toast({
           title: "பயனர் புதுப்பிக்கப்பட்டார்",
-          description: `${name} இன் விவரங்கள் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டன.`,
+          description: `${name} இன் விவரங்கள் வெற்றிகரமாக புதுப்பிக்கப்பட்டன.`,
         });
         
         router.push(`/dashboard/users`);
@@ -139,7 +139,7 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனர்களுக்குத் திரும்பு
+            பயனர்கள் பக்கத்திற்கு திரும்ப
           </Link>
         </Button>
       </PageHeader>
@@ -204,5 +204,3 @@ export default function EditUserPage({ params: paramsPromise }: { params: Promis
     </form>
   );
 }
-
-    

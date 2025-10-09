@@ -32,14 +32,14 @@ function LoanStatus({ loan }: { loan: Loan }) {
   const dueDate = new Date(loan.dueDate);
 
   if (loan.status === 'Paid') {
-    return <Badge variant="default">கடன் முழுமையாக திருப்பிச் செலுத்தப்பட்டது.</Badge>;
+    return <Badge variant="default">முழுமையாக செலுத்தப்பட்டது</Badge>;
   }
 
   if (loan.status === 'Overdue') {
     const daysOverdue = differenceInDays(today, dueDate);
     return (
       <Badge variant="destructive">
-        {daysOverdue} நாள்{daysOverdue > 1 ? 'கள்' : ''} தாமதம் — பின்தொடர்தல் தேவை.
+        {daysOverdue} நாள்{daysOverdue > 1 ? 'கள்' : ''} தாமதம் — பின்தொடரவும்
       </Badge>
     );
   }
@@ -47,7 +47,7 @@ function LoanStatus({ loan }: { loan: Loan }) {
   // Active
   return (
     <Badge variant="success">
-      செலுத்துதல் நிலுவையில் உள்ளது — {format(dueDate, 'PP')} அன்று செலுத்த வேண்டும்
+      நிலுவையில் உள்ளது — {format(dueDate, 'PP')} அன்று செலுத்த வேண்டும்
     </Badge>
   );
 }

@@ -26,7 +26,7 @@ function UserCard({ user }: { user: User }) {
     ? "தாமதம்"
     : user.loans.some((l) => l.status === "Active")
     ? "செயலில்"
-    : "தெளிவு";
+    : "முடிந்தது";
   
   const loanStatusVariant = user.loans.some((l) => l.status === "Overdue")
     ? "destructive"
@@ -59,7 +59,7 @@ function UserCard({ user }: { user: User }) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{user.registrationType === 'Loan' ? 'கடன்' : 'தீபாவளி நிதி'} க்காக பதிவு செய்யப்பட்டது</p>
+                  <p>{user.registrationType === 'Loan' ? 'கடன்' : 'தீபாவளி நிதி'} பதிவு</p>                
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

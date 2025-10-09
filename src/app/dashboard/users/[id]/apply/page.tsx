@@ -28,7 +28,7 @@ import { addDays, addMonths, addYears, format } from "date-fns";
 
 
 const LOAN_TYPE_CONFIG = {
-  loan: { interestRate: 0.1, label: "வழக்கமான கடன்" }, // 10%
+  loan: { interestRate: 0.1, label: "சாதாரண கடன்" }, // 10%
   emi: { interestRate: 0.12, label: "EMI" }, // 12%
 };
 
@@ -75,8 +75,8 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
     if (!loanType || !paymentFrequency || !dueDate) {
       toast({
         variant: "destructive",
-        title: "தகவல் இல்லை",
-        description: "கடன் வகை மற்றும் செலுத்தும் கால இடைவெளியைத் தேர்ந்தெடுக்கவும்.",
+        title: "முழுமையற்ற தகவல்",
+        description: "கடன் வகை மற்றும் చెల్లింపు తరచుదనాన్ని ఎంచుకోండి.",
       });
       return;
     }
@@ -122,7 +122,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
 
     toast({
       title: "விண்ணப்பம் சமர்ப்பிக்கப்பட்டது!",
-      description: `₹${totalOwed.toLocaleString('en-IN')} க்கான கடன் அங்கீகரிக்கப்பட்டுள்ளது.`,
+      description: `₹${totalOwed.toLocaleString('en-IN')} க்கான கடன் ஒப்புதல் அளிக்கப்பட்டது.`,
     });
 
     router.push(`/dashboard/users/${userId}`);
@@ -135,7 +135,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
         <Button asChild variant="outline" size="sm">
           <Link href={`/dashboard/users/${userId}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            பயனருக்குத் திரும்பு
+            பயனர் விவரங்களுக்கு திரும்ப
           </Link>
         </Button>
       </PageHeader>
@@ -147,7 +147,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
             <CardHeader className="p-0 mb-6">
               <CardTitle>உங்கள் கடனை உள்ளமைக்கவும்</CardTitle>
               <CardDescription>
-                தொகையை சரிசெய்து கடன் வகையைத் தேர்ந்தெடுக்கவும்.
+                தொகையை சரிசெய்து கடன் வகையை தேர்ந்தெடுக்கவும்.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow p-0 space-y-8">
@@ -231,7 +231,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
             </CardContent>
             <CardFooter className="p-0 pt-6">
               <Button onClick={handleSubmit} disabled={amount <= 0 || !loanType || !paymentFrequency} className="w-full" size="lg">
-                விண்ணப்பத்தைச் சமர்ப்பிக்கவும்
+                விண்ணப்பத்தை சமர்ப்பிக்கவும்
               </Button>
             </CardFooter>
           </div>
@@ -288,12 +288,12 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
                 <div className="flex justify-between">
                     <span className="text-muted-foreground">செலுத்த வேண்டிய தேதி:</span>
                     <span className="font-medium">
-                        {dueDate ? format(dueDate, 'PPP') : 'N/A'}
+                        {dueDate ? format(dueDate, 'PPP') : 'கி/இ'}
                     </span>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex justify-between font-semibold text-base">
-                  <span>திருப்பிச் செலுத்த வேண்டிய மொத்த தொகை:</span>
+                  <span>திருப்பிச் செலுத்த வேண்டிய மொத்தம்:</span>
                   <span>₹{totalOwed.toLocaleString("en-IN")}</span>
                 </div>
               </div>

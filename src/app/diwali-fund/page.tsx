@@ -64,7 +64,7 @@ export default function DiwaliFundPage() {
       toast({
         variant: 'destructive',
         title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
-        description: 'உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
+        description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
       });
     }
   }
@@ -100,8 +100,8 @@ export default function DiwaliFundPage() {
     if (!faceImageBase64 || !name || !contact || !idProof) {
       toast({
         variant: "destructive",
-        title: "தகவல் இல்லை",
-        description: "தயவுசெய்து அனைத்து புலங்களையும் பூர்த்தி செய்து ஒரு புகைப்படத்தைப் பிடிக்கவும்.",
+        title: "முழுமையற்ற தகவல்",
+        description: "தொடர, அனைத்து புலங்களையும் பூர்த்தி செய்து ஒரு புகைப்படத்தைப் பிடிக்கவும்.",
       });
       return;
     }
@@ -199,11 +199,11 @@ export default function DiwaliFundPage() {
                 )}
                 {faceImageBase64 ? (
                   <Button type="button" variant="outline" onClick={retakePhoto} disabled={isSubmitting} className="w-full max-w-xs">
-                    <RefreshCw className="mr-2 h-4 w-4" /> மீண்டும் புகைப்படம் எடு
+                    <RefreshCw className="mr-2 h-4 w-4" /> மீண்டும் படம் எடு
                   </Button>
                 ) : isCameraOpen ? (
                   <Button type="button" onClick={captureFace} disabled={isSubmitting || hasCameraPermission === false} className="w-full max-w-xs">
-                    <Camera className="mr-2 h-4 w-4" /> புகைப்படத்தைப் பிடி
+                    <Camera className="mr-2 h-4 w-4" /> படம் பிடி
                   </Button>
                 ) : (
                   <Button type="button" onClick={openCamera} disabled={isSubmitting} className="w-full max-w-xs">
@@ -231,7 +231,3 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
-
-    
-
-    

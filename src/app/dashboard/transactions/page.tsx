@@ -82,7 +82,7 @@ export default function TransactionsPage() {
                 <TableHead>பரிவர்த்தனை ஐடி</TableHead>
                 <TableHead>பயனர்</TableHead>
                 <TableHead>தொகை</TableHead>
-                <TableHead>நிலை</TableHead>
+                <TableHead>வகை</TableHead>
                 <TableHead className="text-right">தேதி</TableHead>
               </TableRow>
             </TableHeader>
@@ -95,7 +95,7 @@ export default function TransactionsPage() {
                     <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
                      <TableCell>
                       <Badge variant={tx.type === 'Disbursement' ? 'destructive' : 'success'}>
-                        {tx.type === 'Disbursement' ? 'பற்று' : 'வரவு'}
+                        {tx.type === 'Disbursement' ? 'பட்டுவாடா' : 'திருப்பிச் செலுத்துதல்'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -109,7 +109,7 @@ export default function TransactionsPage() {
                     colSpan={5}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    இன்னும் பரிவர்த்தனைகள் இல்லை. ஒரு பயனரை உருவாக்கி, பரிவர்த்தனைகளைப் பார்க்க கடன் வழங்கவும்.
+                    இன்னும் பரிவர்த்தனைகள் இல்லை.
                   </TableCell>
                 </TableRow>
               )}

@@ -39,7 +39,7 @@ function UserCard({ user }: { user: User }) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{user.registrationType}-க்காக பதிவு செய்யப்பட்டது</p>
+                  <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி நிதி பதிவு'}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -55,7 +55,7 @@ function UserCard({ user }: { user: User }) {
                 </div>
             ) : (
                  <p className="text-xs text-muted-foreground">
-                    {user.registrationType === 'Diwali Fund' ? 'தீபாவளி நிதி' : "செயலில் கடன் இல்லை"}
+                    {user.registrationType === 'Diwali Fund' ? 'தீபாவளி நிதி' : "செயலில் கடன்கள் இல்லை"}
                  </p>
             )}
           </div>
@@ -73,7 +73,7 @@ function AddUserCard() {
             <div className="flex items-center justify-center bg-background/50 rounded-full w-10 h-10">
                 <Plus className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="font-semibold text-xs">புதிய பயனரைச் சேர்க்கவும்</p>
+            <p className="font-semibold text-xs">புதிய பயனரைச் சேர்</p>
         </CardContent>
       </Card>
     </Link>
@@ -87,7 +87,7 @@ function NewLoanRegistrationCard() {
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <UserPlus className="h-6 w-6 text-primary" />
         </div>
-        <p className="font-semibold text-sm text-primary">கடன் பெற சேரவும்</p>
+        <p className="font-semibold text-sm text-primary">கடனுக்காக சேரவும்</p>
         <p className="text-xs text-muted-foreground">புதிய பயனரை உள்வாங்கவும்</p>
       </Card>
     </Link>
@@ -144,7 +144,7 @@ export default function DashboardPage() {
 
   const { vault: vaultData, users } = use(dataPromise);
   const recentUsers = users.slice(-3).reverse();
-  const loanUsers = users.filter(user => 
+  const loanUsers = users.filter(user =>
     user.loans.some(loan => loan.loanType === 'Loan' || loan.loanType === 'EMI')
   );
 

@@ -68,7 +68,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
     if (!contribution || !frequency || !user) {
       toast({
         variant: "destructive",
-        title: "தகவல் இல்லை",
+        title: "முழுமையற்ற தகவல்",
         description: "பங்களிப்புத் திட்டத்தைத் தேர்ந்தெடுக்கவும்.",
       });
       return;
@@ -204,7 +204,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
                 <Info className="h-4 w-4" />
                 <AlertTitle>இது எப்படி வேலை செய்கிறது</AlertTitle>
                 <AlertDescription>
-                    ₹100, ₹1,000, அல்லது ₹5,000 வாராந்திரம் அல்லது மாதாந்திரம் சேமித்து, தீபாவளி அன்று <span className="font-bold text-primary">+10% போனஸ்</span> பெறுங்கள். முன்கூட்டியே எடுத்தால் உங்கள் மொத்த சேமிப்பில் 10% கழிக்கப்படும்.
+                ₹100, ₹1,000, அல்லது ₹5,000 வாராந்திரம் அல்லது மாதாந்திரம் சேமித்து, தீபாவளி அன்று <span className="font-bold text-primary">+10% போனஸ்</span> பெறுங்கள். முன்கூட்டியே எடுத்தால் உங்கள் மொத்த சேமிப்பில் 10% கழிக்கப்படும்.
                 </AlertDescription>
             </Alert>
             <Card className="bg-primary text-primary-foreground">
@@ -223,7 +223,7 @@ export default function DiwaliFundPlanPage({ params: paramsPromise }: { params: 
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                சேர்கிறீர்கள்...
+                சேர்க்கப்படுகிறது...
               </>
             ) : (
               "இப்போது சேரவும்"

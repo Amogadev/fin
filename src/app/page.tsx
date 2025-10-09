@@ -47,7 +47,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="grid gap-2 relative">
-                <Label htmlFor="password">கடவுச்சொல்</Label>
+                <Label htmlFor="password">கடவுச்சொல்</Label>
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -68,7 +68,7 @@ export default function LoginPage() {
                 </Button>
               </div>
               <Button type="submit" className="w-full">
-                உள்நுழைய
+                உள்நுழைக
               </Button>
             </form>
           </CardContent>
