@@ -116,16 +116,15 @@ function ReportsPageContent() {
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
     }, [tab]); 
-
-    const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
-    const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
     
     if (!reportsPromise) {
-        // This can be a skeleton or loading state shown before the effect runs
         return <ReportsSkeleton />;
     }
     
     const { loans, funds } = use(reportsPromise);
+
+    const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
+    const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
 
     return (
         <div className="space-y-4">
