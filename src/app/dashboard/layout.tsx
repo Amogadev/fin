@@ -108,7 +108,7 @@ export default function DashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center gap-1 w-20 h-full transition-colors ${
+                className={`flex flex-col items-center justify-center gap-1 px-4 h-full transition-colors ${
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-accent-foreground/80"
@@ -122,10 +122,10 @@ export default function DashboardLayout({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className={`flex flex-col items-center justify-center gap-1 w-20 h-full transition-colors text-muted-foreground hover:text-accent-foreground/80`}
+                className={`flex flex-col items-center justify-center gap-1 px-4 h-full transition-colors text-muted-foreground hover:text-accent-foreground/80`}
               >
                 <Settings className="h-6 w-6" />
-                <span className="text-xs">அமைப்புகள்</span>
+                <span className="text-xs text-center w-full">அமைப்புகள்</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
