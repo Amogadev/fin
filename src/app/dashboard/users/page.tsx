@@ -25,7 +25,7 @@ function UserCard({ user }: { user: User }) {
   const loanStatus = user.loans.some((l) => l.status === "Overdue")
     ? "தாமதம்"
     : user.loans.some((l) => l.status === "Active")
-    ? "செயலில்"
+    ? "செயலில் உள்ளது"
     : "முடிந்தது";
   
   const loanStatusVariant = user.loans.some((l) => l.status === "Overdue")
@@ -95,7 +95,7 @@ function UserCard({ user }: { user: User }) {
       <CardFooter className="p-3 pt-1">
         <Button asChild variant="outline" size="sm" className="w-full h-8">
           <Link href={`/dashboard/users/${user.id}`}>
-            விவரங்களைக் காண்க
+            விவரங்கள்
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
