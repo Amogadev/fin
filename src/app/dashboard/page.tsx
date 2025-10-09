@@ -144,6 +144,9 @@ export default function DashboardPage() {
                     <p className="text-xs text-primary-foreground/80">Initial Balance: ₹1,00,000</p>
                 </CardContent>
             </Card>
+            
+            <h3 className="text-lg font-semibold pt-4">LOAN</h3>
+
             <div className="grid gap-4 md:grid-cols-2">
                 <StatCard
                 title="Total Loans Given"
@@ -158,6 +161,7 @@ export default function DashboardPage() {
                 description="Users with accounts"
                 />
             </div>
+
             <div className="h-36">
                 <DiwaliFundCard />
             </div>
