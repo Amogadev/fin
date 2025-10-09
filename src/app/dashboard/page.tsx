@@ -3,7 +3,7 @@
 
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText, Wallet } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -106,8 +106,8 @@ export default function DashboardPage() {
   if (!dataPromise) {
     return (
         <div className="space-y-8">
+            <div className="h-36 bg-muted/50 rounded-md"></div>
             <div className="grid gap-4 md:grid-cols-2">
-                <StatCard.Skeleton />
                 <StatCard.Skeleton />
                 <StatCard.Skeleton />
             </div>
@@ -134,17 +134,16 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
        <div className="space-y-4">
-            <StatCard
-                title="Wallet Balance"
-                value={`₹${(vaultData.balance).toLocaleString("en-IN")}`}
-                icon={Landmark}
-                description={
-                    <div>
-                    <span>Total available funds</span>
-                    <span className="block text-xs text-muted-foreground/80">Initial Balance: ₹1,00,000</span>
-                    </div>
-                }
-            />
+           <Card className="bg-primary text-primary-foreground">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Amount</CardTitle>
+                    <Wallet className="h-5 w-5 text-primary-foreground/80" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-4xl font-bold">₹{(vaultData.balance).toLocaleString("en-IN")}</div>
+                    <p className="text-xs text-primary-foreground/80">Initial Balance: ₹1,00,000</p>
+                </CardContent>
+            </Card>
             <div className="grid gap-4 md:grid-cols-2">
                 <StatCard
                 title="Total Loans Given"
@@ -159,9 +158,9 @@ export default function DashboardPage() {
                 description="Users with accounts"
                 />
             </div>
-             <div className="h-36">
+            <div className="h-36">
                 <DiwaliFundCard />
-             </div>
+            </div>
         </div>
       <Card>
         <CardHeader className="flex flex-row items-center">
