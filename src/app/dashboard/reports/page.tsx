@@ -2,11 +2,12 @@
 "use client";
 
 import { use, useEffect, useState, Suspense } from "react";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import PageHeader from "@/components/page-header";
 import { getLoanReports, getDiwaliFundReports, type LoanReport, type DiwaliFundReport } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -71,7 +72,12 @@ function DiwaliFundReportTable({ funds }: { funds: DiwaliFundReport[] }) {
 function ReportsSkeleton() {
     return (
         <div className="space-y-4">
-            <PageHeader title="அறிக்கைகள் ஏற்றப்படுகின்றன..." description="செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்." />
+            <div className="flex items-center justify-between space-y-2 mb-6">
+                <div>
+                    <Skeleton className="h-8 w-48 mb-2" />
+                    <Skeleton className="h-4 w-64" />
+                </div>
+            </div>
             <Card>
                 <CardContent className="pt-6">
                     <Table>
@@ -101,6 +107,7 @@ function ReportsSkeleton() {
 }
 
 function ReportsPageContent() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const tab = searchParams.get('tab') || 'loans';
     
@@ -110,7 +117,7 @@ function ReportsPageContent() {
         setReportsPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, [tab]); 
+    }, []); 
     
     if (!reportsPromise) {
         // This will be handled by the Suspense fallback on initial render.
@@ -119,17 +126,36 @@ function ReportsPageContent() {
     
     const { loans, funds } = use(reportsPromise);
 
+    const handleTabChange = (value: string) => {
+        router.push(`/dashboard/reports?tab=${value}`);
+    };
+    
     const pageTitle = tab === 'loans' ? 'கடன் அறிக்கைகள்' : 'தீபாவளி சேமிப்புத் திட்ட அறிக்கைகள்';
     const pageDescription = "செயலில் உள்ள திட்டங்களின் கண்ணோட்டம்.";
 
     return (
         <div className="space-y-4">
-            <PageHeader title={pageTitle} description={pageDescription} />
-             <Card>
-                <CardContent className="pt-6">
-                    {tab === 'loans' ? <LoanReportTable loans={loans} /> : <DiwaliFundReportTable funds={funds} />}
-                </CardContent>
-            </Card>
+             <PageHeader title={pageTitle} description={pageDescription} />
+            <Tabs value={tab} onValueChange={handleTabChange} className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="loans">கடன்</TabsTrigger>
+                    <TabsTrigger value="funds">தீபாவளி சேமிப்புத் திட்டம்</TabsTrigger>
+                </TabsList>
+                <TabsContent value="loans">
+                    <Card>
+                        <CardContent className="pt-6">
+                           <LoanReportTable loans={loans} />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent value="funds">
+                     <Card>
+                        <CardContent className="pt-6">
+                           <DiwaliFundReportTable funds={funds} />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }
