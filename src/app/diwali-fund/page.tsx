@@ -36,22 +36,23 @@ export default function DiwaliFundPage() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     // Stop camera stream when component unmounts
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
 
 
   const openCamera = async () => {
-    if (faceImageBase64) return;
+    if (faceImageBase64 || isCameraOpen) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      streamRef.current = stream;
       setHasCameraPermission(true);
       setIsCameraOpen(true);
 
@@ -82,10 +83,9 @@ export default function DiwaliFundPage() {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         const dataUri = canvas.toDataURL('image/png');
         
-        if (video.srcObject) {
-          const stream = video.srcObject as MediaStream;
-          stream.getTracks().forEach(track => track.stop());
-          video.srcObject = null;
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current = null;
         }
 
         setFaceImageBase64(dataUri);
@@ -187,15 +187,16 @@ export default function DiwaliFundPage() {
               <div className="space-y-2 flex flex-col items-center">
                 <Label className="text-center w-full">முகப் புகைப்படம்</Label>
                 <div
-                  className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden cursor-pointer"
+                  className="w-48 h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden cursor-pointer"
                   onClick={openCamera}
                 >
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                  ) : !isCameraOpen ? (
-                    <Camera className="h-10 w-10 text-muted-foreground" />
-                  ) : null}
-                  {isCameraOpen && <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />}
+                  ) : isCameraOpen ? (
+                     <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                  ) : (
+                    <Camera className="h-16 w-16 text-muted-foreground" />
+                  )}
                   <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
                 {hasCameraPermission === false && (
@@ -237,5 +238,3 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
-
-    
