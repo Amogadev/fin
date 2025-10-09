@@ -107,15 +107,12 @@ function ReportsPageContent() {
     const [reportsPromise, setReportsPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }>>();
 
     useEffect(() => {
-        // This effect runs whenever the `tab` changes, ensuring the data is re-fetched.
         setReportsPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
     }, [tab]); 
     
     if (!reportsPromise) {
-        // This can happen on the very first render before useEffect runs.
-        // The Suspense boundary will catch this and show the skeleton.
         return null;
     }
     
