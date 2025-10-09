@@ -9,6 +9,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -374,13 +375,14 @@ function LoanUserForm({ onUserRegistered }: { onUserRegistered: (user: User) => 
       canvas.height = video.videoHeight;
       const context = canvas.getContext('2d');
       if (context) {
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUri = canvas.toDataURL('image/png');
-        
+        // Stop the stream tracks before setting the image
         if (streamRef.current) {
           streamRef.current.getTracks().forEach(track => track.stop());
           streamRef.current = null;
         }
+        
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUri = canvas.toDataURL('image/png');
         
         setFaceImageBase64(dataUri);
         setIsCameraOpen(false);
@@ -592,5 +594,3 @@ export default function NewUserPage() {
     </div>
   );
 }
-
-    
