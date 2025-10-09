@@ -132,7 +132,7 @@ export default function DashboardPage() {
   const recentUsers = users.slice(-3).reverse();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
        <div className="space-y-4">
            <Card className="bg-primary text-primary-foreground">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -145,7 +145,7 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
             
-            <h3 className="text-lg font-semibold pt-4">LOAN</h3>
+            <h3 className="text-lg font-semibold pt-2">LOAN</h3>
 
             <div className="grid gap-4 md:grid-cols-2">
                 <StatCard
