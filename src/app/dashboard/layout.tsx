@@ -59,7 +59,7 @@ function ThemeToggle() {
      <div className="flex items-center space-x-2 px-2 py-1.5" onClick={(e) => { e.stopPropagation(); }}>
       <Label htmlFor="dark-mode-switch" className="flex items-center gap-2 text-sm cursor-pointer">
         {theme === 'light' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        <span>இருண்ட режим</span>
+        <span>இருண்ட பயன்முறை</span>
       </Label>
       <Switch
         id="dark-mode-switch"
