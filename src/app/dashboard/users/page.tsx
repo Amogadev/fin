@@ -13,15 +13,29 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon, FilePenLine, FileText, Gift } from "lucide-react";
+import { PlusCircle, ArrowLeft, ArrowRight, User as UserIcon, FilePenLine, FileText, Gift, Trash2 } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 
-function UserCard({ user }: { user: User }) {
+function UserCard({ user, onDelete }: { user: User, onDelete: (userId: string) => void }) {
+  const { toast } = useToast();
+  
   const loanStatus = user.loans.some((l) => l.status === "Overdue")
     ? "தாமதம்"
     : user.loans.some((l) => l.status === "Active")
@@ -39,37 +53,81 @@ function UserCard({ user }: { user: User }) {
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
     [0]?.dueDate;
 
+  const handleDelete = () => {
+    const tempUsersJson = localStorage.getItem('temp_new_users');
+    let users: User[] = tempUsersJson ? JSON.parse(tempUsersJson) : [];
+    users = users.filter(u => u.id !== user.id);
+    localStorage.setItem('temp_new_users', JSON.stringify(users));
+
+    const tempLoansJson = localStorage.getItem('temp_new_loans');
+    if(tempLoansJson) {
+      const tempLoans = JSON.parse(tempLoansJson);
+      delete tempLoans[user.id];
+      localStorage.setItem('temp_new_loans', JSON.stringify(tempLoans));
+    }
+
+    toast({
+      title: "பயனர் நீக்கப்பட்டார்",
+      description: `${user.name} வெற்றிகரமாக நீக்கப்பட்டார்.`,
+    });
+    onDelete(user.id);
+  };
+
   return (
     <Card>
       <CardHeader className="p-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full border bg-muted flex items-center justify-center">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-full border bg-muted flex items-center justify-center shrink-0">
             <UserIcon className="h-5 w-5 text-muted-foreground" />
           </div>
           <div className="flex-1">
             <CardTitle className="text-base">{user.name}</CardTitle>
             <CardDescription className="text-xs">{user.contact}</CardDescription>
           </div>
-           {user.registrationType && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-default">
-                    {user.registrationType === 'Loan' ? <FileText className="h-4 w-4 text-muted-foreground" /> : <Gift className="h-4 w-4 text-muted-foreground" />}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி சேமிப்புத் திட்டம்'}</p>                
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          <Button asChild variant="ghost" size="icon" className="w-8 h-8">
-            <Link href={`/dashboard/users/${user.id}/edit`}>
-              <FilePenLine className="h-4 w-4" />
-              <span className="sr-only">பயனரைத் திருத்து</span>
-            </Link>
-          </Button>
+          <div className="flex items-center">
+            {user.registrationType && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="cursor-default mr-1">
+                      {user.registrationType === 'Loan' ? <FileText className="h-4 w-4 text-muted-foreground" /> : <Gift className="h-4 w-4 text-muted-foreground" />}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{user.registrationType === 'Loan' ? 'கடன் பதிவு' : 'தீபாவளி சேமிப்புத் திட்டம்'}</p>                
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            <Button asChild variant="ghost" size="icon" className="w-8 h-8">
+              <Link href={`/dashboard/users/${user.id}/edit`}>
+                <FilePenLine className="h-4 w-4" />
+                <span className="sr-only">பயனரைத் திருத்து</span>
+              </Link>
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="w-8 h-8">
+                  <Trash2 className="h-4 w-4 text-destructive/70 hover:text-destructive" />
+                  <span className="sr-only">பயனரை நீக்கு</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure you want to delete this user?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the user <span className="font-bold">{user.name}</span> and all associated data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>ரத்துசெய்</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
+                    நீக்கு
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="px-3 pb-2 text-xs space-y-1">
@@ -134,13 +192,17 @@ function UserCardSkeleton() {
 }
 
 export default function UsersPage() {
-  const [usersPromise, setUsersPromise] = useState<Promise<User[]>>();
+  const [users, setUsers] = useState<User[] | null>(null);
 
   useEffect(() => {
-    setUsersPromise(getUsers());
+    getUsers().then(setUsers);
   }, []);
 
-  if (!usersPromise) {
+  const handleUserDeleted = (deletedUserId: string) => {
+    setUsers(prevUsers => prevUsers ? prevUsers.filter(user => user.id !== deletedUserId) : null);
+  }
+
+  if (!users) {
     return (
       <div className="space-y-4">
         <PageHeader
@@ -168,8 +230,7 @@ export default function UsersPage() {
     );
   }
 
-  const users = use(usersPromise);
-  const sortedUsers = users.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const sortedUsers = [...users].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
 
   return (
@@ -194,9 +255,11 @@ export default function UsersPage() {
       </PageHeader>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {sortedUsers.map((user) => (
-          <UserCard key={user.id} user={user} />
+          <UserCard key={user.id} user={user} onDelete={handleUserDeleted} />
         ))}
       </div>
     </div>
   );
 }
+
+    
