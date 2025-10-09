@@ -239,7 +239,7 @@ export default function ApplyLoanPage({ params: paramsPromise }: { params: Promi
           {/* Right Side: Summary */}
           <div className="bg-muted/50 p-6 flex flex-col rounded-r-lg border-l">
             <CardHeader className="p-0 mb-6">
-              <CardTitle>கடன் சுருக்கம்</CardTitle>
+              <CardTitle>கடன் விவரம்</CardTitle>
               <CardDescription>
                 நீங்கள் கோரிய கடனின் விவரங்கள்.
               </CardDescription>
