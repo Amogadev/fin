@@ -101,12 +101,12 @@ function ReportsPageContent() {
     const initialTab = searchParams.get('tab') || 'loans';
     
     const [reportsPromise, setReportsPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }>>();
-    
-    // We use a key on the Tabs component to force re-mount when the tab from URL changes
     const [activeTab, setActiveTab] = useState(initialTab);
 
      useEffect(() => {
-        setActiveTab(initialTab)
+        // This effect synchronizes the activeTab state with the URL's `tab` query parameter.
+        // It ensures that when the user navigates using the header dropdown, the correct tab is displayed.
+        setActiveTab(initialTab);
     }, [initialTab]);
 
     useEffect(() => {
