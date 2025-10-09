@@ -104,7 +104,7 @@ export default function UserDetailPage({
         <Button asChild variant="outline">
           <Link href="/dashboard/users">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            அனைத்து பயனர்களுக்கும் திரும்பு
+            பயனர்கள் பக்கத்திற்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
@@ -113,7 +113,7 @@ export default function UserDetailPage({
         <div className="md:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>பயனர் சுயவிவரம்</CardTitle>
+              <CardTitle>பயனர் விவரங்கள்</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-center">
