@@ -110,9 +110,11 @@ function ReportsPageContent() {
         setReportsPromise(
             Promise.all([getLoanReports(), getDiwaliFundReports()]).then(([loans, funds]) => ({ loans, funds }))
         );
-    }, [tab]); 
+    }, [tab]); // This dependency array ensures the effect re-runs when the tab changes.
     
     if (!reportsPromise) {
+        // This can happen on the very first render before useEffect runs.
+        // The Suspense fallback will be shown.
         return null;
     }
     
