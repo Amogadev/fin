@@ -83,6 +83,7 @@ export default function DashboardLayout({
     { href: "/dashboard/users", label: "பயனர்கள்", icon: Users },
     { href: "/dashboard/transactions", label: "பரிவர்த்தனைகள்", icon: Receipt },
     { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: FileText },
+    { id: "settings", label: "அமைப்புகள்", icon: Settings },
   ];
 
   const showBackButton = pathname !== "/dashboard";
@@ -125,11 +126,44 @@ export default function DashboardLayout({
       <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border rounded-full shadow-lg overflow-hidden">
         <div className="flex justify-around items-center h-full max-w-lg mx-auto px-2">
           {menuItems.map((item) => {
+            if ('id' in item && item.id === 'settings') {
+                return (
+                    <div key={item.id} className="flex flex-col items-center justify-center gap-1 h-full px-4 text-muted-foreground">
+                        <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <button
+                            className="flex flex-col items-center justify-center gap-1 h-full w-full transition-colors hover:text-accent-foreground/80"
+                            >
+                            <item.icon className="h-6 w-6" />
+                            <span className="text-xs text-center w-full">{item.label}</span>
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                            side="top"
+                            align="center"
+                            className="mb-2"
+                        >
+                            <div onMouseDown={(e) => e.preventDefault()}>
+                            <ThemeToggle />
+                            </div>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem asChild>
+                            <Link href="/">
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>வெளியேறு</span>
+                            </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                );
+            }
+            
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={item.href!}
                 className={`flex flex-col items-center justify-center gap-1 h-full transition-colors px-4 ${
                   isActive
                     ? "text-primary"
@@ -141,36 +175,9 @@ export default function DashboardLayout({
               </Link>
             );
           })}
-          <div className="flex flex-col items-center justify-center gap-1 h-full px-4 text-muted-foreground">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="flex flex-col items-center justify-center gap-1 h-full w-full transition-colors hover:text-accent-foreground/80"
-                >
-                  <Settings className="h-6 w-6" />
-                  <span className="text-xs text-center w-full">அமைப்புகள்</span>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                align="center"
-                className="mb-2"
-              >
-                <div onMouseDown={(e) => e.preventDefault()}>
-                  <ThemeToggle />
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>வெளியேறு</span>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
         </div>
       </nav>
     </div>
   );
 }
+
