@@ -38,17 +38,18 @@ export default function DiwaliFundPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Stop camera stream when component unmounts or image is captured
+    // Stop camera stream when component unmounts
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [faceImageBase64]);
+  }, []);
 
 
   const openCamera = async () => {
+    if (faceImageBase64) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       setHasCameraPermission(true);
@@ -85,14 +86,15 @@ export default function DiwaliFundPage() {
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
           stream.getTracks().forEach(track => track.stop());
+          video.srcObject = null;
         }
       }
     }
   };
 
-  const retakePhoto = () => {
+  const retakePhoto = async () => {
     setFaceImageBase64(null);
-    setIsCameraOpen(false);
+    await openCamera();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -184,11 +186,7 @@ export default function DiwaliFundPage() {
                 <Label className="text-center w-full">முகப் புகைப்படம்</Label>
                 <div
                   className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden cursor-pointer"
-                  onClick={() => {
-                    if (!faceImageBase64 && !isCameraOpen) {
-                      openCamera();
-                    }
-                  }}
+                  onClick={openCamera}
                 >
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />

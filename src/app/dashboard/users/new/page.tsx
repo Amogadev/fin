@@ -36,21 +36,21 @@ function LoanUserForm() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Stop camera stream when component unmounts or image is captured
+    // Stop camera stream when component unmounts
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [faceImageBase64]);
+  }, []);
 
   const openCamera = async () => {
+    if (faceImageBase64) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       setHasCameraPermission(true);
       setIsCameraOpen(true);
-
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
@@ -83,6 +83,7 @@ function LoanUserForm() {
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
           stream.getTracks().forEach(track => track.stop());
+          video.srcObject = null;
         }
       }
     }
@@ -90,7 +91,7 @@ function LoanUserForm() {
   
   const retakePhoto = async () => {
     setFaceImageBase64(null);
-    setIsCameraOpen(false);
+    await openCamera();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -193,11 +194,7 @@ function LoanUserForm() {
               <CardContent className="flex-grow flex flex-col items-center justify-center space-y-4">
                 <div 
                   className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed overflow-hidden cursor-pointer"
-                  onClick={() => {
-                    if (!faceImageBase64 && !isCameraOpen) {
-                      openCamera();
-                    }
-                  }}
+                  onClick={openCamera}
                 >
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
