@@ -136,7 +136,7 @@ export default function DashboardPage() {
        <div className="space-y-4">
            <Card className="bg-primary text-primary-foreground">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Amount</CardTitle>
+                    <CardTitle className="text-sm font-medium">TOTAL AMOUNT IN WALLET</CardTitle>
                     <Wallet className="h-5 w-5 text-primary-foreground/80" />
                 </CardHeader>
                 <CardContent>
