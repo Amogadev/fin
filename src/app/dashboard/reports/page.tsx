@@ -1,7 +1,8 @@
 
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, Suspense } from "react";
+import { useSearchParams } from 'next/navigation';
 import PageHeader from "@/components/page-header";
 import { getLoanReports, getDiwaliFundReports, type LoanReport, type DiwaliFundReport } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
@@ -71,20 +72,40 @@ function DiwaliFundReportTable({ funds }: { funds: DiwaliFundReport[] }) {
 function ReportsSkeleton() {
     return (
         <div className="space-y-4">
-            {Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                    <TableCell className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableCell>
-                </TableRow>
-            ))}
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                         <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                         <TableHead><Skeleton className="h-5 w-32" /></TableHead>
+                         <TableHead><Skeleton className="h-5 w-20" /></TableHead>
+                         <TableHead className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                            <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                            <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                            <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                            <TableCell className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </div>
     )
 }
 
-export default function ReportsPage() {
+function ReportsPageContent() {
+    const searchParams = useSearchParams();
+    const initialTab = searchParams.get('tab') || 'loans';
+    
     const [reportsPromise, setReportsPromise] = useState<Promise<{ loans: LoanReport[]; funds: DiwaliFundReport[] }>>();
+    const [activeTab, setActiveTab] = useState(initialTab);
+
+     useEffect(() => {
+        setActiveTab(initialTab)
+    }, [initialTab]);
 
     useEffect(() => {
         setReportsPromise(
@@ -110,7 +131,7 @@ export default function ReportsPage() {
     return (
         <div className="space-y-4">
             <PageHeader title="அறிக்கைகள்" description="செயலில் உள்ள கடன்கள் மற்றும் தீபாவளி சேமிப்புத் திட்டங்களின் கண்ணோட்டம்." />
-            <Tabs defaultValue="loans">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="loans">கடன்</TabsTrigger>
                     <TabsTrigger value="funds">தீபாவளி சேமிப்புத் திட்டம்</TabsTrigger>
@@ -132,4 +153,12 @@ export default function ReportsPage() {
             </Tabs>
         </div>
     );
+}
+
+export default function ReportsPage() {
+    return (
+        <Suspense fallback={<ReportsSkeleton />}>
+            <ReportsPageContent />
+        </Suspense>
+    )
 }

@@ -13,6 +13,7 @@ import {
   Moon,
   Sun,
   FileText,
+  ChevronDown,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -90,6 +91,22 @@ export default function DashboardLayout({
           <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
         </div>
         <div className="flex items-center gap-4">
+           <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                அறிக்கைகள்
+                <ChevronDown className="w-4 h-4 ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/reports?tab=loans">கடன்</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/reports?tab=funds">தீபாவளி சேமிப்புத் திட்டம்</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
