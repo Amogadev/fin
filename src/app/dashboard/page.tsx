@@ -144,6 +144,8 @@ export default function DashboardPage() {
 
   const { vault: vaultData, users } = use(dataPromise);
   const recentUsers = users.slice(-3).reverse();
+  const loanUsers = users.filter(user => user.loans.some(loan => loan.loanType === 'Loan' || loan.loanType === 'EMI'));
+
 
   return (
     <div className="space-y-6">
@@ -171,9 +173,9 @@ export default function DashboardPage() {
                 />
                 <StatCard
                 title="Total Active Users"
-                value={users.length.toString()}
+                value={loanUsers.length.toString()}
                 icon={Users}
-                description="Users with accounts"
+                description="Users with active loans"
                 />
             </div>
             
