@@ -82,6 +82,7 @@ export default function DashboardLayout({
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
     { href: "/dashboard/users", label: "பயனர்கள்", icon: Users },
     { href: "/dashboard/transactions", label: "பரிவர்த்தனைகள்", icon: Receipt },
+    { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: FileText },
     { id: "settings", label: "அமைப்புகள்", icon: Settings },
   ];
 
@@ -102,23 +103,6 @@ export default function DashboardLayout({
             <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
           </div>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <FileText className="mr-2 h-4 w-4" />
-              <span>அறிக்கைகள்</span>
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard/reports?tab=loans">கடன்</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard/reports?tab=funds">தீபாவளி சேமிப்புத் திட்டம்</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
       <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 h-20 bg-card border rounded-full shadow-lg overflow-hidden">
