@@ -77,14 +77,16 @@ function LoanUserForm() {
       if (context) {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         const dataUri = canvas.toDataURL('image/png');
-        setFaceImageBase64(dataUri);
-        setIsCameraOpen(false); // Close camera view
+        
         // Stop the camera stream after capture
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
           stream.getTracks().forEach(track => track.stop());
           video.srcObject = null;
         }
+        
+        setFaceImageBase64(dataUri);
+        setIsCameraOpen(false); // Close camera view
       }
     }
   };
@@ -198,11 +200,10 @@ function LoanUserForm() {
                 >
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                  ) : isCameraOpen ? (
-                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
-                  ) : (
+                  ) : !isCameraOpen ? (
                     <Camera className="h-10 w-10 text-muted-foreground" />
-                  )}
+                  ) : null}
+                  {isCameraOpen && <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />}
                   <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
 
@@ -271,3 +272,5 @@ export default function NewUserPage() {
     </div>
   );
 }
+
+    

@@ -81,13 +81,15 @@ export default function DiwaliFundPage() {
       if (context) {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         const dataUri = canvas.toDataURL('image/png');
-        setFaceImageBase64(dataUri);
-        setIsCameraOpen(false);
+        
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
           stream.getTracks().forEach(track => track.stop());
           video.srcObject = null;
         }
+
+        setFaceImageBase64(dataUri);
+        setIsCameraOpen(false);
       }
     }
   };
@@ -190,11 +192,10 @@ export default function DiwaliFundPage() {
                 >
                   {faceImageBase64 ? (
                     <img src={faceImageBase64} alt="Captured face" className="w-full h-full object-cover" />
-                  ) : isCameraOpen ? (
-                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
-                  ) : (
+                  ) : !isCameraOpen ? (
                     <Camera className="h-10 w-10 text-muted-foreground" />
-                  )}
+                  ) : null}
+                  {isCameraOpen && <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />}
                   <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
                 {hasCameraPermission === false && (
@@ -236,3 +237,5 @@ export default function DiwaliFundPage() {
     </div>
   );
 }
+
+    
