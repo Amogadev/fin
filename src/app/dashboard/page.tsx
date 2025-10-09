@@ -177,7 +177,7 @@ export default function DashboardPage() {
                 description="Principal amount disbursed"
                 />
                 <StatCard
-                title="Total Active Users"
+                title="Total Loan Users"
                 value={loanUsers.length.toString()}
                 icon={Users}
                 description="Users with active loans"
