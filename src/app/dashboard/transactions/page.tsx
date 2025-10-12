@@ -1,7 +1,7 @@
 
 "use client";
 
-import { getAllTransactions, TransactionWithUser } from "@/lib/data";
+import { getUsers, TransactionWithUser, User } from "@/lib/data";
 import PageHeader from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,16 +17,22 @@ import { format } from "date-fns";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function TransactionTableSkeleton() {
+type DiwaliFundParticipant = {
+    chitNumber: string;
+    memberName: string;
+    weeksPaid: number;
+    totalAmountPaid: number;
+};
+
+function DiwaliFundTableSkeleton() {
     return (
         <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>பரிவர்த்தனை ஐடி</TableHead>
-                <TableHead>பயனர்</TableHead>
-                <TableHead>தொகை</TableHead>
-                <TableHead>நிலை</TableHead>
-                <TableHead className="text-right">தேதி</TableHead>
+                <TableHead>சிட் எண்</TableHead>
+                <TableHead>உறுப்பினர் பெயர்</TableHead>
+                <TableHead>செலுத்திய வாரங்களின் எண்ணிக்கை</TableHead>
+                <TableHead className="text-right">செலுத்திய மொத்த தொகை</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -34,9 +40,8 @@ function TransactionTableSkeleton() {
                     <TableRow key={i}>
                         <TableCell><Skeleton className="h-5 w-24" /></TableCell>
                         <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-16" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                        <TableCell className="text-right"><Skeleton className="h-5 w-40 ml-auto" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-28" /></TableCell>
+                        <TableCell className="text-right"><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -45,71 +50,86 @@ function TransactionTableSkeleton() {
 }
 
 
-export default function TransactionsPage() {
-  const [transactionsPromise, setTransactionsPromise] = useState<Promise<TransactionWithUser[]>>();
+export default function DiwaliFundReportPage() {
+  const [participantsPromise, setParticipantsPromise] = useState<Promise<DiwaliFundParticipant[]>>();
 
   useEffect(() => {
-    setTransactionsPromise(getAllTransactions());
+    const fetchParticipants = async () => {
+        const users = await getUsers();
+        const participants: DiwaliFundParticipant[] = [];
+
+        users.forEach(user => {
+            const diwaliFund = user.loans.find(loan => loan.loanType === 'Diwali Fund');
+            if (diwaliFund) {
+                const weeksPaid = diwaliFund.transactions.filter(tx => tx.type === 'Repayment').length;
+                participants.push({
+                    chitNumber: diwaliFund.id,
+                    memberName: user.name,
+                    weeksPaid: weeksPaid,
+                    totalAmountPaid: diwaliFund.amountRepaid,
+                });
+            }
+        });
+        return participants.sort((a,b) => b.totalAmountPaid - a.totalAmountPaid);
+    };
+    
+    setParticipantsPromise(fetchParticipants());
   }, []);
   
-  if (!transactionsPromise) {
+  if (!participantsPromise) {
     return (
          <div className="space-y-4">
             <PageHeader
-                title="அனைத்து பரிவர்த்தனைகள்"
+                title="தீபாவளி சிட் அறிக்கை"
+                description="தீபாவளி சேமிப்புத் திட்டத்தில் பங்கேற்பாளர்களின் கண்ணோட்டம்."
             />
             <Card>
                 <CardContent className="pt-6">
-                    <TransactionTableSkeleton />
+                    <DiwaliFundTableSkeleton />
                 </CardContent>
             </Card>
         </div>
     )
   }
 
-  const transactions = use(transactionsPromise);
+  const participants = use(participantsPromise);
 
   return (
     <div className="space-y-4">
       <PageHeader
-        title="அனைத்து பரிவர்த்தனைகள்"
+        title="தீபாவளி சிட் அறிக்கை"
+        description="தீபாவளி சேமிப்புத் திட்டத்தில் பங்கேற்பாளர்களின் கண்ணோட்டம்."
       />
       <Card>
         <CardContent className="pt-6">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>பரிவர்த்தனை ஐடி</TableHead>
-                <TableHead>பயனர்</TableHead>
-                <TableHead>தொகை</TableHead>
-                <TableHead>வகை</TableHead>
-                <TableHead className="text-right">தேதி</TableHead>
+                <TableHead>சிட் எண்</TableHead>
+                <TableHead>உறுப்பினர் பெயர்</TableHead>
+                <TableHead>செலுத்திய வாரங்களின் எண்ணிக்கை</TableHead>
+                <TableHead className="text-right">செலுத்திய மொத்த தொகை</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transactions.length > 0 ? (
-                transactions.map((tx) => (
-                  <TableRow key={tx.id}>
-                    <TableCell className="font-mono">{tx.id}</TableCell>
-                    <TableCell>{tx.userName}</TableCell>
-                    <TableCell>₹{tx.amount.toLocaleString("en-IN")}</TableCell>
-                     <TableCell>
-                      <Badge variant={tx.type === 'Disbursement' ? 'destructive' : 'success'}>
-                        {tx.type === 'Disbursement' ? 'வழங்கல்' : 'திருப்பிச் செலுத்துதல்'}
-                      </Badge>
-                    </TableCell>
+              {participants.length > 0 ? (
+                participants.map((p) => (
+                  <TableRow key={p.chitNumber}>
+                    <TableCell className="font-mono">{p.chitNumber}</TableCell>
+                    <TableCell>{p.memberName}</TableCell>
+                    <TableCell>{p.weeksPaid}</TableCell>
                     <TableCell className="text-right">
-                      {format(new Date(tx.date), "PPpp")}
+                      ₹{p.totalAmountPaid.toLocaleString("en-IN")}
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={5}
+                    colSpan={4}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    இன்னும் பரிவர்த்தனைகள் இல்லை.
+                    தீபாவளி சிட் திட்டத்தில் பங்கேற்பாளர்கள் யாரும் இல்லை.
                   </TableCell>
                 </TableRow>
               )}
@@ -120,3 +140,4 @@ export default function TransactionsPage() {
     </div>
   );
 }
+
