@@ -1,5 +1,5 @@
 
-import { addDays, addMonths, addYears } from 'date-fns';
+import { addDays, addMonths, addYears, subDays } from 'date-fns';
 
 export type User = {
   id: string;
@@ -75,6 +75,50 @@ export type TransactionWithUser = Transaction & {
     userId: string;
     userName: string;
 };
+
+// --- DUMMY DATA INJECTION ---
+
+const MOCK_USERS: User[] = [
+    { id: 'user1', name: 'குமார்', contact: '+91 9876543210', idProof: 'ADHR1234', faceImageUrl: 'https://picsum.photos/seed/user1/128/128', createdAt: subDays(new Date(), 10).toISOString(), loans: [], registrationType: 'Loan' },
+    { id: 'user2', name: 'பிரியா', contact: '+91 9876543211', idProof: 'ADHR1235', faceImageUrl: 'https://picsum.photos/seed/user2/128/128', createdAt: subDays(new Date(), 25).toISOString(), loans: [], registrationType: 'Loan' },
+    { id: 'user3', name: 'அருண்', contact: '+91 9876543212', idProof: 'ADHR1236', faceImageUrl: 'https://picsum.photos/seed/user3/128/128', createdAt: subDays(new Date(), 40).toISOString(), loans: [], registrationType: 'Loan' },
+    { id: 'user4', name: 'சந்தியா', contact: '+91 9876543213', idProof: 'ADHR1237', faceImageUrl: 'https://picsum.photos/seed/user4/128/128', createdAt: subDays(new Date(), 5).toISOString(), loans: [], registrationType: 'Diwali Fund' },
+    { id: 'user5', name: 'விஜய்', contact: '+91 9876543214', idProof: 'ADHR1238', faceImageUrl: 'https://picsum.photos/seed/user5/128/128', createdAt: subDays(new Date(), 60).toISOString(), loans: [], registrationType: 'Loan' },
+];
+
+const MOCK_LOANS: Record<string, Loan[]> = {
+    'user1': [{
+        id: 'loan1', userId: 'user1', amountRequested: 10000, interest: 1000, principal: 9000, totalOwed: 10000, amountRepaid: 2000, status: 'Active', loanType: 'Loan', paymentFrequency: 'Monthly', createdAt: subDays(new Date(), 10).toISOString(), dueDate: addMonths(new Date(), 1).toISOString(),
+        transactions: [{ id: 'txn1', loanId: 'loan1', type: 'Disbursement', amount: 9000, date: subDays(new Date(), 10).toISOString() }, { id: 'txn2', loanId: 'loan1', type: 'Repayment', amount: 2000, date: subDays(new Date(), 2).toISOString() }]
+    }],
+    'user2': [{
+        id: 'loan2', userId: 'user2', amountRequested: 5000, interest: 500, principal: 4500, totalOwed: 5000, amountRepaid: 5000, status: 'Paid', loanType: 'EMI', paymentFrequency: 'Weekly', createdAt: subDays(new Date(), 25).toISOString(), dueDate: addDays(new Date(), 3).toISOString(),
+        transactions: [{ id: 'txn3', loanId: 'loan2', type: 'Disbursement', amount: 4500, date: subDays(new Date(), 25).toISOString() }, { id: 'txn4', loanId: 'loan2', type: 'Repayment', amount: 5000, date: subDays(new Date(), 1).toISOString() }]
+    }],
+    'user3': [{
+        id: 'loan3', userId: 'user3', amountRequested: 15000, interest: 1500, principal: 13500, totalOwed: 15000, amountRepaid: 5000, status: 'Overdue', loanType: 'Loan', paymentFrequency: 'Monthly', createdAt: subDays(new Date(), 40).toISOString(), dueDate: subDays(new Date(), 10).toISOString(),
+        transactions: [{ id: 'txn5', loanId: 'loan3', type: 'Disbursement', amount: 13500, date: subDays(new Date(), 40).toISOString() }, { id: 'txn6', loanId: 'loan3', type: 'Repayment', amount: 5000, date: subDays(new Date(), 15).toISOString() }]
+    }],
+    'user4': [{
+        id: 'diwali1', userId: 'user4', amountRequested: 12000, interest: 1200, principal: 0, totalOwed: 12000, amountRepaid: 1000, status: 'Active', loanType: 'Diwali Fund', paymentFrequency: 'Monthly', createdAt: subDays(new Date(), 5).toISOString(), dueDate: addMonths(new Date(), 1).toISOString(),
+        transactions: [{ id: 'txn7', loanId: 'diwali1', type: 'Repayment', amount: 1000, date: subDays(new Date(), 5).toISOString() }]
+    }],
+};
+
+
+function injectDummyData() {
+    if (typeof window !== 'undefined' && !localStorage.getItem('dummy_data_injected')) {
+        localStorage.setItem('temp_new_users', JSON.stringify(MOCK_USERS));
+        localStorage.setItem('temp_new_loans', JSON.stringify(MOCK_LOANS));
+        localStorage.setItem('dummy_data_injected', 'true');
+    }
+}
+
+// Call this once at the module level.
+injectDummyData();
+
+// ---------------------------
+
 
 function getStoredUsers(): User[] {
   if (typeof window === 'undefined') return [];
