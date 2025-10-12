@@ -3,7 +3,7 @@
 
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpRight, Plus, Gift, FileText, Wallet, PiggyBank, UserPlus } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpright, Plus, Gift, FileText, Wallet, PiggyBank, UserPlus } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -152,7 +152,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
        <div className="space-y-4">
-           <Card className="bg-gradient-to-b from-primary to-primary/90 text-primary-foreground">
+           <Card className="bg-gradient-to-t from-primary to-primary/90 text-primary-foreground">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">மொத்த கை இருப்பு</CardTitle>
                     <Wallet className="h-5 w-5 text-primary-foreground/80" />
@@ -199,42 +199,6 @@ export default function DashboardPage() {
                 />
             </div>
         </div>
-      <Card>
-        <CardHeader className="flex flex-row items-center">
-          <div className="grid gap-2">
-            <CardTitle>விரைவு அணுகல்</CardTitle>
-          </div>
-          <Button asChild size="sm" className="ml-auto gap-1">
-            <Link href="/dashboard/users">
-              அனைத்து பயனர்கள்
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-4">
-            {recentUsers.map((user) => (
-              <UserCard key={user.id} user={user} />
-            ))}
-            <AddUserCard />
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
-
-    
-
-    
-
-
-
-
-    
-
-    
-
-    
-
-    
