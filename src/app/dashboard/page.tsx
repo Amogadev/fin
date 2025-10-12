@@ -152,7 +152,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
        <div className="space-y-4">
-           <Card className="bg-primary text-primary-foreground">
+           <Card className="bg-gradient-to-tr from-primary to-accent text-primary-foreground">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">மொத்த கை இருப்பு</CardTitle>
                     <Wallet className="h-5 w-5 text-primary-foreground/80" />
