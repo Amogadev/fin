@@ -99,7 +99,6 @@ export default function DashboardLayout({
               </Button>
            )}
           <div>
-            <p className="text-sm text-muted-foreground">மீண்டும் வருக!</p>
             <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
           </div>
         </div>
