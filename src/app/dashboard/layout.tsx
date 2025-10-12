@@ -16,6 +16,7 @@ import {
   ChevronDown,
   ArrowLeft,
   CalendarDays,
+  Gift,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -99,7 +100,7 @@ export default function DashboardLayout({
   const menuItems = [
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
     { href: "/dashboard/users", label: "கடன் விவரங்கள்", icon: Users },
-    { href: "/dashboard/transactions", label: "பரிவர்த்தனைகள்", icon: Receipt },
+    { href: "/diwali-fund", label: "தீபாவளி சிட்", icon: Gift },
     { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: FileText },
     { id: "settings", label: "அமைப்புகள்", icon: Settings },
   ];
