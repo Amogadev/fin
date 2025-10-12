@@ -98,7 +98,7 @@ export default function DashboardLayout({
 
   const menuItems = [
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
-    { href: "/dashboard/users", label: "பயனர்கள்", icon: Users },
+    { href: "/dashboard/users", label: "கடன் விவரங்கள்", icon: Users },
     { href: "/dashboard/transactions", label: "பரிவர்த்தனைகள்", icon: Receipt },
     { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: FileText },
     { id: "settings", label: "அமைப்புகள்", icon: Settings },
