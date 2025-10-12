@@ -15,6 +15,7 @@ import {
   FileText,
   ChevronDown,
   ArrowLeft,
+  CalendarDays,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { format } from 'date-fns';
+import { ta } from 'date-fns/locale';
 
 
 function ThemeToggle() {
@@ -69,6 +72,21 @@ function ThemeToggle() {
   )
 }
 
+function CurrentDate() {
+    const [date, setDate] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => setDate(new Date()), 60000); // Update every minute
+        return () => clearInterval(timer);
+    }, []);
+
+    return (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <CalendarDays className="h-4 w-4" />
+            <span>{format(date, 'PPP', { locale: ta })}</span>
+        </div>
+    );
+}
 
 export default function DashboardLayout({
   children,
@@ -101,6 +119,9 @@ export default function DashboardLayout({
           <div>
             <h2 className="text-2xl font-bold font-headline">வணக்கம்.</h2>
           </div>
+        </div>
+        <div>
+            <CurrentDate />
         </div>
       </header>
       <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24">{children}</main>
