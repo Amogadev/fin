@@ -90,18 +90,21 @@ function UsersTable({ users, onDelete }: { users: User[], onDelete: (userId: str
               return (
                 <TableRow key={user.id}>
                   <TableCell>
-                    <Link href={`/dashboard/users/${user.id}`} className="font-medium text-primary hover:underline">
-                      {user.name}
-                    </Link>
+                    <div className="flex items-center gap-2">
+                        <Link href={`/dashboard/users/${user.id}`} className="font-medium text-primary hover:underline">
+                        {user.name}
+                        </Link>
+                        {!latestLoan && <Badge variant="success">செயலில் கடன் இல்லை</Badge>}
+                    </div>
                   </TableCell>
                   <TableCell>
-                    {latestLoan ? `₹${latestLoan.totalOwed.toLocaleString('en-IN')}` : 'N/A'}
+                    {latestLoan ? `₹${latestLoan.totalOwed.toLocaleString('en-IN')}` : '₹0'}
                   </TableCell>
                   <TableCell>
-                    {latestLoan ? format(new Date(latestLoan.createdAt), 'PP') : 'N/A'}
+                    {latestLoan ? format(new Date(latestLoan.createdAt), 'PP') : '-'}
                   </TableCell>
                    <TableCell>
-                    {latestLoan ? `₹${dueAmount.toLocaleString('en-IN')}` : 'N/A'}
+                    {`₹${dueAmount.toLocaleString('en-IN')}`}
                   </TableCell>
                   <TableCell className="text-right">
                      <Button asChild variant="ghost" size="icon" className="w-8 h-8">
