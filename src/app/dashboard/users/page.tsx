@@ -75,6 +75,7 @@ function UsersTable({ users, onDelete }: { users: User[], onDelete: (userId: str
         <TableHeader>
           <TableRow>
             <TableHead>உறுப்பினர் பெயர்</TableHead>
+            <TableHead>கடன் எண்</TableHead>
             <TableHead>கடன் தொகை</TableHead>
             <TableHead>கடன் தேதி</TableHead>
             <TableHead>நிலுவைத் தொகை</TableHead>
@@ -96,6 +97,9 @@ function UsersTable({ users, onDelete }: { users: User[], onDelete: (userId: str
                         </Link>
                         {!latestLoan && <Badge variant="success">செயலில் கடன் இல்லை</Badge>}
                     </div>
+                  </TableCell>
+                  <TableCell className="font-mono">
+                    {latestLoan ? latestLoan.id : '-'}
                   </TableCell>
                   <TableCell>
                     {latestLoan ? `₹${latestLoan.totalOwed.toLocaleString('en-IN')}` : '₹0'}
@@ -147,7 +151,7 @@ function UsersTable({ users, onDelete }: { users: User[], onDelete: (userId: str
             })
           ) : (
              <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center">
+              <TableCell colSpan={6} className="h-24 text-center">
                 பயனர்கள் இல்லை.
               </TableCell>
             </TableRow>
@@ -165,6 +169,7 @@ function UsersTableSkeleton() {
                 <TableHeader>
                     <TableRow>
                         <TableHead><Skeleton className="h-5 w-24" /></TableHead>
+                        <TableHead><Skeleton className="h-5 w-20" /></TableHead>
                         <TableHead><Skeleton className="h-5 w-24" /></TableHead>
                         <TableHead><Skeleton className="h-5 w-24" /></TableHead>
                         <TableHead><Skeleton className="h-5 w-24" /></TableHead>
@@ -175,6 +180,7 @@ function UsersTableSkeleton() {
                     {Array.from({ length: 5 }).map((_, i) => (
                         <TableRow key={i}>
                             <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                            <TableCell><Skeleton className="h-5 w-20" /></TableCell>
                             <TableCell><Skeleton className="h-5 w-20" /></TableCell>
                             <TableCell><Skeleton className="h-5 w-28" /></TableCell>
                             <TableCell><Skeleton className="h-5 w-20" /></TableCell>
