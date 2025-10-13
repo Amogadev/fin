@@ -164,6 +164,8 @@ export default function UsersPage() {
     setUsers(prevUsers => prevUsers ? prevUsers.filter(user => user.id !== deletedUserId) : null);
   }
 
+  const loanUsers = users?.filter(user => user.loans.some(loan => loan.loanType === 'Loan' || loan.loanType === 'EMI'));
+
   return (
     <div className="space-y-4">
       <PageHeader
@@ -186,17 +188,17 @@ export default function UsersPage() {
       </PageHeader>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {!users ? (
+        {!loanUsers ? (
           Array.from({ length: 10 }).map((_, i) => <UserCardSkeleton key={i} />)
-        ) : users.length > 0 ? (
-          users
+        ) : loanUsers.length > 0 ? (
+          loanUsers
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .map((user) => <UserCard key={user.id} user={user} onDelete={handleUserDeleted} />)
         ) : (
           <div className="col-span-full text-center text-muted-foreground py-16">
             <UserIcon className="h-12 w-12 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold">பயனர்கள் இல்லை</h3>
-            <p>தொடங்க ஒரு புதிய பயனரைச் சேர்க்கவும்.</p>
+            <h3 className="text-xl font-semibold">கடன் பயனர்கள் இல்லை</h3>
+            <p>தொடங்குவதற்கு ஒரு புதிய கடன் பயனரைச் சேர்க்கவும்.</p>
           </div>
         )}
       </div>
