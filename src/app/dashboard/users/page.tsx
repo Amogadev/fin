@@ -39,6 +39,7 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
   
   const dueAmount = latestActiveLoan ? latestActiveLoan.totalOwed - latestActiveLoan.amountRepaid : 0;
+  const totalLoanAmount = latestActiveLoan ? latestActiveLoan.totalOwed : 0;
 
   const handleDelete = () => {
     const tempUsersJson = localStorage.getItem('temp_new_users');
@@ -86,7 +87,7 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
           </Link>
            {latestActiveLoan ? (
              <p className="text-sm text-muted-foreground">
-                நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span>
+                கடன்: <span className="font-semibold text-foreground">₹{totalLoanAmount.toLocaleString('en-IN')}</span> | நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span>
              </p>
            ) : (
             <Badge variant="success" className="text-xs">செயலில் கடன் இல்லை</Badge>
