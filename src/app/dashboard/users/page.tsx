@@ -77,19 +77,19 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
           <Link href={`/dashboard/users/${user.id}`} className="block">
             <div className="flex items-baseline justify-center gap-2">
                 <CardTitle className="text-lg">{user.name}</CardTitle>
-                {latestActiveLoan ? (
+                {latestActiveLoan && (
                     <CardDescription className="text-xs">
                         (<span className="font-mono">{latestActiveLoan.id}</span>)
                     </CardDescription>
-                ) : (
-                    <Badge variant="success" className="text-xs">செயலில் கடன் இல்லை</Badge>
                 )}
             </div>
           </Link>
-           {latestActiveLoan && (
+           {latestActiveLoan ? (
              <p className="text-sm text-muted-foreground">
                 நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span>
              </p>
+           ) : (
+            <Badge variant="success" className="text-xs">செயலில் கடன் இல்லை</Badge>
            )}
         </div>
       </CardContent>
