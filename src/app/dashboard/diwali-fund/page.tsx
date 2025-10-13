@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, User as UserIcon, Eye, FilePenLine, Trash2 } from "lucide-react";
+import { PlusCircle, ArrowLeft, User as UserIcon, Eye, FilePenLine, Trash2, Search } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { format } from 'date-fns';
@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
 
 
 type DiwaliUser = {
@@ -43,30 +44,6 @@ function DiwaliUserCard({ diwaliUser, onDelete }: { diwaliUser: DiwaliUser; onDe
   const { toast } = useToast();
   
   const remainingContribution = fundDetails.totalOwed - fundDetails.amountRepaid;
-
-  const handleDelete = () => {
-    // This logic is simplified for front-end. A real app would make an API call.
-    const tempUsersJson = localStorage.getItem('temp_new_users');
-    let allUsers: User[] = tempUsersJson ? JSON.parse(tempUsersJson) : [];
-    
-    const userIndex = allUsers.findIndex(u => u.id === user.id);
-    if(userIndex !== -1) {
-      allUsers[userIndex].loans = allUsers[userIndex].loans.filter(l => l.id !== fundDetails.id);
-      
-      // If this was the only reason they were a user, we could remove them.
-      // For now, we just remove the fund.
-      if(allUsers[userIndex].loans.length === 0 && allUsers[userIndex].registrationType === 'Diwali Fund') {
-          allUsers.splice(userIndex, 1);
-      }
-      localStorage.setItem('temp_new_users', JSON.stringify(allUsers));
-    }
-    
-    toast({
-      title: "Participant Removed",
-      description: `${user.name} has been removed from the Diwali Fund.`,
-    });
-    onDelete(user.id);
-  };
 
   return (
     <Card>
@@ -126,6 +103,7 @@ function UserCardSkeleton() {
 
 export default function DiwaliFundPage() {
   const [diwaliUsers, setDiwaliUsers] = useState<DiwaliUser[] | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function fetchDiwaliUsers() {
@@ -146,12 +124,26 @@ export default function DiwaliFundPage() {
     setDiwaliUsers(prevUsers => prevUsers ? prevUsers.filter(({ user }) => user.id !== deletedUserId) : null);
   }
 
+  const filteredDiwaliUsers = diwaliUsers?.filter(diwaliUser =>
+    diwaliUser.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="space-y-4">
       <PageHeader
         title="தீபாவளி சிட் பயனர்கள்"
       >
         <div className="flex items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              type="search"
+              placeholder="பயனரைத் தேடு..."
+              className="pl-8 h-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -168,15 +160,15 @@ export default function DiwaliFundPage() {
       </PageHeader>
       
        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {!diwaliUsers ? (
+        {!filteredDiwaliUsers ? (
           Array.from({ length: 5 }).map((_, i) => <UserCardSkeleton key={i} />)
-        ) : diwaliUsers.length > 0 ? (
-          diwaliUsers.map((diwaliUser) => <DiwaliUserCard key={diwaliUser.user.id} diwaliUser={diwaliUser} onDelete={handleUserDeleted} />)
+        ) : filteredDiwaliUsers.length > 0 ? (
+          filteredDiwaliUsers.map((diwaliUser) => <DiwaliUserCard key={diwaliUser.user.id} diwaliUser={diwaliUser} onDelete={handleUserDeleted} />)
         ) : (
           <div className="col-span-full text-center text-muted-foreground py-16">
             <UserIcon className="h-12 w-12 mx-auto mb-4" />
             <h3 className="text-xl font-semibold">பங்கேற்பாளர்கள் இல்லை</h3>
-            <p>தொடங்குவதற்கு ஒரு புதிய பங்கேற்பாளரைச் சேர்க்கவும்.</p>
+            <p>{searchTerm ? `"${searchTerm}" உடன் பயனர்கள் இல்லை.` : 'தொடங்குவதற்கு ஒரு புதிய பங்கேற்பாளரைச் சேர்க்கவும்.'}</p>
           </div>
         )}
       </div>
