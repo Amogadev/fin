@@ -48,7 +48,7 @@ function DiwaliUserCard({ diwaliUser }: { diwaliUser: DiwaliUser; }) {
   return (
     <Card>
       <CardContent className="pt-6 flex flex-col items-center text-center space-y-3">
-        <Link href={`/dashboard/users/${user.id}`} className="block">
+        <Link href={`/dashboard/users/${user.id}?source=diwali-fund`} className="block">
           <Image 
             src={user.faceImageUrl} 
             alt={user.name}
@@ -59,7 +59,7 @@ function DiwaliUserCard({ diwaliUser }: { diwaliUser: DiwaliUser; }) {
           />
         </Link>
         <div className="space-y-1">
-          <Link href={`/dashboard/users/${user.id}`} className="block">
+          <Link href={`/dashboard/users/${user.id}?source=diwali-fund`} className="block">
             <CardTitle className="text-lg">{user.name}</CardTitle>
           </Link>
           <p className="text-sm text-muted-foreground">
@@ -72,7 +72,7 @@ function DiwaliUserCard({ diwaliUser }: { diwaliUser: DiwaliUser; }) {
       </CardContent>
       <CardFooter className="flex justify-center gap-1">
          <Button asChild variant="ghost" size="icon" className="w-8 h-8">
-            <Link href={`/dashboard/users/${user.id}`}>
+            <Link href={`/dashboard/users/${user.id}?source=diwali-fund`}>
                 <Eye className="h-4 w-4" />
                 <span className="sr-only">Details</span>
             </Link>

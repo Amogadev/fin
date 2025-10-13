@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import {
   LayoutDashboard,
@@ -96,6 +96,8 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const source = searchParams.get('source');
 
   const menuItems = [
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
@@ -162,7 +164,22 @@ export default function DashboardLayout({
                 );
             }
             
-            const isActive = 'href' in item && pathname.startsWith(item.href!);
+            let isActive = false;
+            if ('href' in item) {
+                if (source === 'diwali-fund' && item.href === '/dashboard/diwali-fund') {
+                    isActive = true;
+                } else if (!source && item.href) {
+                     isActive = pathname.startsWith(item.href);
+                } else if (source !== 'diwali-fund' && item.href === '/dashboard/users') {
+                    isActive = pathname.startsWith(item.href);
+                }
+
+                if (item.href === '/dashboard' && pathname !== '/dashboard') {
+                    isActive = false;
+                }
+            }
+
+
             return (
               <Link
                 key={item.href}
