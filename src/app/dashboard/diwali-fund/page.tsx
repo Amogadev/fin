@@ -86,10 +86,10 @@ function DiwaliUserCard({ diwaliUser, onDelete }: { diwaliUser: DiwaliUser; onDe
             <CardTitle className="text-lg">{user.name}</CardTitle>
           </Link>
           <p className="text-sm text-muted-foreground">
-            Goal: <span className="font-semibold text-foreground">₹{fundDetails.totalOwed.toLocaleString('en-IN')}</span>
+            இலக்கு: <span className="font-semibold text-foreground">₹{fundDetails.totalOwed.toLocaleString('en-IN')}</span>
           </p>
            <p className="text-sm text-muted-foreground">
-            Contributed: <span className="font-semibold text-success">₹{fundDetails.amountRepaid.toLocaleString('en-IN')}</span>
+            பங்களிப்பு: <span className="font-semibold text-success">₹{fundDetails.amountRepaid.toLocaleString('en-IN')}</span>
           </p>
         </div>
       </CardContent>
