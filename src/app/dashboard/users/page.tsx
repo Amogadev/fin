@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, User as UserIcon, FilePenLine, Trash2, Eye } from "lucide-react";
+import { PlusCircle, ArrowLeft, User as UserIcon, FilePenLine, Eye, Search } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,9 +30,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
 
-function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) => void; }) {
+function UserCard({ user }: { user: User; }) {
   const { toast } = useToast();
   const latestActiveLoan = user.loans
     .filter(loan => (loan.loanType === 'Loan' || loan.loanType === 'EMI') && (loan.status === 'Active' || loan.status === 'Overdue'))
@@ -44,26 +45,6 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
   const latestPaidLoan = !latestActiveLoan ? user.loans
     .filter(loan => (loan.loanType === 'Loan' || loan.loanType === 'EMI') && loan.status === 'Paid')
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0] : null;
-
-  const handleDelete = () => {
-    const tempUsersJson = localStorage.getItem('temp_new_users');
-    let allUsers: User[] = tempUsersJson ? JSON.parse(tempUsersJson) : [];
-    allUsers = allUsers.filter(u => u.id !== user.id);
-    localStorage.setItem('temp_new_users', JSON.stringify(allUsers));
-
-    const tempLoansJson = localStorage.getItem('temp_new_loans');
-    if(tempLoansJson) {
-      const tempLoans = JSON.parse(tempLoansJson);
-      delete tempLoans[user.id];
-      localStorage.setItem('temp_new_loans', JSON.stringify(tempLoans));
-    }
-
-    toast({
-      title: "பயனர் நீக்கப்பட்டார்",
-      description: `${user.name} வெற்றிகரமாக நீக்கப்பட்டார்.`,
-    });
-    onDelete(user.id);
-  };
 
   return (
     <Card>
@@ -144,6 +125,7 @@ function UserCardSkeleton() {
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[] | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     getUsers().then(setUsers);
@@ -155,12 +137,26 @@ export default function UsersPage() {
 
   const loanUsers = users?.filter(user => user.loans.some(loan => loan.loanType === 'Loan' || loan.loanType === 'EMI'));
 
+  const filteredLoanUsers = loanUsers?.filter(user =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="space-y-4">
       <PageHeader
         title="பயனர்கள்"
       >
         <div className="flex items-center gap-2">
+           <div className="relative">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              type="search"
+              placeholder="பயனரைத் தேடு..."
+              className="pl-8 h-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -177,17 +173,17 @@ export default function UsersPage() {
       </PageHeader>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {!loanUsers ? (
+        {!filteredLoanUsers ? (
           Array.from({ length: 10 }).map((_, i) => <UserCardSkeleton key={i} />)
-        ) : loanUsers.length > 0 ? (
-          loanUsers
+        ) : filteredLoanUsers.length > 0 ? (
+          filteredLoanUsers
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .map((user) => <UserCard key={user.id} user={user} onDelete={handleUserDeleted} />)
+            .map((user) => <UserCard key={user.id} user={user} />)
         ) : (
           <div className="col-span-full text-center text-muted-foreground py-16">
             <UserIcon className="h-12 w-12 mx-auto mb-4" />
             <h3 className="text-xl font-semibold">கடன் பயனர்கள் இல்லை</h3>
-            <p>தொடங்குவதற்கு ஒரு புதிய கடன் பயனரைச் சேர்க்கவும்.</p>
+            <p>{searchTerm ? `"${searchTerm}" உடன் பயனர்கள் இல்லை.` : 'தொடங்குவதற்கு ஒரு புதிய கடன் பயனரைச் சேர்க்கவும்.'}</p>
           </div>
         )}
       </div>
