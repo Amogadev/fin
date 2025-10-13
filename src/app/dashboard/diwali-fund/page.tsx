@@ -171,7 +171,7 @@ export default function DiwaliFundPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="தீபாவளி சிட் பங்கேற்பாளர்கள்"
+        title="பயனர்கள்"
         description="தீபாவளி சேமிப்புத் திட்டத்தில் செயலில் உள்ள அனைத்து உறுப்பினர்களின் பட்டியல்."
       >
         <div className="flex items-center gap-2">
