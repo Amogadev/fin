@@ -155,51 +155,54 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
             <CardHeader>
                 <CardTitle>நிலுவையில் உள்ள தொகை</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted p-4">
-                    <div className="text-center">
-                        <p className="text-sm text-muted-foreground">மொத்த கடன்</p>
-                        <p className="text-2xl font-bold">₹{activeLoan.totalOwed.toLocaleString('en-IN')}</p>
+            <CardContent className="space-y-3">
+                <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted p-3 text-center">
+                    <div>
+                        <p className="text-xs text-muted-foreground">மொத்த கடன்</p>
+                        <p className="text-xl font-bold">₹{activeLoan.totalOwed.toLocaleString('en-IN')}</p>
                     </div>
-                    <div className="text-center">
-                        <p className="text-sm text-muted-foreground">மீதமுள்ள இருப்பு</p>
-                        <p className="text-2xl font-bold text-primary">₹{remainingBalance.toLocaleString('en-IN')}</p>
+                    <div>
+                        <p className="text-xs text-muted-foreground">மீதமுள்ள இருப்பு</p>
+                        <p className="text-xl font-bold text-primary">₹{remainingBalance.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
-                 <div className="space-y-2">
-                    <label htmlFor="outstanding-amount" className="text-sm font-medium">செலுத்தும் தொகை</label>
-                    <Input 
-                        id="outstanding-amount"
-                        type="number"
-                        placeholder="தொகையை உள்ளிடவும்"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                    />
-                 </div>
-                 <div className="space-y-2">
-                    <label htmlFor="outstanding-date" className="text-sm font-medium">செலுத்தும் தேதி</label>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant={"outline"}
-                                className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !date && "text-muted-foreground"
-                                )}
-                            >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date ? format(date, "PPP") : <span>ஒரு தேதியைத் தேர்ந்தெடுக்கவும்</span>}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                            <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={setDate}
-                                initialFocus
-                            />
-                        </PopoverContent>
-                    </Popover>
+                 <div className="grid md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                        <label htmlFor="outstanding-amount" className="text-xs font-medium">செலுத்தும் தொகை</label>
+                        <Input 
+                            id="outstanding-amount"
+                            type="number"
+                            placeholder="தொகை"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            className="h-9"
+                        />
+                    </div>
+                    <div className="space-y-1.5">
+                        <label htmlFor="outstanding-date" className="text-xs font-medium">செலுத்தும் தேதி</label>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                    "w-full justify-start text-left font-normal h-9",
+                                    !date && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? format(date, "PP") : <span>தேதி</span>}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                                <Calendar
+                                    mode="single"
+                                    selected={date}
+                                    onSelect={setDate}
+                                    initialFocus
+                                />
+                            </PopoverContent>
+                        </Popover>
+                    </div>
                  </div>
                  {repaymentHistory.length > 0 && (
                     <Collapsible>
@@ -209,7 +212,7 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                                 கட்டண வரலாற்றைக் காட்டு
                             </Button>
                         </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-4 space-y-2 animate-in fade-in-0">
+                        <CollapsibleContent className="mt-2 space-y-2 animate-in fade-in-0">
                              <div className="p-3 rounded-md border bg-muted/50 max-h-32 overflow-y-auto">
                                 <h4 className="font-semibold text-sm mb-2">கட்டண வரலாறு</h4>
                                 <ul className="space-y-2">
@@ -389,5 +392,7 @@ export default function UserDetailPage({
     </div>
   );
 }
+
+    
 
     
