@@ -100,28 +100,6 @@ function DiwaliUserCard({ diwaliUser, onDelete }: { diwaliUser: DiwaliUser; onDe
                 <span className="sr-only">Details</span>
             </Link>
         </Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="ghost" size="icon" className="w-8 h-8">
-              <Trash2 className="h-4 w-4 text-destructive/70 hover:text-destructive" />
-              <span className="sr-only">Remove Participant</span>
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Remove {user.name} from the Diwali Fund?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will remove the user from the current Diwali savings plan. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
-                Remove
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </CardFooter>
     </Card>
   )

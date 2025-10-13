@@ -108,28 +108,6 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
             <span className="sr-only">பயனரைத் திருத்து</span>
           </Link>
         </Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="ghost" size="icon" className="w-8 h-8">
-              <Trash2 className="h-4 w-4 text-destructive/70 hover:text-destructive" />
-              <span className="sr-only">பயனரை நீக்கு</span>
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure you want to delete this user?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the user <span className="font-bold">{user.name}</span> and all associated data.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>ரத்துசெய்</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
-                நீக்கு
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </CardFooter>
     </Card>
   )
