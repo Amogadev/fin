@@ -32,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 function LoanStatus({ loan }: { loan: Loan }) {
   const today = new Date();
@@ -86,7 +87,6 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
 
         setIsSubmitting(true);
         
-        // This is a simulation. In a real app, this would be an API call.
         const users = await getUsers();
         const userIndex = users.findIndex(u => u.id === user.id);
         
@@ -105,10 +105,12 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
 
                 if (loan.amountRepaid >= loan.totalOwed) {
                     loan.status = 'Paid';
+                } else if(loan.status === 'Overdue') {
+                    loan.status = 'Active';
                 }
 
+
                 localStorage.setItem('temp_new_users', JSON.stringify(users));
-                // Also update the separate loans object if it's still being used elsewhere
                 const tempLoansJson = localStorage.getItem('temp_new_loans');
                 const tempLoans = tempLoansJson ? JSON.parse(tempLoansJson) : {};
                 if (tempLoans[user.id]) {
@@ -122,7 +124,7 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                 toast({ title: "செலுத்துதல் சேமிக்கப்பட்டது!", description: `₹${repaymentAmount.toLocaleString('en-IN')} தொகை பதிவு செய்யப்பட்டது.` });
                 setAmount('');
                 setDate(new Date());
-                onPaymentSaved(); // Callback to refresh parent component
+                onPaymentSaved();
             }
         } else {
              toast({ variant: "destructive", title: "பயனரைக் கண்டுபிடிக்க முடியவில்லை" });
@@ -153,9 +155,15 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                 <CardDescription>கடன் <span className="font-mono">{activeLoan.id}</span>க்கான கொடுப்பனவுகளை உள்ளிடவும்</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="text-center p-4 rounded-lg bg-muted">
-                    <p className="text-sm text-muted-foreground">மீதமுள்ள இருப்பு</p>
-                    <p className="text-3xl font-bold">₹{remainingBalance.toLocaleString('en-IN')}</p>
+                <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted p-4">
+                    <div className="text-center">
+                        <p className="text-sm text-muted-foreground">மொத்த கடன்</p>
+                        <p className="text-2xl font-bold">₹{activeLoan.totalOwed.toLocaleString('en-IN')}</p>
+                    </div>
+                    <div className="text-center">
+                        <p className="text-sm text-muted-foreground">மீதமுள்ள இருப்பு</p>
+                        <p className="text-2xl font-bold text-primary">₹{remainingBalance.toLocaleString('en-IN')}</p>
+                    </div>
                 </div>
                  <div className="space-y-2">
                     <label htmlFor="outstanding-amount" className="text-sm font-medium">செலுத்தும் தொகை</label>
@@ -258,7 +266,6 @@ export default function UserDetailPage({
       </PageHeader>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* First Column: User Details and Actions */}
         <div className="lg:col-span-1 space-y-6">
           <Card>
             <CardHeader>
@@ -303,7 +310,6 @@ export default function UserDetailPage({
           </Card>
         </div>
 
-        {/* Second Column: Outstanding Payment and Loan History */}
         <div className="lg:col-span-2 space-y-6">
            <OutstandingPaymentCard user={user} onPaymentSaved={loadUser} />
           <Card>
