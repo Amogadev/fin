@@ -120,18 +120,22 @@ function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | nu
     
     allUsers[userIndex].loans.push(newFundLoan);
 
+    const confirmationDetails = {
+      name: user.name,
+      contribution: contribution.toString(),
+      frequency: frequency,
+      estimatedReturn: Math.round(estimatedReturn).toString(),
+      nextPaymentDate: nextPaymentDate.toISOString(),
+    };
+
+    localStorage.setItem('diwali_fund_confirmation', JSON.stringify(confirmationDetails));
+
     // Simulate submission
     setTimeout(() => {
       localStorage.setItem('temp_new_users', JSON.stringify(allUsers));
       localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
 
-      const confirmationParams = new URLSearchParams({
-        name: user.name,
-        contribution: contribution.toString(),
-        frequency: frequency,
-        estimatedReturn: Math.round(estimatedReturn).toString(),
-        nextPaymentDate: nextPaymentDate.toISOString(),
-      });
+      const confirmationParams = new URLSearchParams(confirmationDetails);
       
       toast({
         title: "வெற்றிகரமாக சேர்ந்தீர்கள்!",
