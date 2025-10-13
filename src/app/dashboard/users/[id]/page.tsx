@@ -350,18 +350,6 @@ export default function UserDetailPage({
                   {format(new Date(user.createdAt), "PPP")}
                 </p>
               </div>
-              <div className="flex flex-col gap-2 pt-2">
-                <Button asChild>
-                  <Link href={`/dashboard/users/${user.id}/apply`}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> கடன்/EMIக்கு விண்ணப்பிக்கவும்
-                  </Link>
-                </Button>
-                <Button asChild variant="secondary">
-                  <Link href={`/dashboard/users/${user.id}/repay`}>
-                    <IndianRupee className="mr-2 h-4 w-4" /> கடனைத் திருப்பிச் செலுத்து
-                  </Link>
-                </Button>
-              </div>
             </CardContent>
           </Card>
         </div>
