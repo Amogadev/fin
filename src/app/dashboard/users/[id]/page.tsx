@@ -257,8 +257,9 @@ export default function UserDetailPage({
         </Button>
       </PageHeader>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-1 space-y-6">
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* First Column: User Details and Actions */}
+        <div className="lg:col-span-1 space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>பயனர் விவரங்கள்</CardTitle>
@@ -300,10 +301,11 @@ export default function UserDetailPage({
               </div>
             </CardContent>
           </Card>
-           <OutstandingPaymentCard user={user} onPaymentSaved={loadUser} />
         </div>
 
-        <div className="md:col-span-2">
+        {/* Second Column: Outstanding Payment and Loan History */}
+        <div className="lg:col-span-2 space-y-6">
+           <OutstandingPaymentCard user={user} onPaymentSaved={loadUser} />
           <Card>
             <CardHeader>
               <CardTitle>கடன் வரலாறு</CardTitle>
@@ -357,5 +359,3 @@ export default function UserDetailPage({
     </div>
   );
 }
-
-    
