@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { format, differenceInDays } from "date-fns";
+import { format, differenceInDays, differenceInWeeks, differenceInMonths } from "date-fns";
 import { IndianRupee, PlusCircle, ArrowLeft, Loader2, Save, CalendarIcon, History } from "lucide-react";
 import { useEffect, useState, use } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -34,6 +34,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
+
+const DIWALI_DATE = new Date(new Date().getFullYear(), 10, 1); // Approx. Nov 1st
 
 function LoanStatus({ loan }: { loan: Loan }) {
   const today = new Date();
@@ -80,8 +82,9 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
 
         const repaymentAmount = Number(amount);
         const remainingBalance = activeLoan.totalOwed - activeLoan.amountRepaid;
+        const isDiwaliFund = activeLoan.loanType === 'Diwali Fund';
 
-        if (repaymentAmount > remainingBalance) {
+        if (!isDiwaliFund && repaymentAmount > remainingBalance) {
             toast({ variant: "destructive", title: "அதிகப்படியான தொகை", description: `செலுத்தும் தொகை மீதமுள்ள இருப்பை விட அதிகமாக இருக்கக்கூடாது: ₹${remainingBalance.toLocaleString('en-IN')}` });
             return;
         }
@@ -149,6 +152,17 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
     
     const remainingBalance = activeLoan.totalOwed - activeLoan.amountRepaid;
     const repaymentHistory = activeLoan.transactions.filter(tx => tx.type === 'Repayment').sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const isDiwaliFund = activeLoan.loanType === 'Diwali Fund';
+    
+    let remainingPeriods = 0;
+    if (isDiwaliFund) {
+        const now = new Date();
+        if (activeLoan.paymentFrequency === 'Weekly') {
+            remainingPeriods = differenceInWeeks(DIWALI_DATE, now);
+        } else { // Monthly
+            remainingPeriods = differenceInMonths(DIWALI_DATE, now);
+        }
+    }
 
     return (
         <Card>
@@ -157,18 +171,33 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
             </CardHeader>
             <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted p-3 text-center">
-                    <div>
-                        <p className="text-xs text-muted-foreground">மொத்த கடன்</p>
-                        <p className="text-xl font-bold">₹{activeLoan.totalOwed.toLocaleString('en-IN')}</p>
-                    </div>
-                    <div>
-                        <p className="text-xs text-muted-foreground">மீதமுள்ள இருப்பு</p>
-                        <p className="text-xl font-bold text-primary">₹{remainingBalance.toLocaleString('en-IN')}</p>
-                    </div>
+                    {isDiwaliFund ? (
+                        <>
+                            <div>
+                                <p className="text-xs text-muted-foreground">மீதமுள்ள காலம்</p>
+                                <p className="text-xl font-bold">{remainingPeriods} {activeLoan.paymentFrequency === 'Weekly' ? 'வாரங்கள்' : 'மாதங்கள்'}</p>
+                            </div>
+                            <div>
+                                <p className="text-xs text-muted-foreground">மொத்த சேமிப்பு இலக்கு</p>
+                                <p className="text-xl font-bold text-primary">₹{activeLoan.totalOwed.toLocaleString('en-IN')}</p>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div>
+                                <p className="text-xs text-muted-foreground">மொத்த கடன்</p>
+                                <p className="text-xl font-bold">₹{activeLoan.totalOwed.toLocaleString('en-IN')}</p>
+                            </div>
+                            <div>
+                                <p className="text-xs text-muted-foreground">மீதமுள்ள இருப்பு</p>
+                                <p className="text-xl font-bold text-primary">₹{remainingBalance.toLocaleString('en-IN')}</p>
+                            </div>
+                        </>
+                    )}
                 </div>
                  <div className="grid md:grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                        <label htmlFor="outstanding-amount" className="text-xs font-medium">செலுத்தும் தொகை</label>
+                        <label htmlFor="outstanding-amount" className="text-xs font-medium">{isDiwaliFund ? 'பங்களிப்புத் தொகை' : 'செலுத்தும் தொகை'}</label>
                         <Input 
                             id="outstanding-amount"
                             type="number"
@@ -179,7 +208,7 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                         />
                     </div>
                     <div className="space-y-1.5">
-                        <label htmlFor="outstanding-date" className="text-xs font-medium">செலுத்தும் தேதி</label>
+                        <label htmlFor="outstanding-date" className="text-xs font-medium">{isDiwaliFund ? 'பங்களிப்புத் தேதி' : 'செலுத்தும் தேதி'}</label>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
@@ -209,12 +238,12 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                         <CollapsibleTrigger asChild>
                             <Button variant="link" className="p-0 text-sm h-auto">
                                 <History className="mr-2 h-4 w-4" />
-                                கட்டண வரலாற்றைக் காட்டு
+                                {isDiwaliFund ? 'பங்களிப்பு வரலாற்றைக் காட்டு' : 'கட்டண வரலாற்றைக் காட்டு'}
                             </Button>
                         </CollapsibleTrigger>
                         <CollapsibleContent className="mt-2 space-y-2 animate-in fade-in-0">
                              <div className="p-3 rounded-md border bg-muted/50 max-h-32 overflow-y-auto">
-                                <h4 className="font-semibold text-sm mb-2">கட்டண வரலாறு</h4>
+                                <h4 className="font-semibold text-sm mb-2">{isDiwaliFund ? 'பங்களிப்பு வரலாறு' : 'கட்டண வரலாறு'}</h4>
                                 <ul className="space-y-2">
                                     {repaymentHistory.map(tx => (
                                         <li key={tx.id} className="flex justify-between items-center text-sm">
@@ -232,7 +261,7 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                 <Button className="w-full" onClick={handleSave} disabled={isSubmitting}>
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     <Save className="mr-2 h-4 w-4" />
-                    செலுத்துதலைச் சேமி
+                    {isDiwaliFund ? 'பங்களிப்பைச் சேமி' : 'செலுத்துதலைச் சேமி'}
                 </Button>
             </CardFooter>
         </Card>
@@ -392,3 +421,5 @@ export default function UserDetailPage({
     </div>
   );
 }
+
+    
