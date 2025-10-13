@@ -210,7 +210,7 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                             </Button>
                         </CollapsibleTrigger>
                         <CollapsibleContent className="mt-4 space-y-2 animate-in fade-in-0">
-                             <div className="p-3 rounded-md border bg-muted/50 max-h-48 overflow-y-auto">
+                             <div className="p-3 rounded-md border bg-muted/50 max-h-32 overflow-y-auto">
                                 <h4 className="font-semibold text-sm mb-2">கட்டண வரலாறு</h4>
                                 <ul className="space-y-2">
                                     {repaymentHistory.map(tx => (
