@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, User as UserIcon, Eye, FilePenLine, Trash2, Search } from "lucide-react";
+import { PlusCircle, ArrowLeft, User as UserIcon, Eye, Search } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { format } from 'date-fns';

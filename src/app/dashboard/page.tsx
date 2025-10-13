@@ -3,7 +3,7 @@
 
 import { getVaultData, getUsers } from "@/lib/data";
 import StatCard from "@/components/stat-card";
-import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpright, Plus, Gift, FileText, Wallet, PiggyBank, UserPlus } from "lucide-react";
+import { IndianRupee, Users, Landmark, User as UserIcon, ArrowUpright, Plus, Gift, Wallet, PiggyBank, UserPlus } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
@@ -35,7 +35,7 @@ function UserCard({ user }: { user: User }) {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="absolute top-2 right-2">
-                    {user.registrationType === 'Loan' ? <FileText className="h-4 w-4 text-muted-foreground" /> : <Gift className="h-4 w-4 text-muted-foreground" />}
+                    {user.registrationType === 'Loan' ? <Users className="h-4 w-4 text-muted-foreground" /> : <Gift className="h-4 w-4 text-muted-foreground" />}
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>

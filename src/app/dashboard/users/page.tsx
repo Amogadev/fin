@@ -134,7 +134,7 @@ export default function UsersPage() {
     setUsers(prevUsers => prevUsers ? prevUsers.filter(user => user.id !== deletedUserId) : null);
   }
 
-  const loanUsers = users?.filter(user => user.loans.some(loan => loan.loanType === 'Loan' || loan.loanType === 'EMI'));
+  const loanUsers = users?.filter(user => user.loans.some(loan => loan.loanType === 'Loan' || loan.loanType === 'EMI') || user.registrationType === 'Loan');
 
   const filteredLoanUsers = loanUsers?.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
