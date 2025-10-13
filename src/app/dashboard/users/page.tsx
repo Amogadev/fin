@@ -91,7 +91,7 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
                 <p>நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span></p>
              </div>
            ) : (
-            <Badge variant="success" className="text-xs">செயலில் கடன் இல்லை</Badge>
+            <Badge variant="secondary" className="text-xs font-medium">அனைத்து கடன்களும் செலுத்தப்பட்டன</Badge>
            )}
         </div>
       </CardContent>
