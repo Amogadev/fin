@@ -144,7 +144,7 @@ export default function UsersPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="பயனர்கள்"
+        title="கடன் பயனர்கள்"
       >
         <div className="flex items-center gap-2">
            <div className="relative">
