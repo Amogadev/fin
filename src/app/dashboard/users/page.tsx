@@ -86,9 +86,10 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
             </div>
           </Link>
            {latestActiveLoan ? (
-             <p className="text-sm text-muted-foreground">
-                கடன்: <span className="font-semibold text-foreground">₹{totalLoanAmount.toLocaleString('en-IN')}</span> | நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span>
-             </p>
+             <div className="text-sm text-muted-foreground">
+                <p>கடன்: <span className="font-semibold text-foreground">₹{totalLoanAmount.toLocaleString('en-IN')}</span></p>
+                <p>நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span></p>
+             </div>
            ) : (
             <Badge variant="success" className="text-xs">செயலில் கடன் இல்லை</Badge>
            )}
