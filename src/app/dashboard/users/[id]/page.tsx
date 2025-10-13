@@ -160,7 +160,7 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
         if (activeLoan.paymentFrequency === 'Weekly') {
             remainingPeriods = differenceInWeeks(DIWALI_DATE, now);
         } else { // Monthly
-            remainingPeriods = differenceInMonths(DIWALI_DATE, now);
+             remainingPeriods = (DIWALI_DATE.getFullYear() - now.getFullYear()) * 12 + (DIWALI_DATE.getMonth() - now.getMonth());
         }
     }
 
@@ -421,5 +421,3 @@ export default function UserDetailPage({
     </div>
   );
 }
-
-    
