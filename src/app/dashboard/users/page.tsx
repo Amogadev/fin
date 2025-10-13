@@ -35,7 +35,7 @@ import { useToast } from "@/hooks/use-toast";
 function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) => void; }) {
   const { toast } = useToast();
   const latestActiveLoan = user.loans
-    .filter(loan => loan.status === 'Active' || loan.status === 'Overdue')
+    .filter(loan => (loan.loanType === 'Loan' || loan.loanType === 'EMI') && (loan.status === 'Active' || loan.status === 'Overdue'))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
   
   const dueAmount = latestActiveLoan ? latestActiveLoan.totalOwed - latestActiveLoan.amountRepaid : 0;
