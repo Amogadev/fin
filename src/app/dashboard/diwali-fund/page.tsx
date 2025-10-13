@@ -39,7 +39,7 @@ type DiwaliUser = {
   fundDetails: Loan;
 };
 
-function DiwaliUserCard({ diwaliUser, onDelete }: { diwaliUser: DiwaliUser; onDelete: (userId: string) => void; }) {
+function DiwaliUserCard({ diwaliUser }: { diwaliUser: DiwaliUser; }) {
   const { user, fundDetails } = diwaliUser;
   const { toast } = useToast();
   
@@ -94,7 +94,6 @@ function UserCardSkeleton() {
                 </div>
             </CardContent>
             <CardFooter className="flex justify-center gap-1">
-                <Skeleton className="h-8 w-8 rounded-md" />
                 <Skeleton className="h-8 w-8 rounded-md" />
             </CardFooter>
         </Card>
@@ -163,7 +162,7 @@ export default function DiwaliFundPage() {
         {!filteredDiwaliUsers ? (
           Array.from({ length: 5 }).map((_, i) => <UserCardSkeleton key={i} />)
         ) : filteredDiwaliUsers.length > 0 ? (
-          filteredDiwaliUsers.map((diwaliUser) => <DiwaliUserCard key={diwaliUser.user.id} diwaliUser={diwaliUser} onDelete={handleUserDeleted} />)
+          filteredDiwaliUsers.map((diwaliUser) => <DiwaliUserCard key={diwaliUser.user.id} diwaliUser={diwaliUser} />)
         ) : (
           <div className="col-span-full text-center text-muted-foreground py-16">
             <UserIcon className="h-12 w-12 mx-auto mb-4" />

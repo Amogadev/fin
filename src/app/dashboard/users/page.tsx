@@ -117,7 +117,6 @@ function UserCardSkeleton() {
             <CardFooter className="flex justify-center gap-1">
                 <Skeleton className="h-8 w-8 rounded-md" />
                 <Skeleton className="h-8 w-8 rounded-md" />
-                <Skeleton className="h-8 w-8 rounded-md" />
             </CardFooter>
         </Card>
     );
