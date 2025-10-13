@@ -152,7 +152,6 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
         <Card>
             <CardHeader>
                 <CardTitle>நிலுவையில் உள்ள தொகை</CardTitle>
-                <CardDescription>கடன் <span className="font-mono">{activeLoan.id}</span>க்கான கொடுப்பனவுகளை உள்ளிடவும்</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted p-4">
