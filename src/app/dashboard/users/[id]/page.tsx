@@ -25,13 +25,14 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format, differenceInDays } from "date-fns";
-import { IndianRupee, PlusCircle, ArrowLeft, Loader2, Save, CalendarIcon } from "lucide-react";
+import { IndianRupee, PlusCircle, ArrowLeft, Loader2, Save, CalendarIcon, History } from "lucide-react";
 import { useEffect, useState, use } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 
 function LoanStatus({ loan }: { loan: Loan }) {
@@ -147,6 +148,7 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
     }
     
     const remainingBalance = activeLoan.totalOwed - activeLoan.amountRepaid;
+    const repaymentHistory = activeLoan.transactions.filter(tx => tx.type === 'Repayment').sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
         <Card>
@@ -199,6 +201,29 @@ function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymen
                         </PopoverContent>
                     </Popover>
                  </div>
+                 {repaymentHistory.length > 0 && (
+                    <Collapsible>
+                        <CollapsibleTrigger asChild>
+                            <Button variant="link" className="p-0 text-sm h-auto">
+                                <History className="mr-2 h-4 w-4" />
+                                கட்டண வரலாற்றைக் காட்டு
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4 space-y-2 animate-in fade-in-0">
+                             <div className="p-3 rounded-md border bg-muted/50 max-h-48 overflow-y-auto">
+                                <h4 className="font-semibold text-sm mb-2">கட்டண வரலாறு</h4>
+                                <ul className="space-y-2">
+                                    {repaymentHistory.map(tx => (
+                                        <li key={tx.id} className="flex justify-between items-center text-sm">
+                                            <span>{format(new Date(tx.date), 'PPP')}</span>
+                                            <span className="font-mono">₹{tx.amount.toLocaleString('en-IN')}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                             </div>
+                        </CollapsibleContent>
+                    </Collapsible>
+                 )}
             </CardContent>
             <CardFooter>
                 <Button className="w-full" onClick={handleSave} disabled={isSubmitting}>
@@ -364,3 +389,5 @@ export default function UserDetailPage({
     </div>
   );
 }
+
+    
