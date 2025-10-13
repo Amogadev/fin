@@ -437,7 +437,7 @@ function UserRegistrationForm({ onUserRegistered, isDisabled }: { onUserRegister
   );
 }
 
-export default function DiwaliFundPage() {
+export default function NewDiwaliFundParticipantPage() {
   const router = useRouter();
   const [registeredUser, setRegisteredUser] = useState<User | null>(null);
 
@@ -456,9 +456,9 @@ export default function DiwaliFundPage() {
         description="புதிய பயனரைச் சேர்த்து உடனடியாக உங்கள் சேமிப்புத் திட்டத்தைத் தொடங்கவும்."
       >
         <Button asChild variant="outline">
-          <Link href="/dashboard">
+          <Link href="/diwali-fund">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            முகப்புக்குத் திரும்பு
+            பங்கேற்பாளர் பட்டியலுக்குத் திரும்பு
           </Link>
         </Button>
       </PageHeader>
