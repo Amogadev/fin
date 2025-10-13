@@ -2,7 +2,7 @@
 "use client";
 
 import { notFound, useRouter } from "next/navigation";
-import { getUserById, type User, type Loan } from "@/lib/data";
+import { getUserById, type User, type Loan, getUsers } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import PageHeader from "@/components/page-header";
@@ -13,6 +13,7 @@ import {
   CardTitle,
   CardContent,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
 import {
   Table,
@@ -24,8 +25,13 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format, differenceInDays } from "date-fns";
-import { IndianRupee, PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
+import { IndianRupee, PlusCircle, ArrowLeft, Loader2, Save, CalendarIcon } from "lucide-react";
 import { useEffect, useState, use } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 function LoanStatus({ loan }: { loan: Loan }) {
   const today = new Date();
@@ -52,6 +58,152 @@ function LoanStatus({ loan }: { loan: Loan }) {
   );
 }
 
+function OutstandingPaymentCard({ user, onPaymentSaved }: { user: User, onPaymentSaved: () => void }) {
+    const { toast } = useToast();
+    const activeLoan = user.loans.find(loan => loan.status === 'Active' || loan.status === 'Overdue');
+    
+    const [amount, setAmount] = useState('');
+    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSave = async () => {
+        if (!activeLoan) {
+            toast({ variant: "destructive", title: "செயலில் கடன்கள் இல்லை" });
+            return;
+        }
+        if (!amount || !date || Number(amount) <= 0) {
+            toast({ variant: "destructive", title: "தவறான உள்ளீடு", description: "செல்லுபடியாகும் தொகை மற்றும் தேதியை உள்ளிடவும்." });
+            return;
+        }
+
+        const repaymentAmount = Number(amount);
+        const remainingBalance = activeLoan.totalOwed - activeLoan.amountRepaid;
+
+        if (repaymentAmount > remainingBalance) {
+            toast({ variant: "destructive", title: "அதிகப்படியான தொகை", description: `செலுத்தும் தொகை மீதமுள்ள இருப்பை விட அதிகமாக இருக்கக்கூடாது: ₹${remainingBalance.toLocaleString('en-IN')}` });
+            return;
+        }
+
+        setIsSubmitting(true);
+        
+        // This is a simulation. In a real app, this would be an API call.
+        const users = await getUsers();
+        const userIndex = users.findIndex(u => u.id === user.id);
+        
+        if (userIndex !== -1) {
+            const loanIndex = users[userIndex].loans.findIndex(l => l.id === activeLoan.id);
+            if (loanIndex !== -1) {
+                const loan = users[userIndex].loans[loanIndex];
+                loan.amountRepaid += repaymentAmount;
+                loan.transactions.push({
+                    id: `txn${Date.now()}`,
+                    loanId: loan.id,
+                    type: 'Repayment',
+                    amount: repaymentAmount,
+                    date: date.toISOString(),
+                });
+
+                if (loan.amountRepaid >= loan.totalOwed) {
+                    loan.status = 'Paid';
+                }
+
+                localStorage.setItem('temp_new_users', JSON.stringify(users));
+                // Also update the separate loans object if it's still being used elsewhere
+                const tempLoansJson = localStorage.getItem('temp_new_loans');
+                const tempLoans = tempLoansJson ? JSON.parse(tempLoansJson) : {};
+                if (tempLoans[user.id]) {
+                    const tempLoanIndex = tempLoans[user.id].findIndex((l:Loan) => l.id === activeLoan.id);
+                    if(tempLoanIndex !== -1) {
+                       tempLoans[user.id][tempLoanIndex] = loan;
+                       localStorage.setItem('temp_new_loans', JSON.stringify(tempLoans));
+                    }
+                }
+
+                toast({ title: "செலுத்துதல் சேமிக்கப்பட்டது!", description: `₹${repaymentAmount.toLocaleString('en-IN')} தொகை பதிவு செய்யப்பட்டது.` });
+                setAmount('');
+                setDate(new Date());
+                onPaymentSaved(); // Callback to refresh parent component
+            }
+        } else {
+             toast({ variant: "destructive", title: "பயனரைக் கண்டுபிடிக்க முடியவில்லை" });
+        }
+        
+        setIsSubmitting(false);
+    };
+
+    if (!activeLoan) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle>நிலுவையில் உள்ள தொகை</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground text-sm">இந்த பயனருக்கு செயலில் கடன்கள் எதுவும் இல்லை.</p>
+                </CardContent>
+            </Card>
+        )
+    }
+    
+    const remainingBalance = activeLoan.totalOwed - activeLoan.amountRepaid;
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>நிலுவையில் உள்ள தொகை</CardTitle>
+                <CardDescription>கடன் <span className="font-mono">{activeLoan.id}</span>க்கான கொடுப்பனவுகளை உள்ளிடவும்</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div className="text-center p-4 rounded-lg bg-muted">
+                    <p className="text-sm text-muted-foreground">மீதமுள்ள இருப்பு</p>
+                    <p className="text-3xl font-bold">₹{remainingBalance.toLocaleString('en-IN')}</p>
+                </div>
+                 <div className="space-y-2">
+                    <label htmlFor="outstanding-amount" className="text-sm font-medium">செலுத்தும் தொகை</label>
+                    <Input 
+                        id="outstanding-amount"
+                        type="number"
+                        placeholder="தொகையை உள்ளிடவும்"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                    />
+                 </div>
+                 <div className="space-y-2">
+                    <label htmlFor="outstanding-date" className="text-sm font-medium">செலுத்தும் தேதி</label>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant={"outline"}
+                                className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !date && "text-muted-foreground"
+                                )}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {date ? format(date, "PPP") : <span>ஒரு தேதியைத் தேர்ந்தெடுக்கவும்</span>}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                            <Calendar
+                                mode="single"
+                                selected={date}
+                                onSelect={setDate}
+                                initialFocus
+                            />
+                        </PopoverContent>
+                    </Popover>
+                 </div>
+            </CardContent>
+            <CardFooter>
+                <Button className="w-full" onClick={handleSave} disabled={isSubmitting}>
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    <Save className="mr-2 h-4 w-4" />
+                    செலுத்துதலைச் சேமி
+                </Button>
+            </CardFooter>
+        </Card>
+    );
+}
+
 
 export default function UserDetailPage({
   params: paramsPromise,
@@ -62,27 +214,23 @@ export default function UserDetailPage({
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const router = useRouter();
 
-  useEffect(() => {
-    async function loadUser() {
-      let userData = await getUserById(id);
-      
-      // Check for new loans in localStorage
-      if (userData) {
-        const tempLoansJson = localStorage.getItem('temp_new_loans');
-        if (tempLoansJson) {
-            const tempLoans = JSON.parse(tempLoansJson);
-            if (tempLoans[id]) {
-                const existingLoanIds = new Set(userData.loans.map(l => l.id));
-                const newLoans = tempLoans[id].filter((l: Loan) => !existingLoanIds.has(l.id));
-                userData.loans = [...userData.loans, ...newLoans];
-            }
-        }
+  const loadUser = async () => {
+    let userData = await getUserById(id);
+    if (userData) {
+      const tempLoansJson = localStorage.getItem('temp_new_loans');
+      if (tempLoansJson) {
+          const tempLoans = JSON.parse(tempLoansJson);
+          if (tempLoans[id]) {
+              const existingLoanIds = new Set(userData.loans.map(l => l.id));
+              const newLoans = tempLoans[id].filter((l: Loan) => !existingLoanIds.has(l.id));
+              userData.loans = [...userData.loans, ...newLoans].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          }
       }
-
-
-      setUser(userData || null);
     }
+    setUser(userData || null);
+  }
 
+  useEffect(() => {
     loadUser();
   }, [id]);
 
@@ -110,7 +258,7 @@ export default function UserDetailPage({
       </PageHeader>
 
       <div className="grid md:grid-cols-3 gap-6">
-        <div className="md:col-span-1">
+        <div className="md:col-span-1 space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>பயனர் விவரங்கள்</CardTitle>
@@ -152,6 +300,7 @@ export default function UserDetailPage({
               </div>
             </CardContent>
           </Card>
+           <OutstandingPaymentCard user={user} onPaymentSaved={loadUser} />
         </div>
 
         <div className="md:col-span-2">

@@ -133,8 +133,8 @@ function getStoredLoans(): Record<string, Loan[]> {
 }
 
 function checkAndUpdateLoanStatus(loan: Loan): Loan {
-    if (loan.status === 'Paid') {
-        return loan;
+    if (loan.status === 'Paid' || loan.amountRepaid >= loan.totalOwed) {
+        return { ...loan, status: 'Paid', amountRepaid: Math.min(loan.amountRepaid, loan.totalOwed) };
     }
 
     const today = new Date();
@@ -225,7 +225,7 @@ export const getUserById = async (id: string): Promise<User | undefined> => {
   const allUsers = await getUsers();
   const user = allUsers.find(u => u.id === id);
   if (user) {
-    user.loans = user.loans.map(checkAndUpdateLoanStatus);
+    user.loans = user.loans.map(checkAndUpdateLoanStatus).sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
   return Promise.resolve(user);
 };
@@ -286,3 +286,5 @@ export const getDiwaliFundReports = async (): Promise<DiwaliFundReport[]> => {
 
     return Promise.resolve(fundReports);
 }
+
+    
