@@ -169,20 +169,15 @@ export default function DiwaliFundPage() {
   }
 
   return (
-    <div className="space-y-4 p-4 md:p-6 lg:p-8">
+    <div className="space-y-4">
       <PageHeader
         title="தீபாவளி சிட் பங்கேற்பாளர்கள்"
         description="தீபாவளி சேமிப்புத் திட்டத்தில் செயலில் உள்ள அனைத்து உறுப்பினர்களின் பட்டியல்."
       >
         <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link href="/dashboard">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              பின்செல்
-            </Link>
-          </Button>
+          
           <Button asChild>
-            <Link href="/diwali-fund/new">
+            <Link href="/dashboard/diwali-fund/new">
               <PlusCircle className="mr-2 h-4 w-4" />
               புதிய பங்கேற்பாளர்
             </Link>

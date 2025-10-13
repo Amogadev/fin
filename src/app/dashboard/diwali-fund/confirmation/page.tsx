@@ -42,7 +42,7 @@ export default function ConfirmationPage() {
     }
 
     return (
-        <main className="flex items-center justify-center min-h-screen bg-muted/40 p-4">
+        <main className="flex items-center justify-center min-h-[calc(100vh-200px)] p-4">
             <Card className="w-full max-w-lg mx-auto shadow-lg">
                 <CardHeader className="text-center items-center">
                     <div className="p-3 bg-green-100 dark:bg-green-900 rounded-full mb-4">

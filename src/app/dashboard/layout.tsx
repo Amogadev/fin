@@ -100,7 +100,7 @@ export default function DashboardLayout({
   const menuItems = [
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
     { href: "/dashboard/users", label: "கடன் விவரங்கள்", icon: Users },
-    { href: "/diwali-fund", label: "தீபாவளி சிட்", icon: Gift },
+    { href: "/dashboard/diwali-fund", label: "தீபாவளி சிட்", icon: Gift },
     { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: FileText },
     { id: "settings", label: "அமைப்புகள்", icon: Settings },
   ];

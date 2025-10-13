@@ -96,7 +96,7 @@ function NewLoanRegistrationCard() {
 
 function DiwaliFundCard() {
   return (
-    <Link href="/diwali-fund" className="block h-full">
+    <Link href="/dashboard/diwali-fund" className="block h-full">
       <Card className="h-full bg-primary/5 hover:bg-primary/10 transition-colors flex flex-col items-center justify-center text-center space-y-2 p-4">
         <div className="flex items-center justify-center bg-background/50 rounded-full w-12 h-12">
             <Gift className="h-6 w-6 text-primary" />

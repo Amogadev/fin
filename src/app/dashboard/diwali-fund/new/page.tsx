@@ -446,17 +446,17 @@ export default function NewDiwaliFundParticipantPage() {
   };
 
   const handlePlanSubmitted = () => {
-    router.push(`/diwali-fund/confirmation`);
+    router.push(`/dashboard/diwali-fund/confirmation`);
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <div className="space-y-6">
       <PageHeader
         title="தீபாவளி சேமிப்புத் திட்டத்தில் சேரவும்"
         description="புதிய பயனரைச் சேர்த்து உடனடியாக உங்கள் சேமிப்புத் திட்டத்தைத் தொடங்கவும்."
       >
         <Button asChild variant="outline">
-          <Link href="/diwali-fund">
+          <Link href="/dashboard/diwali-fund">
             <ArrowLeft className="mr-2 h-4 w-4" />
             பங்கேற்பாளர் பட்டியலுக்குத் திரும்பு
           </Link>
