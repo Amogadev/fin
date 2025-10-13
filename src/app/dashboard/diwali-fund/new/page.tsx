@@ -29,7 +29,7 @@ const CONTRIBUTION_AMOUNTS = [100, 1000, 5000];
 const FREQUENCIES = ["வாராந்திர", "மாதாந்திர"];
 const DIWALI_DATE = new Date(new Date().getFullYear(), 10, 1); // Approx. Nov 1st
 
-function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | null, onPlanSubmitted: () => void, isDisabled: boolean }) {
+function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | null, onPlanSubmitted: (params: URLSearchParams) => void, isDisabled: boolean }) {
   const router = useRouter();
   const { toast } = useToast();
   
@@ -125,21 +125,20 @@ function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | nu
       localStorage.setItem('temp_new_users', JSON.stringify(allUsers));
       localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
 
-      const confirmationDetails = {
+      const confirmationParams = new URLSearchParams({
         name: user.name,
-        contribution,
-        frequency,
-        estimatedReturn,
+        contribution: contribution.toString(),
+        frequency: frequency,
+        estimatedReturn: Math.round(estimatedReturn).toString(),
         nextPaymentDate: nextPaymentDate.toISOString(),
-      }
-      localStorage.setItem('diwali_fund_confirmation', JSON.stringify(confirmationDetails));
+      });
       
       toast({
         title: "வெற்றிகரமாக சேர்ந்தீர்கள்!",
         description: `தீபாவளி சேமிப்புத் திட்டத்திற்கு வரவேற்கிறோம், ${user.name}!`,
       });
       
-      onPlanSubmitted();
+      onPlanSubmitted(confirmationParams);
 
       setIsSubmitting(false);
     }, 1000);
@@ -445,8 +444,8 @@ export default function NewDiwaliFundParticipantPage() {
     setRegisteredUser(user);
   };
 
-  const handlePlanSubmitted = () => {
-    router.push(`/dashboard/diwali-fund/confirmation`);
+  const handlePlanSubmitted = (params: URLSearchParams) => {
+    router.push(`/dashboard/diwali-fund/confirmation?${params.toString()}`);
   }
 
   return (
