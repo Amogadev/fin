@@ -171,7 +171,7 @@ export default function DiwaliFundPage() {
   return (
     <div className="space-y-4">
       <PageHeader
-        title="பயனர்கள்"
+        title="தீபாவளி சிட் பயனர்கள்"
       >
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm">
