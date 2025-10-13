@@ -29,6 +29,7 @@ const CONTRIBUTION_AMOUNTS = [100, 1000, 5000];
 const FREQUENCIES = ["வாராந்திர", "மாதாந்திர"];
 const DIWALI_DATE = new Date(new Date().getFullYear(), 10, 1); // Approx. Nov 1st
 
+// ----------------- DiwaliPlanForm -----------------
 function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | null, onPlanSubmitted: (params: URLSearchParams) => void, isDisabled: boolean }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -130,7 +131,6 @@ function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | nu
 
     localStorage.setItem('diwali_fund_confirmation', JSON.stringify(confirmationDetails));
 
-    // Simulate submission
     setTimeout(() => {
       localStorage.setItem('temp_new_users', JSON.stringify(allUsers));
       localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
@@ -143,7 +143,6 @@ function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | nu
       });
       
       onPlanSubmitted(confirmationParams);
-
       setIsSubmitting(false);
     }, 1000);
   };
@@ -223,6 +222,7 @@ function DiwaliPlanForm({ user, onPlanSubmitted, isDisabled }: { user: User | nu
   );
 }
 
+// ----------------- UserRegistrationForm -----------------
 function UserRegistrationForm({ onUserRegistered, isDisabled }: { onUserRegistered: (user: User) => void, isDisabled: boolean }) {
   const { toast } = useToast();
 
@@ -238,51 +238,43 @@ function UserRegistrationForm({ onUserRegistered, isDisabled }: { onUserRegister
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
-    let stream: MediaStream | null = null;
-    const enableCamera = async () => {
-      if (isCameraOpen) {
-        try {
-          stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          setHasCameraPermission(true);
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        } catch (error) {
-          console.error("கேமராவை அணுகுவதில் பிழை:", error);
-          setHasCameraPermission(false);
-          toast({
-            variant: "destructive",
-            title: "கேமரா அணுகல் மறுக்கப்பட்டது",
-            description: "பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.",
-          });
-        }
-      }
-    };
-    enableCamera();
-
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [isCameraOpen, toast]);
-
+  // Safe openCamera function
   const openCamera = async () => {
     setFaceImageBase64(null);
-    const permission = await navigator.permissions.query({ name: 'camera' as PermissionName });
-    if (permission.state === 'denied') {
-        toast({
-            variant: 'destructive',
-            title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
-            description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
-        });
-        setHasCameraPermission(false);
-        return;
+
+    let permissionState: PermissionStatus | null = null;
+    try {
+      permissionState = await (navigator.permissions as any).query({ name: 'camera' });
+    } catch {
+      // ignore errors; attempt to open camera anyway
     }
-    setHasCameraPermission(true);
-    setIsCameraOpen(true);
-  }
+
+    if (permissionState?.state === 'denied') {
+      toast({
+        variant: 'destructive',
+        title: 'கேமரா அணுகல் மறுக்கப்பட்டது',
+        description: 'பயன்பாட்டைப் பயன்படுத்த, உங்கள் உலாவி அமைப்புகளில் கேமரா அனுமதிகளை இயக்கவும்.',
+      });
+      setHasCameraPermission(false);
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setHasCameraPermission(true);
+      setIsCameraOpen(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error(err);
+      toast({
+        variant: 'destructive',
+        title: 'கேமரா திறக்க முடியவில்லை',
+      });
+      setHasCameraPermission(false);
+    }
+  };
 
   const captureFace = () => {
     if (videoRef.current && canvasRef.current) {
@@ -427,11 +419,10 @@ function UserRegistrationForm({ onUserRegistered, isDisabled }: { onUserRegister
                 <Button type="submit" size="lg" disabled={isSubmitting || !faceImageBase64} className="w-full">
                     {isSubmitting ? (
                     <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        பயனரைச் சேமிக்கிறது...
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> பதிவு செய்யப்படுகிறது...
                     </>
                     ) : (
-                    "பயனரை உருவாக்கி தொடரவும்"
+                    "பதிவு செய்து அடுத்து செல்லவும்"
                     )}
                 </Button>
             </CardFooter>
@@ -440,21 +431,19 @@ function UserRegistrationForm({ onUserRegistered, isDisabled }: { onUserRegister
   );
 }
 
+// ----------------- Main Page -----------------
 export default function NewDiwaliFundParticipantPage() {
   const router = useRouter();
   const [registeredUser, setRegisteredUser] = useState<User | null>(null);
 
-  const handleUserRegistered = (user: User) => {
-    setRegisteredUser(user);
-  };
-
+  const handleUserRegistered = (user: User) => setRegisteredUser(user);
   const handlePlanSubmitted = (params: URLSearchParams) => {
     router.push(`/dashboard/diwali-fund/confirmation?${params.toString()}`);
-  }
+  };
 
   return (
-    <div className="space-y-6">
-      <PageHeader
+    <div className="space-y-12">
+       <PageHeader
         title="தீபாவளி சேமிப்புத் திட்டத்தில் சேரவும்"
         description="புதிய பயனரைச் சேர்த்து உடனடியாக உங்கள் சேமிப்புத் திட்டத்தைத் தொடங்கவும்."
       >
@@ -465,12 +454,11 @@ export default function NewDiwaliFundParticipantPage() {
           </Link>
         </Button>
       </PageHeader>
-      
       <UserRegistrationForm onUserRegistered={handleUserRegistered} isDisabled={!!registeredUser} />
-
-      <Separator className="my-8"/>
-
+      <Separator className="my-8" />
       <DiwaliPlanForm user={registeredUser} onPlanSubmitted={handlePlanSubmitted} isDisabled={!registeredUser} />
     </div>
   );
 }
+
+    
