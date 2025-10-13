@@ -12,7 +12,6 @@ import {
   Receipt,
   Moon,
   Sun,
-  FileText,
   ChevronDown,
   ArrowLeft,
   CalendarDays,
@@ -165,9 +164,9 @@ export default function DashboardLayout({
             
             let isActive = false;
             if ('href' in item) {
-                if (source === 'diwali-fund' && item.href === '/dashboard/diwali-fund') {
-                    isActive = true;
-                } else if (!source && item.href) {
+                if (source === 'diwali-fund' && (item.href === '/dashboard/diwali-fund' || pathname.startsWith('/dashboard/users/'))) {
+                    isActive = item.href === '/dashboard/diwali-fund';
+                } else if (!source) {
                      isActive = pathname.startsWith(item.href);
                 } else if (source !== 'diwali-fund' && item.href === '/dashboard/users') {
                     isActive = pathname.startsWith(item.href);
