@@ -174,7 +174,12 @@ export default function DiwaliFundPage() {
         title="பயனர்கள்"
       >
         <div className="flex items-center gap-2">
-          
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              பின்செல்
+            </Link>
+          </Button>
           <Button asChild>
             <Link href="/dashboard/diwali-fund/new">
               <PlusCircle className="mr-2 h-4 w-4" />
