@@ -41,6 +41,10 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
   const dueAmount = latestActiveLoan ? latestActiveLoan.totalOwed - latestActiveLoan.amountRepaid : 0;
   const totalLoanAmount = latestActiveLoan ? latestActiveLoan.totalOwed : 0;
 
+  const latestPaidLoan = !latestActiveLoan ? user.loans
+    .filter(loan => (loan.loanType === 'Loan' || loan.loanType === 'EMI') && loan.status === 'Paid')
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0] : null;
+
   const handleDelete = () => {
     const tempUsersJson = localStorage.getItem('temp_new_users');
     let allUsers: User[] = tempUsersJson ? JSON.parse(tempUsersJson) : [];
@@ -90,8 +94,13 @@ function UserCard({ user, onDelete }: { user: User; onDelete: (userId: string) =
                 <p>கடன்: <span className="font-semibold text-foreground">₹{totalLoanAmount.toLocaleString('en-IN')}</span></p>
                 <p>நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span></p>
              </div>
+           ) : latestPaidLoan ? (
+            <div className="text-sm text-muted-foreground">
+                <p>கடைசி கடன்: <span className="font-semibold text-foreground">₹{latestPaidLoan.totalOwed.toLocaleString('en-IN')}</span></p>
+                <Badge variant="secondary" className="text-xs font-medium mt-1">முழுதும் செலுத்தப்பட்டது</Badge>
+            </div>
            ) : (
-            <Badge variant="secondary" className="text-xs font-medium">அனைத்து கடன்களும் செலுத்தப்பட்டன</Badge>
+             <Badge variant="secondary" className="text-xs font-medium">கடன்கள் இல்லை</Badge>
            )}
         </div>
       </CardContent>
