@@ -169,6 +169,7 @@ function mergeData(users: User[], allLoans: Record<string, Loan[]>): User[] {
 export const getVaultData = async (): Promise<Vault> => {
   const users = await getUsers();
   
+  let totalLoanValue = 0;
   let totalDisbursed = 0;
   let totalInterest = 0;
   let totalRepaid = 0;
@@ -184,6 +185,7 @@ export const getVaultData = async (): Promise<Vault> => {
             totalDiwaliFundContributions += loan.amountRepaid;
           }
       } else {
+        totalLoanValue += loan.amountRequested;
         totalDisbursed += loan.principal;
         totalInterest += loan.interest;
         totalRepaid += loan.amountRepaid;
@@ -198,7 +200,7 @@ export const getVaultData = async (): Promise<Vault> => {
 
   return Promise.resolve({
       balance: currentBalance,
-      totalLoansGiven: totalDisbursed,
+      totalLoansGiven: totalLoanValue,
       totalInterestEarned: totalInterest,
       diwaliFundUsers,
       totalDiwaliFundContributions
