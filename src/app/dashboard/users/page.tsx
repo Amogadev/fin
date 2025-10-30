@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, User as UserIcon, FilePenLine, Eye, Search } from "lucide-react";
+import { PlusCircle, ArrowLeft, User as UserIcon, FilePenLine, Eye, Search, Trash2 } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,7 +33,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 
 
-function UserCard({ user }: { user: User; }) {
+function UserCard({ user, onUserDeleted }: { user: User; onUserDeleted: (userId: string) => void; }) {
   const { toast } = useToast();
   const latestActiveLoan = user.loans
     .filter(loan => (loan.loanType === 'Loan' || loan.loanType === 'EMI') && (loan.status === 'Active' || loan.status === 'Overdue'))
@@ -45,6 +45,33 @@ function UserCard({ user }: { user: User; }) {
   const latestPaidLoan = !latestActiveLoan ? user.loans
     .filter(loan => (loan.loanType === 'Loan' || loan.loanType === 'EMI') && loan.status === 'Paid')
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0] : null;
+
+  const handleDelete = () => {
+    try {
+      const allUsersJson = localStorage.getItem('temp_new_users');
+      let allUsers: User[] = allUsersJson ? JSON.parse(allUsersJson) : [];
+      
+      const updatedUsers = allUsers.filter(u => u.id !== user.id);
+      localStorage.setItem('temp_new_users', JSON.stringify(updatedUsers));
+      
+      const allLoansJson = localStorage.getItem('temp_new_loans');
+      let allLoans: Record<string, Loan[]> = allLoansJson ? JSON.parse(allLoansJson) : {};
+      delete allLoans[user.id];
+      localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
+
+      toast({
+        title: "பயனர் நீக்கப்பட்டார்",
+        description: `${user.name} வெற்றிகரமாக நீக்கப்பட்டார்.`,
+      });
+      onUserDeleted(user.id);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "நீக்குதல் தோல்வியடைந்தது",
+        description: "பயனரை நீக்கும்போது ஒரு பிழை ஏற்பட்டது.",
+      });
+    }
+  }
 
   return (
     <Card>
@@ -98,6 +125,26 @@ function UserCard({ user }: { user: User; }) {
             <span className="sr-only">பயனரைத் திருத்து</span>
           </Link>
         </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="w-8 h-8 text-destructive hover:text-destructive/80">
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">பயனரை நீக்கு</span>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to delete this user?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the user '{user.name}' and all of their associated data.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardFooter>
     </Card>
   )
@@ -115,6 +162,7 @@ function UserCardSkeleton() {
                 </div>
             </CardContent>
             <CardFooter className="flex justify-center gap-1">
+                <Skeleton className="h-8 w-8 rounded-md" />
                 <Skeleton className="h-8 w-8 rounded-md" />
                 <Skeleton className="h-8 w-8 rounded-md" />
             </CardFooter>
@@ -177,7 +225,7 @@ export default function UsersPage() {
         ) : filteredLoanUsers.length > 0 ? (
           filteredLoanUsers
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .map((user) => <UserCard key={user.id} user={user} />)
+            .map((user) => <UserCard key={user.id} user={user} onUserDeleted={handleUserDeleted} />)
         ) : (
           <div className="col-span-full text-center text-muted-foreground py-16">
             <UserIcon className="h-12 w-12 mx-auto mb-4" />
