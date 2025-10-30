@@ -288,3 +288,4 @@ export const getDiwaliFundReports = async (): Promise<DiwaliFundReport[]> => {
 
     return Promise.resolve(fundReports);
 }
+
