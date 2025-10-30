@@ -176,10 +176,12 @@ export const getVaultData = async (): Promise<Vault> => {
   let totalDiwaliFundContributions = 0;
 
   users.forEach(user => {
-    let hasDiwaliFund = false;
+    let hasActiveDiwaliFund = false;
     user.loans.forEach(loan => {
         if (loan.loanType === 'Diwali Fund') {
-            hasDiwaliFund = true;
+            if(loan.status === 'Active') {
+              hasActiveDiwaliFund = true;
+            }
             totalDiwaliFundContributions += loan.amountRepaid;
         } else {
              totalDisbursed += loan.principal;
@@ -191,7 +193,7 @@ export const getVaultData = async (): Promise<Vault> => {
         }
       })
     });
-    if (hasDiwaliFund) {
+    if (hasActiveDiwaliFund) {
         diwaliFundUsers++;
     }
   });
