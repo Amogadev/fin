@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, ArrowLeft, User as UserIcon, Eye, Search } from "lucide-react";
+import { PlusCircle, ArrowLeft, User as UserIcon, Eye, Search, Trash2 } from "lucide-react";
 import PageHeader from "@/components/page-header";
 import { use, useEffect, useState } from "react";
 import { format } from 'date-fns';
@@ -39,11 +39,45 @@ type DiwaliUser = {
   fundDetails: Loan;
 };
 
-function DiwaliUserCard({ diwaliUser }: { diwaliUser: DiwaliUser; }) {
+function DiwaliUserCard({ diwaliUser, onUserDeleted }: { diwaliUser: DiwaliUser; onUserDeleted: (userId: string) => void; }) {
   const { user, fundDetails } = diwaliUser;
   const { toast } = useToast();
   
   const remainingContribution = fundDetails.totalOwed - fundDetails.amountRepaid;
+
+  const handleDelete = () => {
+    try {
+      const allUsersJson = localStorage.getItem('temp_new_users');
+      let allUsers: User[] = allUsersJson ? JSON.parse(allUsersJson) : [];
+      
+      // Find user and remove just the diwali fund loan
+      const userIndex = allUsers.findIndex(u => u.id === user.id);
+      if (userIndex !== -1) {
+        allUsers[userIndex].loans = allUsers[userIndex].loans.filter(l => l.id !== fundDetails.id);
+      }
+
+      localStorage.setItem('temp_new_users', JSON.stringify(allUsers));
+      
+      const allLoansJson = localStorage.getItem('temp_new_loans');
+      let allLoans: Record<string, Loan[]> = allLoansJson ? JSON.parse(allLoansJson) : {};
+      if (allLoans[user.id]) {
+        allLoans[user.id] = allLoans[user.id].filter(l => l.id !== fundDetails.id);
+      }
+      localStorage.setItem('temp_new_loans', JSON.stringify(allLoans));
+
+      toast({
+        title: "பங்கேற்பாளர் நீக்கப்பட்டார்",
+        description: `${user.name} தீபாவளி சேமிப்புத் திட்டத்திலிருந்து வெற்றிகரமாக நீக்கப்பட்டார்.`,
+      });
+      onUserDeleted(user.id);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "நீக்குதல் தோல்வியடைந்தது",
+        description: "பங்கேற்பாளரை நீக்கும்போது ஒரு பிழை ஏற்பட்டது.",
+      });
+    }
+  }
 
   return (
     <Card>
@@ -77,6 +111,26 @@ function DiwaliUserCard({ diwaliUser }: { diwaliUser: DiwaliUser; }) {
                 <span className="sr-only">Details</span>
             </Link>
         </Button>
+         <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="w-8 h-8 text-destructive hover:text-destructive/80">
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">பங்கேற்பாளரை நீக்கு</span>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>இந்த பங்கேற்பாளரை நீக்க விரும்புகிறீர்களா?</AlertDialogTitle>
+              <AlertDialogDescription>
+                இந்தச் செயலைச் செயல்தவிர்க்க முடியாது. இது '{user.name}' ஐ தீபாவளி சேமிப்புத் திட்டத்திலிருந்து நிரந்தரமாக நீக்கிவிடும்.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>ரத்துசெய்</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">தொடர்க</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardFooter>
     </Card>
   )
@@ -95,6 +149,7 @@ function UserCardSkeleton() {
             </CardContent>
             <CardFooter className="flex justify-center gap-1">
                 <Skeleton className="h-8 w-8 rounded-md" />
+                <Skeleton className="h-8 w-8 rounded-md" />
             </CardFooter>
         </Card>
     );
@@ -104,23 +159,25 @@ export default function DiwaliFundPage() {
   const [diwaliUsers, setDiwaliUsers] = useState<DiwaliUser[] | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  async function fetchDiwaliUsers() {
+      const allUsers = await getUsers();
+      const filteredUsers: DiwaliUser[] = [];
+      allUsers.forEach(user => {
+          const diwaliFund = user.loans.find(loan => loan.loanType === 'Diwali Fund' && loan.status === 'Active');
+          if (diwaliFund) {
+              filteredUsers.push({ user, fundDetails: diwaliFund });
+          }
+      });
+      setDiwaliUsers(filteredUsers.sort((a, b) => new Date(b.fundDetails.createdAt).getTime() - new Date(a.fundDetails.createdAt).getTime()));
+  }
+  
   useEffect(() => {
-    async function fetchDiwaliUsers() {
-        const allUsers = await getUsers();
-        const filteredUsers: DiwaliUser[] = [];
-        allUsers.forEach(user => {
-            const diwaliFund = user.loans.find(loan => loan.loanType === 'Diwali Fund' && loan.status === 'Active');
-            if (diwaliFund) {
-                filteredUsers.push({ user, fundDetails: diwaliFund });
-            }
-        });
-        setDiwaliUsers(filteredUsers.sort((a, b) => new Date(b.fundDetails.createdAt).getTime() - new Date(a.fundDetails.createdAt).getTime()));
-    }
     fetchDiwaliUsers();
   }, []);
 
   const handleUserDeleted = (deletedUserId: string) => {
     setDiwaliUsers(prevUsers => prevUsers ? prevUsers.filter(({ user }) => user.id !== deletedUserId) : null);
+    fetchDiwaliUsers(); // Re-fetch to ensure list is up to date
   }
 
   const filteredDiwaliUsers = diwaliUsers?.filter(diwaliUser =>
@@ -162,7 +219,7 @@ export default function DiwaliFundPage() {
         {!filteredDiwaliUsers ? (
           Array.from({ length: 5 }).map((_, i) => <UserCardSkeleton key={i} />)
         ) : filteredDiwaliUsers.length > 0 ? (
-          filteredDiwaliUsers.map((diwaliUser) => <DiwaliUserCard key={diwaliUser.user.id} diwaliUser={diwaliUser} />)
+          filteredDiwaliUsers.map((diwaliUser) => <DiwaliUserCard key={diwaliUser.user.id} diwaliUser={diwaliUser} onUserDeleted={handleUserDeleted} />)
         ) : (
           <div className="col-span-full text-center text-muted-foreground py-16">
             <UserIcon className="h-12 w-12 mx-auto mb-4" />
