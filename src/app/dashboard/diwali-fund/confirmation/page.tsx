@@ -26,9 +26,7 @@ function ConfirmationContent() {
     const storedDetails = localStorage.getItem("diwali_fund_confirmation");
     if (storedDetails) {
       setDetails(JSON.parse(storedDetails));
-      // localStorage.removeItem("diwali_fund_confirmation"); // Optional: clear after reading
     } else {
-        // Fallback to searchParams if localStorage is empty
         const name = searchParams.get("name");
         const contribution = searchParams.get("contribution");
         const frequency = searchParams.get("frequency");
@@ -43,6 +41,7 @@ function ConfirmationContent() {
                 nextPaymentDate,
             });
         } else {
+             // If no data is found anywhere, redirect to avoid a blank page
              router.push("/dashboard/diwali-fund");
         }
     }
