@@ -61,6 +61,14 @@ export type DiwaliFundReport = {
     endDate: string;
 };
 
+export type DiwaliFundParticipant = {
+    chitNumber: string;
+    memberName: string;
+    weeksPaid: number;
+    totalAmountPaid: number;
+};
+
+
 // Initial state for the vault. In a real app, this would come from a persistent store.
 const initialVaultState: Vault = {
   balance: 100000,
@@ -150,31 +158,14 @@ function checkAndUpdateLoanStatus(loan: Loan): Loan {
 }
 
 
-function mergeData(users: User[], allLoans: Record<string, Loan[]>): User[] {
-    return users.map(user => {
-        const userLoans = (allLoans[user.id] || []).map(checkAndUpdateLoanStatus);
-        const existingLoanIds = new Set(user.loans.map(l => l.id));
-        const newLoans = userLoans.filter((l: Loan) => !existingLoanIds.has(l.id));
-        
-        const updatedExistingLoans = user.loans.map(checkAndUpdateLoanStatus);
-        
-        return {
-            ...user,
-            loans: [...updatedExistingLoans, ...newLoans]
-        };
-    });
-}
-
-
 export const getVaultData = async (): Promise<Vault> => {
   const users = await getUsers();
   
-  let totalLoanValue = 0;
   let totalDisbursed = 0;
   let totalInterest = 0;
-  let totalRepaid = 0;
   let diwaliFundUsers = 0;
   let totalDiwaliFundContributions = 0;
+  let totalLoanValue = 0;
 
   users.forEach(user => {
     let hasActiveDiwaliFund = false;
@@ -188,7 +179,6 @@ export const getVaultData = async (): Promise<Vault> => {
         totalLoanValue += loan.amountRequested;
         totalDisbursed += loan.principal;
         totalInterest += loan.interest;
-        totalRepaid += loan.amountRepaid;
       }
     });
      if (hasActiveDiwaliFund) {

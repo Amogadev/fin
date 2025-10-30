@@ -1,7 +1,7 @@
 
 "use client";
 
-import { getUsers, TransactionWithUser, User } from "@/lib/data";
+import { getUsers, type DiwaliFundParticipant } from "@/lib/data";
 import PageHeader from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -12,17 +12,8 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 import { use, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-
-type DiwaliFundParticipant = {
-    chitNumber: string;
-    memberName: string;
-    weeksPaid: number;
-    totalAmountPaid: number;
-};
 
 function DiwaliFundTableSkeleton() {
     return (
@@ -48,7 +39,6 @@ function DiwaliFundTableSkeleton() {
         </Table>
     )
 }
-
 
 export default function DiwaliFundReportPage() {
   const [participantsPromise, setParticipantsPromise] = useState<Promise<DiwaliFundParticipant[]>>();
@@ -140,4 +130,3 @@ export default function DiwaliFundReportPage() {
     </div>
   );
 }
-

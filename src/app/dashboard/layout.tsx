@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -14,6 +14,7 @@ import {
   ArrowLeft,
   CalendarDays,
   Gift,
+  AreaChart,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -100,6 +101,7 @@ export default function DashboardLayout({
     { href: "/dashboard", label: "முகப்பு", icon: LayoutDashboard },
     { href: "/dashboard/users", label: "கடன் விவரங்கள்", icon: Users },
     { href: "/dashboard/diwali-fund", label: "தீபாவளி சிட்", icon: Gift },
+    { href: "/dashboard/reports", label: "அறிக்கைகள்", icon: AreaChart },
     { id: "settings", label: "அமைப்புகள்", icon: Settings },
   ];
 
@@ -161,17 +163,14 @@ export default function DashboardLayout({
             }
             
             let isActive = false;
-            if ('href' in item) {
+            if ('href' in item && item.href) {
                 if (source === 'diwali-fund' && (item.href === '/dashboard/diwali-fund' || pathname.startsWith('/dashboard/users/'))) {
                     isActive = item.href === '/dashboard/diwali-fund';
-                } else if (!source) {
+                } else {
                      isActive = pathname.startsWith(item.href);
-                } else if (source !== 'diwali-fund' && item.href === '/dashboard/users') {
-                    isActive = pathname.startsWith(item.href);
-                }
-
-                if (item.href === '/dashboard' && pathname !== '/dashboard') {
-                    isActive = false;
+                     if (item.href === '/dashboard' && pathname !== '/dashboard') {
+                        isActive = false;
+                     }
                 }
             }
 
