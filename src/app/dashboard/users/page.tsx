@@ -41,6 +41,7 @@ function UserCard({ user, onUserDeleted }: { user: User; onUserDeleted: (userId:
   
   const dueAmount = latestActiveLoan ? latestActiveLoan.totalOwed - latestActiveLoan.amountRepaid : 0;
   const totalLoanAmount = latestActiveLoan ? latestActiveLoan.totalOwed : 0;
+  const amountRepaid = latestActiveLoan ? latestActiveLoan.amountRepaid : 0;
 
   const latestPaidLoan = !latestActiveLoan ? user.loans
     .filter(loan => (loan.loanType === 'Loan' || loan.loanType === 'EMI') && loan.status === 'Paid')
@@ -100,6 +101,7 @@ function UserCard({ user, onUserDeleted }: { user: User; onUserDeleted: (userId:
            {latestActiveLoan ? (
              <div className="text-sm text-muted-foreground">
                 <p>கடன்: <span className="font-semibold text-foreground">₹{totalLoanAmount.toLocaleString('en-IN')}</span></p>
+                <p>செலுத்தியது: <span className="font-semibold text-foreground">₹{amountRepaid.toLocaleString('en-IN')}</span></p>
                 <p>நிலுவை: <span className="font-semibold text-foreground">₹{dueAmount.toLocaleString('en-IN')}</span></p>
              </div>
            ) : latestPaidLoan ? (
