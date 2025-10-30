@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PageHeader from "@/components/page-header";
-import { Camera, ArrowLeft, Loader2, RefreshCw, Minus, Plus } from "lucide-react";
+import { Camera, ArrowLeft, Loader2, RefreshCw, Minus, Plus, User as UserIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import type { User, Loan } from "@/lib/data";
@@ -427,13 +427,13 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!faceImageBase64) {
-      toast({
-        variant: "destructive",
-        title: "முகம் படம் இல்லை",
-        description: "பயனரை உருவாக்கும் முன், முகப் படத்தைப் பிடிக்கவும்.",
-      });
-      return;
+    if (!name || !contact || !idProof) {
+        toast({
+            variant: "destructive",
+            title: "Required fields missing",
+            description: "Name, contact, and ID proof are required.",
+        });
+        return;
     }
 
     setIsSubmitting(true);
@@ -444,7 +444,7 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
         name,
         contact,
         idProof,
-        faceImageUrl: faceImageBase64,
+        faceImageUrl: faceImageBase64 || `https://api.dicebear.com/8.x/initials/svg?seed=${name}`,
         createdAt: new Date().toISOString(),
         loans: [],
         registrationType: 'Loan' as const,
@@ -518,7 +518,7 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
           <div className="md:col-span-1">
             <Card className="h-full flex flex-col">
               <CardHeader>
-                <CardTitle>முகப் புகைப்படம்</CardTitle>
+                <CardTitle>முகப் புகைப்படம் (விருப்பத்தேர்வு)</CardTitle>
                 <CardDescription>
                   விண்ணப்பதாரரின் முகத்தின் தெளிவான படத்தைப் பிடிக்கவும்.
                 </CardDescription>
@@ -532,8 +532,9 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
                   ) : isCameraOpen ? (
                     <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
                   ) : (
-                    <div onClick={openCamera} className="cursor-pointer">
-                      <Camera className="h-16 w-16 text-muted-foreground" />
+                    <div onClick={openCamera} className="cursor-pointer flex flex-col items-center gap-2 text-muted-foreground">
+                      <UserIcon className="h-16 w-16" />
+                      <span>படம் இல்லை</span>
                     </div>
                   )}
                   <canvas ref={canvasRef} className="hidden"></canvas>
@@ -570,7 +571,7 @@ function LoanUserForm({ onUserRegistered, isDisabled }: { onUserRegistered: (use
           </div>
         </div>
         <div className="flex justify-end pt-4">
-          <Button type="submit" size="lg" disabled={isSubmitting || !faceImageBase64}>
+          <Button type="submit" size="lg" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
