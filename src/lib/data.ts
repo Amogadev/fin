@@ -196,7 +196,7 @@ export const getVaultData = async (): Promise<Vault> => {
     }
   });
   
-  const currentBalance = initialVaultState.balance - totalDisbursed + totalRepaid;
+  const currentBalance = initialVaultState.balance - totalDisbursed;
 
   return Promise.resolve({
       balance: currentBalance,
