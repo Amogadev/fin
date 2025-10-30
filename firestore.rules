@@ -1,0 +1,125 @@
+/**
+ * @fileoverview Firestore Security Rules for VaultWise application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for user profiles, loans, and transactions, ensuring that users can only access their own data. The vault data is secured separately and assumes administrative control.
+ *
+ * Data Structure:
+ * - /vaults/{vaultId}: Contains the main vault's financial metrics. There is only one vault document.
+ * - /users/{userId}: Contains user profile data.
+ * - /users/{userId}/loans/{loanId}: Contains loan applications associated with a specific user.
+ * - /users/{userId}/loans/{loanId}/transactions/{transactionId}: Contains transaction records for a specific loan.
+ *
+ * Key Security Decisions:
+ * - Users can only create, read, update, and delete their own profiles, loans, and transactions.
+ * - Listing of all users is disallowed to protect user privacy.
+ * - No role-based access control is implemented in this prototype. All users are treated equally.
+ *
+ * Denormalization for Authorization:
+ * - Loan and transaction documents are nested under user documents, denormalizing the userId. This enables path-based ownership checks.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Allows read and write access to the vault document.
+     * @path /vaults/{vaultId}
+     * @allow (get) Signed-in user can read the vault document.
+     * @allow (list) Signed-in user can list the vault documents.
+     * @allow (create) Signed-in user can create the vault document.
+     * @allow (update) Signed-in user can update the vault document.
+     * @allow (delete) Signed-in user can delete the vault document.
+     * @deny (get) Unsigned-in user cannot read the vault document.
+     * @deny (list) Unsigned-in user cannot list the vault documents.
+     * @deny (create) Unsigned-in user cannot create the vault document.
+     * @deny (update) Unsigned-in user cannot update the vault document.
+     * @deny (delete) Unsigned-in user cannot delete the vault document.
+     * @principle Allows full read and write access to the vault document for signed-in users, simulating admin control.
+     */
+    match /vaults/{vaultId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+
+    /**
+     * @description Manages user profiles.  Users can only read/write their own profile.
+     * @path /users/{userId}
+     * @allow (get) User 'user_abc' can read their profile.
+     * @allow (list) User 'user_abc' can list users (denied in this case).
+     * @allow (create) User 'user_abc' can create their own profile.
+     * @allow (update) User 'user_abc' can update their own profile.
+     * @allow (delete) User 'user_abc' can delete their own profile.
+     * @deny (get) User 'user_xyz' cannot read 'user_abc''s profile.
+     * @deny (list) Listing all users is not allowed.
+     * @deny (create) User 'user_xyz' cannot create a profile for 'user_abc'.
+     * @deny (update) User 'user_xyz' cannot update 'user_abc''s profile.
+     * @deny (delete) User 'user_xyz' cannot delete 'user_abc''s profile.
+     * @principle Enforces document ownership for user profiles.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // Disallow listing all users.
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Manages loan applications for a user. Users can only access their own loans.
+     * @path /users/{userId}/loans/{loanId}
+     * @allow (get) User 'user_abc' can read their loan 'loan_123'.
+     * @allow (list) User 'user_abc' can list their own loans.
+     * @allow (create) User 'user_abc' can create a loan application.
+     * @allow (update) User 'user_abc' can update their loan 'loan_123'.
+     * @allow (delete) User 'user_abc' can delete their loan 'loan_123'.
+     * @deny (get) User 'user_xyz' cannot read 'user_abc''s loan.
+     * @deny (create) User 'user_xyz' cannot create a loan for 'user_abc'.
+     * @deny (update) User 'user_xyz' cannot update 'user_abc''s loan.
+     * @deny (delete) User 'user_xyz' cannot delete 'user_abc''s loan.
+     * @principle Enforces document ownership for loan applications.
+     */
+    match /users/{userId}/loans/{loanId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && (request.resource.data.userId == resource.data.userId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Manages transaction records for a specific loan.  Users can only access transactions for their own loans.
+     * @path /users/{userId}/loans/{loanId}/transactions/{transactionId}
+     * @allow (get) User 'user_abc' can read transaction 'txn_456' for their loan 'loan_123'.
+     * @allow (list) User 'user_abc' can list transactions for their loan 'loan_123'.
+     * @allow (create) User 'user_abc' can create a transaction for their loan 'loan_123'.
+     * @allow (update) User 'user_abc' can update transaction 'txn_456' for their loan 'loan_123'.
+     * @allow (delete) User 'user_abc' can delete transaction 'txn_456' for their loan 'loan_123'.
+     * @deny (get) User 'user_xyz' cannot read 'user_abc''s transaction.
+     * @deny (create) User 'user_xyz' cannot create a transaction for 'user_abc''s loan.
+     * @deny (update) User 'user_xyz' cannot update 'user_abc''s transaction.
+     * @deny (delete) User 'user_xyz' cannot delete 'user_abc''s transaction.
+     * @principle Enforces document ownership for transaction records.
+     */
+    match /users/{userId}/loans/{loanId}/transactions/{transactionId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.loanId == loanId;
+      allow update: if isExistingOwner(userId) && (request.resource.data.loanId == resource.data.loanId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+    }
+  }
+}
