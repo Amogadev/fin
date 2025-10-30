@@ -1,36 +1,30 @@
-"use client";
+"use client"; // this makes sure it runs on the client only
 
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 function ConfirmationInner() {
   const searchParams = useSearchParams();
-
-  const name = searchParams.get("name");
-  const amount = searchParams.get("amount");
+  const name = searchParams.get("name") || "Unknown";
+  const amount = searchParams.get("amount") || "0";
 
   return (
-    <div style={{ padding: "20px", textAlign: "center", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "hsl(var(--background))", color: "hsl(var(--foreground))" }}>
-      <div style={{ border: "1px solid hsl(var(--border))", padding: "40px", borderRadius: "var(--radius)", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)" }}>
-        <h1 style={{ fontSize: "2.25rem", fontWeight: "bold", marginBottom: "1rem" }}>🎉 Diwali Fund Confirmation</h1>
-        <div style={{ fontSize: "1.125rem", display: "grid", gap: "1rem", textAlign: "left", width: "300px", margin: "0 auto" }}>
-            <p><b>Name:</b> {name || "N/A"}</p>
-            <p><b>Amount:</b> ₹{amount ? Number(amount).toLocaleString('en-IN') : "N/A"}</p>
-            <p><b>Status:</b> Payment Successful!</p>
-        </div>
-      </div>
+    <div style={{ padding: "24px", textAlign: "center" }}>
+      <h1>🎉 Diwali Fund Confirmation</h1>
+      <p><strong>Name:</strong> {name}</p>
+      <p><strong>Amount:</strong> ₹{amount}</p>
+      <p>✅ Payment successful!</p>
     </div>
   );
 }
 
 export default function ConfirmationPage() {
   return (
-    <Suspense fallback={
-        <div style={{ padding: "20px", textAlign: "center", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "hsl(var(--background))", color: "hsl(var(--muted-foreground))" }}>
-            Loading confirmation...
-        </div>
-    }>
+    <Suspense fallback={<div>Loading confirmation...</div>}>
       <ConfirmationInner />
     </Suspense>
   );
 }
+
+// ⛔ Disable static rendering — this page must render only on the client
+export const dynamic = "force-dynamic";
