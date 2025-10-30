@@ -178,22 +178,23 @@ export const getVaultData = async (): Promise<Vault> => {
   users.forEach(user => {
     let hasActiveDiwaliFund = false;
     (user.loans || []).forEach(loan => {
-        if (loan.loanType === 'Diwali Fund') {
-            if(loan.status === 'Active') {
-              hasActiveDiwaliFund = true;
-            }
-            totalDiwaliFundContributions += loan.amountRepaid;
-        } else {
-             totalDisbursed += loan.principal;
-             totalInterest += loan.interest;
-        }
-      (loan.transactions || []).forEach(tx => {
-        if(tx.type === 'Repayment') {
+      // Don't re-calculate for deleted/paid off diwali funds
+      if (loan.loanType === 'Diwali Fund' && loan.status === 'Active') {
+        hasActiveDiwaliFund = true;
+        totalDiwaliFundContributions += loan.amountRepaid;
+      } else if (loan.loanType !== 'Diwali Fund') {
+        loan.transactions.forEach(tx => {
+          if (tx.type === 'Disbursement') {
+            totalDisbursed += tx.amount;
+          }
+          if (tx.type === 'Repayment') {
             totalRepaid += tx.amount;
-        }
-      })
+          }
+        });
+        totalInterest += loan.interest;
+      }
     });
-    if (hasActiveDiwaliFund) {
+     if (hasActiveDiwaliFund) {
         diwaliFundUsers++;
     }
   });
@@ -288,4 +289,5 @@ export const getDiwaliFundReports = async (): Promise<DiwaliFundReport[]> => {
 
     return Promise.resolve(fundReports);
 }
+
 
