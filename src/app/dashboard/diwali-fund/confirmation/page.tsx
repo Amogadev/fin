@@ -1,20 +1,36 @@
+"use client";
 
-import { Suspense } from "react";
-import ConfirmationContent from "./confirmation-content";
+import React, { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
-// This is the main page component. It is a Server Component.
-// Its only job is to set up the Suspense boundary.
+function ConfirmationInner() {
+  const searchParams = useSearchParams();
+
+  const name = searchParams.get("name");
+  const amount = searchParams.get("amount");
+
+  return (
+    <div style={{ padding: "20px", textAlign: "center", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "hsl(var(--background))", color: "hsl(var(--foreground))" }}>
+      <div style={{ border: "1px solid hsl(var(--border))", padding: "40px", borderRadius: "var(--radius)", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)" }}>
+        <h1 style={{ fontSize: "2.25rem", fontWeight: "bold", marginBottom: "1rem" }}>🎉 Diwali Fund Confirmation</h1>
+        <div style={{ fontSize: "1.125rem", display: "grid", gap: "1rem", textAlign: "left", width: "300px", margin: "0 auto" }}>
+            <p><b>Name:</b> {name || "N/A"}</p>
+            <p><b>Amount:</b> ₹{amount ? Number(amount).toLocaleString('en-IN') : "N/A"}</p>
+            <p><b>Status:</b> Payment Successful!</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ConfirmationPage() {
   return (
-    // The Suspense boundary tells Next.js to show a fallback UI while the
-    // client-side component inside it is loading.
     <Suspense fallback={
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-background">
-        <p>உங்கள் உறுதிப்படுத்தல் ஏற்றப்படுகிறது...</p>
-      </div>
+        <div style={{ padding: "20px", textAlign: "center", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "hsl(var(--background))", color: "hsl(var(--muted-foreground))" }}>
+            Loading confirmation...
+        </div>
     }>
-      {/* ConfirmationContent is a Client Component that can safely use hooks. */}
-      <ConfirmationContent />
+      <ConfirmationInner />
     </Suspense>
   );
 }
